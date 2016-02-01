@@ -5,9 +5,7 @@
   "dependencies": {
     "angular": "1.4.9",
     "angular-tree-repeat": "0.0.1",
-    "http-server": "^0.8.5"
-  },
-  "scripts": {
-      "start": "http-server -a ${OPENSHIFT_NODEJS_IP:-127.0.0.1} -p ${OPENSHIFT_NODEJS_PORT:-9000}"
+    "express": "^4.13.4",
+    "helmet": "^1.1.0"
   }
 }
