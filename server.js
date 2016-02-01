@@ -8,8 +8,9 @@ var host = process.env.OPENSHIFT_NODEJS_IP || 'localhost';
 
 // Middlewares, in order of execution
 app.use(helmet());
-app.use(function forceHTTPS(req, res, next) {  // Following the OpenShift doc
-    if (req.headers['x-forwarded-proto'] == 'http') {
+app.use(function forceHTTPS(req, res, next) {
+    // Following the OpenShift doc + add localhost to condition
+    if (req.headers['x-forwarded-proto'] == 'http' && req.headers.host != 'localhost:3000') {
         res.redirect('https://' + req.headers.host + req.path);
     } else {
         return next();
