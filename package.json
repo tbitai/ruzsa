@@ -6,7 +6,6 @@
     "angular": "1.4.9",
     "angular-tree-repeat": "0.0.1",
     "express": "^4.13.4",
-    "express-force-ssl": "^0.3.0",
     "helmet": "^1.1.0"
   }
 }
