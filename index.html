@@ -8,17 +8,25 @@
     angular.module('ruzsa', ['sf.treeRepeat'])
         .controller('treeController', function($scope){
             $scope.treeData = {
-                name: 'root',
+                name: '(Tet(a) & Tet(b)) v (Dod(a) v Tet(b))',
                 children: [
-                    {name: 'first child'},
-                    {name: 'second child'}
-                ]
+                    {name: 'Tet(a) & Tet(b)',
+                     children: [
+                        {name: 'Tet(a)',
+                         children: [
+                             {name: 'Tet(b)'}]}]},
+                    {name: 'Dod(a) v Tet(b)',
+                     children: [
+                         {name: 'Dod(a)'},
+                         {name: 'Tet(b)'}]}]
             };
         });
 </script>
+<link rel="stylesheet" href="./css/tree.css">
 </head>
 
 <body>
+<div class="tree">
 <ul ng-controller="treeController">
     <li sf-treepeat="node in children of treeData">
         {{node.name}}
@@ -27,5 +35,6 @@
         </ul>
     </li>
 </ul>
+</div>
 </body>
 </html>
