@@ -1,0 +1,71 @@
+// Based on http://thecodeplayer.com/walkthrough/css3-family-tree 
+
+.tree
+  *
+    margin: 0
+    padding: 0
+
+  ul
+    padding-top: 20px
+    position: relative
+
+  li
+    float: left
+    text-align: center
+    list-style-type: none
+    position: relative
+    padding: 20px 5px 0 5px
+
+    &::before
+      content: ''
+      position: absolute
+      top: 0
+      right: 50%
+      border-top: 1px solid black
+      width: 50%
+      height: 20px
+
+    &::after
+      content: ''
+      position: absolute
+      top: 0
+      right: 50%
+      border-top: 1px solid black
+      width: 50%
+      height: 20px
+      right: auto
+      left: 50%
+      border-left: 1px solid black
+
+    &:only-child
+      &::after, &::before
+        display: none
+
+      padding-top: 0
+
+    &:first-child::before
+      border: 0 none
+
+    &:last-child
+      &::after
+        border: 0 none
+
+      &::before
+        border-right: 1px solid black
+        border-radius: 0 5px 0 0
+        -webkit-border-radius: 0 5px 0 0
+        -moz-border-radius: 0 5px 0 0
+
+    &:first-child::after
+      border-radius: 5px 0 0 0
+      -webkit-border-radius: 5px 0 0 0
+      -moz-border-radius: 5px 0 0 0
+
+  ul ul::before
+    content: ''
+    position: absolute
+    top: 0
+    left: 50%
+    border-left: 1px solid black
+    width: 0
+    height: 20px

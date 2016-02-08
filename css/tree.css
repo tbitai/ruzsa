@@ -1,73 +1,58 @@
-/* Based on http://thecodeplayer.com/walkthrough/css3-family-tree */
-
 .tree * {
-    margin: 0;
-    padding: 0;
-}
+  margin: 0;
+  padding: 0; }
 .tree ul {
-    padding-top: 20px;
-    position: relative;
-}
+  padding-top: 20px;
+  position: relative; }
 .tree li {
-    float: left;
-    text-align: center;
-    list-style-type: none;
-    position: relative;
-    padding: 20px 5px 0 5px;
-}
-.tree li::before, .tree li::after {
-    content: '';
+  float: left;
+  text-align: center;
+  list-style-type: none;
+  position: relative;
+  padding: 20px 5px 0 5px; }
+  .tree li::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 50%;
+    border-top: 1px solid black;
+    width: 50%;
+    height: 20px; }
+  .tree li::after {
+    content: "";
     position: absolute;
     top: 0;
     right: 50%;
     border-top: 1px solid black;
     width: 50%;
     height: 20px;
-}
-.tree li::after {
     right: auto;
     left: 50%;
-    border-left: 1px solid black;
-}
-
-/* We need to remove left-right connectors from elements without
-any siblings*/
-.tree li:only-child::after, .tree li:only-child::before {
-	display: none;
-}
-
-/* Remove space from the top of single children */
-.tree li:only-child {
-    padding-top: 0;
-}
-
-/* Remove left connector from first child and
-right connector from last child */
-.tree li:first-child::before, .tree li:last-child::after{
-	border: 0 none;
-}
-
-/* Adding back the vertical connector to the last nodes */
-.tree li:last-child::before{
-	border-right: 1px solid black;
+    border-left: 1px solid black; }
+  .tree li:only-child {
+    padding-top: 0; }
+    .tree li:only-child::after, .tree li:only-child::before {
+      display: none; }
+  .tree li:first-child::before {
+    border: 0 none; }
+  .tree li:last-child::after {
+    border: 0 none; }
+  .tree li:last-child::before {
+    border-right: 1px solid black;
     border-radius: 0 5px 0 0;
     -webkit-border-radius: 0 5px 0 0;
-	-moz-border-radius: 0 5px 0 0;
-}
-
-.tree li:first-child::after {
+    -moz-border-radius: 0 5px 0 0; }
+  .tree li:first-child::after {
     border-radius: 5px 0 0 0;
     -webkit-border-radius: 5px 0 0 0;
-	-moz-border-radius: 5px 0 0 0;
-}
+    -moz-border-radius: 5px 0 0 0; }
+.tree ul ul::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  border-left: 1px solid black;
+  width: 0;
+  height: 20px; }
 
-/* Time to add downward connectors from parents */
-.tree ul ul::before{
-	content: '';
-	position: absolute;
-    top: 0;
-    left: 50%;
-	border-left: 1px solid black;
-	width: 0;
-    height: 20px;
-}
+/*# sourceMappingURL=tree.css.map */
