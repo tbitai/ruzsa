@@ -1,5 +1,10 @@
 // Based on http://thecodeplayer.com/walkthrough/css3-family-tree 
 
+=border-radius($r)
+  border-radius: $r
+  -webkit-border-radius: $r
+  -moz-border-radius: $r
+
 .tree
   *
     margin: 0
@@ -52,14 +57,10 @@
 
       &::before
         border-right: 1px solid black
-        border-radius: 0 5px 0 0
-        -webkit-border-radius: 0 5px 0 0
-        -moz-border-radius: 0 5px 0 0
+        +border-radius(0 5px 0 0)
 
     &:first-child::after
-      border-radius: 5px 0 0 0
-      -webkit-border-radius: 5px 0 0 0
-      -moz-border-radius: 5px 0 0 0
+      +border-radius(5px 0 0 0)
 
   ul ul::before
     content: ''
