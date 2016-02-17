@@ -6,6 +6,7 @@
     "angular": "1.4.9",
     "angular-tree-repeat": "https://github.com/tbitai/angular-tree-repeat/tarball/npm",
     "express": "^4.13.4",
+    "formula-parser": "https://github.com/tbitai/formula-parser/tarball/npm",
     "helmet": "^1.1.0"
   }
 }
