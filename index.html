@@ -2,34 +2,36 @@
 <html ng-app="ruzsa">
 <head>
 <meta charset="UTF-8">
-<script src="./node_modules/angular/angular.min.js"></script>
-<script src="./node_modules/angular-tree-repeat/dist/angular-tree-repeat.js"></script>
+<script src="node_modules/angular/angular.min.js"></script>
+<script src="node_modules/angular-tree-repeat/dist/angular-tree-repeat.js"></script>
+<script src="node_modules/formula-parser/dist/formula-parser.js"></script>
+<script src="js/wff.js"></script>
 <script>
     angular.module('ruzsa', ['sf.treeRepeat'])
         .controller('treeController', function($scope){
             $scope.treeData = {
-                name: '(Tet(a) & Tet(b)) v (Dod(a) v Tet(b))',
+                formula: new WFF('Tet(a) & Tet(b) | Dod(a) | Tet(b)'),
                 children: [
-                    {name: 'Tet(a) & Tet(b)',
+                    {formula: new WFF('Tet(a) & Tet(b)'),
                      children: [
-                        {name: 'Tet(a)',
+                        {formula: new WFF('Tet(a)'),
                          children: [
-                             {name: 'Tet(b)'}]}]},
-                    {name: 'Dod(a) v Tet(b)',
+                             {formula: new WFF('Tet(b)')}]}]},
+                    {formula: new WFF('Dod(a) | Tet(b)'),
                      children: [
-                         {name: 'Dod(a)'},
-                         {name: 'Tet(b)'}]}]
+                         {formula: new WFF('Dod(a)')},
+                         {formula: new WFF('Tet(b)')}]}]
             };
         });
 </script>
-<link rel="stylesheet" href="./css/tree.css">
+<link rel="stylesheet" href="css/tree.css">
 </head>
 
 <body>
 <div class="tree">
 <ul ng-controller="treeController">
     <li sf-treepeat="node in children of treeData">
-        {{node.name}}
+        {{node.formula.unicode}}
         <ul>
             <li sf-treecurse></li>
         </ul>
