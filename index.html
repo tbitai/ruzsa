@@ -10,16 +10,16 @@
     angular.module('ruzsa', ['sf.treeRepeat'])
         .controller('treeController', function($scope){
             $scope.treeData = {
-                formula: new WFF('Tet(a) & Tet(b) | Dod(a) | Tet(b)'),
+                formula: new WFF('Tet(a) & Tet(b) | Dodec(a) | Tet(b)'),
                 children: [
                     {formula: new WFF('Tet(a) & Tet(b)'),
                      children: [
                         {formula: new WFF('Tet(a)'),
                          children: [
                              {formula: new WFF('Tet(b)')}]}]},
-                    {formula: new WFF('Dod(a) | Tet(b)'),
+                    {formula: new WFF('Dodec(a) | Tet(b)'),
                      children: [
-                         {formula: new WFF('Dod(a)')},
+                         {formula: new WFF('Dodec(a)')},
                          {formula: new WFF('Tet(b)')}]}]
             };
         });
