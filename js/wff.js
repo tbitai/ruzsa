@@ -51,9 +51,9 @@ function ascii2unicode(ascii) {
 
 // Tarski propositional well-formed formula class
 function WFF(ascii){
-    this.update(ascii);
+    this.edit(ascii);
 }
-WFF.prototype.update = function(ascii) {
+WFF.prototype.edit = function(ascii) {
     // First parse the ASCII, and raise error if it isn't valid.
     this.ast = TarskiPropositionalFormulaParser.parse(ascii);
 

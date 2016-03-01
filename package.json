@@ -4,6 +4,9 @@
   "private": true,
   "dependencies": {
     "angular": "1.4.9",
+    "angular-animate": "^1.5.0",
+    "angular-aria": "^1.5.0",
+    "angular-material": "^1.0.5",
     "angular-tree-repeat": "https://github.com/tbitai/angular-tree-repeat/tarball/npm",
     "express": "^4.13.4",
     "formula-parser": "https://github.com/tbitai/formula-parser/tarball/npm",
