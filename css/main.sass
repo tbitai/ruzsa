@@ -1,0 +1,18 @@
+=width($kw)
+  @if $kw == max-content
+    width: intrinsic
+    width: -moz-max-content
+    width: -webkit-max-content
+
+.tree
+  margin-left: auto
+  margin-right: auto
+  +width(max-content)
+
+.toolbar
+  position: fixed
+
+.toolbar-placeholder
+  $toolbar-height: 60px
+  $toolbar-shadow-height: 4px
+  height: $toolbar-height + $toolbar-shadow-height

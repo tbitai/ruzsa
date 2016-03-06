@@ -1,0 +1,14 @@
+.tree {
+  margin-left: auto;
+  margin-right: auto;
+  width: intrinsic;
+  width: -moz-max-content;
+  width: -webkit-max-content; }
+
+.toolbar {
+  position: fixed; }
+
+.toolbar-placeholder {
+  height: 64px; }
+
+/*# sourceMappingURL=main.css.map */
