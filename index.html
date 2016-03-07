@@ -16,14 +16,14 @@
 <!-- Own stuff -->
 <script src="js/wff.js"></script>
 <script src="js/app.js"></script>
-<link rel="stylesheet" href="css/main.css">
-<link rel="stylesheet" href="css/tree.css">
+<link rel="stylesheet" href="stylesheets/main.css">
+<link rel="stylesheet" href="stylesheets/tree.css">
 </head>
 
 <body>
 <md-toolbar md-whiteframe="4" class="toolbar">
     <div class="md-toolbar-tools">
-        <span>Ruzsa</span>
+        <img src="img/ruzsa-logo.png" height="22" class="logo"></img>
         <md-button>Open</md-button>
         <md-button>Save</md-button>
         <md-button>Check step</md-button>
@@ -31,7 +31,7 @@
 </md-toolbar>
 <div class="toolbar-placeholder"></div>
 
-<md-content>
+<md-content class="content">
 <div class="tree">
 <ul ng-controller="treeController">
     <li sf-treepeat="node in children of treeData">
@@ -55,7 +55,7 @@
 </ul>
 </div>
 <md-button class="md-fab plus_btn">
-    <md-icon md-svg-src="icons/ic_add_black_24px.svg"></md-icon>
+    <md-icon md-svg-src="img/icons/ic_add_black_24px.svg"></md-icon>
 </md-button>
 </md-content>
 </body>
