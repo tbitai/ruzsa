@@ -1,4 +1,9 @@
 angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial'])
+    .config(function($mdThemingProvider) {
+        $mdThemingProvider.theme('default')
+            .primaryPalette('blue')
+            .accentPalette('grey');
+    })
     .controller('treeController', function($scope){
         $scope.treeData = {
             formula: new WFF('Tet(a) & Tet(b) | Dodec(a) | Tet(b)'),

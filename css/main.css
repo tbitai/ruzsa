@@ -11,4 +11,9 @@
 .toolbar-placeholder {
   height: 64px; }
 
+.plus_btn {
+  position: fixed;
+  bottom: 20px;
+  right: 10px; }
+
 /*# sourceMappingURL=main.css.map */
