@@ -45,7 +45,11 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial'])
                 node.formula = newFormula;
                 node.underEdit = false;
             } catch (ex) {
-                alert(ex);  // TODO: show this below the input
+                if (ex instanceof SyntaxError){
+                    alert(ex);  // TODO: show this below the input
+                } else {
+                    throw ex;
+                }
             }
         };
     });
