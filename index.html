@@ -12,6 +12,7 @@
 <script src="node_modules/angular-aria/angular-aria.min.js"></script>
 <script src="node_modules/angular-material/angular-material.min.js"></script>
 <link rel="stylesheet" href="node_modules/angular-material/angular-material.min.css">
+<script src="node_modules/angular-messages/angular-messages.min.js"></script>
 
 <!-- Own stuff -->
 <script src="js/wff.js"></script>
@@ -43,6 +44,10 @@
                 <md-input-container>
                     <input type="text"
                            ng-model="node.input">
+                    <div ng-messages="node.error" role="alert" md-auto-hide="false">
+                        <div ng-message="unmatchedParenthesis">Unmatched parenthesis!</div>
+                        <div ng-message="other">Not a well-formed formula!</div>
+                    </div>
                 </md-input-container>
             </form>
             <span ng-switch-default

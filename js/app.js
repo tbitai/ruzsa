@@ -1,4 +1,4 @@
-angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial'])
+angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages'])
     .config(function($mdThemingProvider) {
         $mdThemingProvider.theme('default')
             .primaryPalette('blue')
@@ -41,12 +41,18 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial'])
         };
         $scope.submit = function(node) {
             try {
+                node.error = {};
                 var newFormula = new WFF(node.input);
                 node.formula = newFormula;
                 node.underEdit = false;
             } catch (ex) {
                 if (ex instanceof SyntaxError){
-                    alert(ex);  // TODO: show this below the input
+                    var msg = ex.message;
+                    if (msg == 'Invalid formula! Found unmatched parenthesis.'){
+                        node.error = {unmatchedParenthesis: true};
+                    } else {
+                        node.error = {other: true};
+                    }
                 } else {
                     throw ex;
                 }
