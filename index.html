@@ -16,6 +16,7 @@
 
 <!-- Own stuff -->
 <script src="js/wff.js"></script>
+<script src="js/traverse.js"></script>
 <script src="js/app.js"></script>
 <link rel="stylesheet" href="stylesheets/main.css">
 <link rel="stylesheet" href="stylesheets/tree.css">
@@ -23,7 +24,7 @@
 <title>Ruzsa</title>
 </head>
 
-<body>
+<body ng-controller="treeController">
 <md-toolbar md-whiteframe="4" class="toolbar">
     <div class="md-toolbar-tools">
         <img src="img/ruzsa-logo.png" height="22" class="logo"></img>
@@ -36,7 +37,7 @@
 
 <md-content class="content">
 <div class="tree">
-<ul ng-controller="treeController">
+<ul>
     <li sf-treepeat="node in children of treeData">
         <div ng-switch="node.underEdit">
             <form ng-switch-when="true"
@@ -61,7 +62,8 @@
     </li>
 </ul>
 </div>
-<md-button class="md-fab plus_btn">
+<md-button class="md-fab plus_btn"
+           ng-click="addLeaves()">
     <md-icon md-svg-src="img/icons/ic_add_black_24px.svg"></md-icon>
 </md-button>
 </md-content>
