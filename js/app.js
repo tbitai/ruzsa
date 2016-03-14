@@ -5,6 +5,7 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages'])
             .accentPalette('grey');
     })
     .controller('treeController', function($scope){
+        /*
         $scope.treeData = {
             formula: new WFF('Tet(a) & Tet(b) | Dodec(a) | Tet(b)'),
             editable: false,
@@ -39,6 +40,8 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages'])
                       underEdit: false,
                       input: 'Tet(b)'}]}]
         };
+        */
+        $scope.treeData = null;
         $scope.submit = function(node) {
             try {
                 node.error = {};
@@ -59,15 +62,20 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages'])
             }
         };
         $scope.addLeaves = function() {
-            traverse($scope.treeData, function(node) {
-                if (!('children' in node) &&
-                    node.formula  // exclude newly added leaves
-                ) {
-                    node.children = [{formula: null,
-                                      editable: true,
-                                      underEdit: true,
-                                      input: ''}];
-                }
-            });
+            var emptyNode = {formula: null,
+                             editable: true,
+                             underEdit: true,
+                             input: ''}
+            if (!$scope.treeData) {
+                $scope.treeData = emptyNode;
+            } else {
+                traverse($scope.treeData, function(node) {
+                    if (!('children' in node) &&
+                        node.formula  // exclude newly added leaves
+                    ) {
+                        node.children = [emptyNode];
+                    }
+                });
+            }
         };
     });
