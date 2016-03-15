@@ -1,7 +1,7 @@
 var variableKey = 'var';
 var unaries = [
     // Logical symbols
-    {symbol: '~',         key: 'not',       precedence: 5},
+    {symbol: '¬',         key: 'not',       precedence: 5},
 
     // Tarski predicate symbols
     {symbol: 'Tet',       key: 'tet',       precedence: 5},
@@ -25,10 +25,10 @@ var unaries = [
 ];
 var binaries = [
     // Logical symbols
-    {symbol: '&',         key: 'and',       precedence: 3, associativity: 'right'},
-    {symbol: '|',         key: 'or',        precedence: 2, associativity: 'right'},
-    {symbol: '->',        key: 'impl',      precedence: 1, associativity: 'right'},
-    {symbol: '<->',       key: 'equi',      precedence: 0, associativity: 'right'},
+    {symbol: '∧',         key: 'and',       precedence: 3, associativity: 'right'},
+    {symbol: '∨',         key: 'or',        precedence: 2, associativity: 'right'},
+    {symbol: '→',         key: 'impl',      precedence: 1, associativity: 'right'},
+    {symbol: '↔',         key: 'equi',      precedence: 0, associativity: 'right'},
 
     // Tarski predicate symbols
     {symbol: '=',         key: 'equa',      precedence: 4, associativity: 'right'},
@@ -40,23 +40,13 @@ var binaries = [
 var TarskiPropositionalFormulaParser = new FormulaParser(variableKey, unaries, binaries);
 
 
-function ascii2unicode(ascii) {
-    return ascii.replace(/~/g,    '\u00ac')
-                .replace(/&/g,    '\u2227')
-                .replace(/\|/g,   '\u2228')
-                .replace(/->/g,   '\u2192')
-                .replace(/<->/g,  '\u2194');
-}
-
-
 // Tarski propositional well-formed formula class
-function WFF(ascii){
-    this.edit(ascii);
+function WFF(unicode){
+    this.edit(unicode);
 }
-WFF.prototype.edit = function(ascii) {
-    // First parse the ASCII, and raise error if it isn't valid.
-    this.ast = TarskiPropositionalFormulaParser.parse(ascii);
+WFF.prototype.edit = function(unicode) {
+    // First parse the Unicode, and raise error if it isn't valid.
+    this.ast = TarskiPropositionalFormulaParser.parse(unicode);
 
-    this.ascii = ascii;
-    this.unicode = ascii2unicode(this.ascii);
+    this.unicode = unicode;
 };

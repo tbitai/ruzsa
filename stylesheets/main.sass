@@ -12,9 +12,10 @@
 .toolbar
   position: fixed
 
+$toolbar-height: 60px
+$toolbar-shadow-height: 4px
+
 .toolbar-placeholder
-  $toolbar-height: 60px
-  $toolbar-shadow-height: 4px
   height: $toolbar-height + $toolbar-shadow-height
 
 .plus_btn
@@ -27,3 +28,26 @@
 
 .content
   padding-top: 20px
+
+#virtual_keyboard
+  position: fixed
+  top: $toolbar-height + $toolbar-shadow-height + 30px
+  right: 18px
+
+  $padding-top-bottom: 8px
+  padding-top:    $padding-top-bottom
+  padding-bottom: $padding-top-bottom
+
+  $padding-left-right: 5px
+  padding-left:  $padding-left-right
+  padding-right: $padding-left-right
+
+.connective_btn
+  min-width: 43px
+
+.tarski_symbol_btn
+  text-transform: none
+
+#connective_btns
+  // Adjust left margin w/ table content
+  margin-left: 3px
