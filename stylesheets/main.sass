@@ -4,19 +4,22 @@
     width: -moz-max-content
     width: -webkit-max-content
 
+$vkb_width: 341px
+
 .tree
   margin-left: auto
   margin-right: auto
   +width(max-content)
+  padding-right: $vkb_width
 
 .toolbar
   position: fixed
 
-$toolbar-height: 60px
-$toolbar-shadow-height: 4px
+$toolbar_height: 60px
+$toolbar_shadow_height: 4px
 
 .toolbar-placeholder
-  height: $toolbar-height + $toolbar-shadow-height
+  height: $toolbar_height + $toolbar_shadow_height
 
 .plus_btn
   position: fixed
@@ -26,12 +29,14 @@ $toolbar-shadow-height: 4px
 .logo
   margin-right: 30px
 
+$formula_margin-top-bottom: 7px
+
 .content
-  padding-top: 20px
+  padding-top: 20px - $formula_margin-top-bottom
 
 #virtual_keyboard
   position: fixed
-  top: $toolbar-height + $toolbar-shadow-height + 30px
+  top: $toolbar_height + $toolbar_shadow_height + 30px
   right: 18px
 
   $padding-top-bottom: 8px
@@ -51,3 +56,7 @@ $toolbar-shadow-height: 4px
 #connective_btns
   // Adjust left margin w/ table content
   margin-left: 3px
+
+.formula
+  margin-bottom: $formula_margin-top-bottom
+  margin-top:    $formula_margin-top-bottom

@@ -14,13 +14,13 @@
 <link rel="stylesheet" href="node_modules/angular-material/angular-material.min.css">
 <script src="node_modules/angular-messages/angular-messages.min.js"></script>
 <script src="node_modules/jquery/dist/jquery.min.js"></script>
+<link rel="stylesheet" href="stylesheets/tree.css">
 
 <!-- Own stuff -->
 <script src="js/wff.js"></script>
 <script src="js/traverse.js"></script>
 <script src="js/app.js"></script>
 <link rel="stylesheet" href="stylesheets/main.css">
-<link rel="stylesheet" href="stylesheets/tree.css">
 <link rel="shortcut icon" href="img/favicon.png">
 <title>Ruzsa</title>
 </head>
@@ -59,10 +59,11 @@
                     </div>
                 </md-input-container>
             </form>
-            <span ng-switch-default
-                  ng-click="node.editable ? node.underEdit = true : {}">
+            <div ng-switch-default
+                 ng-click="node.editable ? node.underEdit = true : {}"
+                 class="formula">
                 {{node.formula.unicode}}
-            </span>
+            </div>
         </div>
         <ul>
             <li sf-treecurse></li>

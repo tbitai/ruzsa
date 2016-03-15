@@ -3,7 +3,8 @@
   margin-right: auto;
   width: intrinsic;
   width: -moz-max-content;
-  width: -webkit-max-content; }
+  width: -webkit-max-content;
+  padding-right: 341px; }
 
 .toolbar {
   position: fixed; }
@@ -20,7 +21,7 @@
   margin-right: 30px; }
 
 .content {
-  padding-top: 20px; }
+  padding-top: 13px; }
 
 #virtual_keyboard {
   position: fixed;
@@ -39,5 +40,9 @@
 
 #connective_btns {
   margin-left: 3px; }
+
+.formula {
+  margin-bottom: 7px;
+  margin-top: 7px; }
 
 /*# sourceMappingURL=main.css.map */
