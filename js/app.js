@@ -5,6 +5,7 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages'])
             .accentPalette('grey');
     })
     .controller('treeController', function($scope, $mdDialog){
+        /*
         $scope.treeData = {
             formula: new WFF('Tet(a) ∧ Tet(b) ∨ Dodec(a) ∨ Tet(b)'),
             editable: false,
@@ -39,8 +40,8 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages'])
                       underEdit: false,
                       input: 'Tet(b)'}]}]
         };
-        /*
-        $scope.treeData = null; */
+        */
+        $scope.treeData = null;
         $scope.setFormula = function (node, formula) {
             node.formula = formula;
             node.underEdit = false;
@@ -81,15 +82,17 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages'])
         };
         $scope.checkForEmptyNodes = function () {
             var emptyNodesPresent = false;
-            traverse($scope.treeData, function (node) {
-                if (!(node.formula)) {
-                    $scope.showEmptyNodeAlert();
-                    emptyNodesPresent = true;
+            if ($scope.treeData) {
+                traverse($scope.treeData, function (node) {
+                    if (!(node.formula)) {
+                        $scope.showEmptyNodeAlert();
+                        emptyNodesPresent = true;
 
-                    // Break traverse
-                    return true;
-                }
-            });
+                        // Break traverse
+                        return true;
+                    }
+                });
+            }
             return emptyNodesPresent;
         };
         $scope.greatestConnectId = 0;
