@@ -19,6 +19,7 @@
 <!-- Own stuff -->
 <script src="js/wff.js"></script>
 <script src="js/traverse.js"></script>
+<script src="js/clone.js"></script>
 <script src="js/app.js"></script>
 <link rel="stylesheet" href="stylesheets/main.css">
 <link rel="shortcut icon" href="img/favicon.png">
@@ -59,11 +60,33 @@
                     </div>
                 </md-input-container>
             </form>
-            <div ng-switch-default
-                 ng-click="node.editable ? node.underEdit = true : {}"
-                 class="formula">
-                {{node.formula.unicode}}
-            </div>
+            <md-fab-speed-dial ng-switch-default
+                               md-direction="right"
+                               ng-mouseenter="node.hovered = true"
+                               ng-mouseleave="node.hovered = false">
+                <md-fab-trigger>
+                    <div ng-click="node.editable ? node.underEdit = true : {}"
+                         ng-class="{formula: true,
+                                    candidate: node.candidate}">
+                        {{node.formula.unicode}}
+                    </div>
+                </md-fab-trigger>
+                <md-fab-actions ng-show="node.hovered"
+                                class="step_btns">
+                    <md-button class="md-fab md-mini step_btn"
+                               ng-click="addCandidates('or', node)">
+                        <md-icon md-svg-src="img/icons/or.svg"></md-icon>
+                    </md-button>
+                    <md-button class="md-fab md-mini step_btn"
+                               ng-click="addCandidates('and', node)">
+                        <md-icon md-svg-src="img/icons/and.svg"></md-icon>
+                    </md-button>
+                    <md-button class="md-fab md-mini step_btn"
+                               ng-click="addCandidates('equi', node)">
+                        <md-icon md-svg-src="img/icons/equi.svg"></md-icon>
+                    </md-button>
+                </md-fab-actions>
+            </md-fab-speed-dial>
         </div>
         <ul>
             <li sf-treecurse></li>
