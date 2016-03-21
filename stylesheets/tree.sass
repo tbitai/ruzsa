@@ -6,6 +6,7 @@
   -moz-border-radius: $r
 
 $border: 1px solid black
+$line_height: 25px
 
 .tree
   *
@@ -13,7 +14,7 @@ $border: 1px solid black
     padding: 0
 
   ul
-    padding-top: 20px
+    padding-top: $line_height
     position: relative
 
   li
@@ -21,7 +22,7 @@ $border: 1px solid black
     text-align: center
     list-style-type: none
     position: relative
-    padding: 20px 5px 0 5px
+    padding: $line_height 5px 0 5px
 
     &::before
       content: ''
@@ -30,7 +31,7 @@ $border: 1px solid black
       right: 50%
       border-top: $border
       width: 50%
-      height: 20px
+      height: $line_height
 
     &::after
       content: ''
@@ -39,7 +40,7 @@ $border: 1px solid black
       right: 50%
       border-top: $border
       width: 50%
-      height: 20px
+      height: $line_height
       right: auto
       left: 50%
       border-left: $border
@@ -71,4 +72,4 @@ $border: 1px solid black
     left: 50%
     border-left: $border
     width: 0
-    height: 20px
+    height: $line_height

@@ -50,3 +50,8 @@ WFF.prototype.edit = function(unicode) {
 
     this.unicode = unicode;
 };
+
+
+function compareFormulas(formula, ref) {
+    return compareObjects(formula.ast, ref.ast);
+}

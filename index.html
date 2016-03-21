@@ -10,6 +10,7 @@
 <script src="node_modules/formula-parser/dist/formula-parser.js"></script>
 <script src="node_modules/angular-animate/angular-animate.min.js"></script>
 <script src="node_modules/angular-aria/angular-aria.min.js"></script>
+<script src="node_modules/angular-sanitize/angular-sanitize.min.js"></script>
 <script src="node_modules/angular-material/angular-material.min.js"></script>
 <link rel="stylesheet" href="node_modules/angular-material/angular-material.min.css">
 <script src="node_modules/angular-messages/angular-messages.min.js"></script>
@@ -17,9 +18,12 @@
 <link rel="stylesheet" href="stylesheets/tree.css">
 
 <!-- Own stuff -->
+<script src="js/equi.js"></script>
+<script src="js/compareObjects.js"></script>
+<script src="js/clone.js"></script>
 <script src="js/wff.js"></script>
 <script src="js/traverse.js"></script>
-<script src="js/clone.js"></script>
+<script src="js/compareFormulaTrees.js"></script>
 <script src="js/app.js"></script>
 <link rel="stylesheet" href="stylesheets/main.css">
 <link rel="shortcut icon" href="img/favicon.png">
@@ -30,9 +34,18 @@
 <md-toolbar md-whiteframe="4" class="toolbar">
     <div class="md-toolbar-tools">
         <img src="img/ruzsa-logo.png" height="20" class="logo"></img>
-        <md-button ng-disabled="true">Open</md-button>
-        <md-button ng-disabled="true">Save</md-button>
-        <md-button>Check step</md-button>
+        <div id="action_bar">
+            <md-button ng-disabled="true">Open</md-button>
+            <md-button ng-disabled="true">Save</md-button>
+            <md-button ng-disabled="!stepInProgress"
+                       ng-click="checkStep()">
+                Check step
+            </md-button>
+            <md-button ng-disabled="!stepInProgress"
+                       ng-click="cancelStep()">
+                Cancel step
+            </md-button>
+        </div>
     </div>
 </md-toolbar>
 <div class="toolbar-placeholder"></div>
@@ -67,11 +80,12 @@
                 <md-fab-trigger>
                     <div ng-click="node.editable ? node.underEdit = true : {}"
                          ng-class="{formula: true,
-                                    candidate: node.candidate}">
+                                    candidate: node.candidate,
+                                    highlighted: node.underBreakingDown}">
                         {{node.formula.unicode}}
                     </div>
                 </md-fab-trigger>
-                <md-fab-actions ng-show="node.hovered"
+                <md-fab-actions ng-show="node.breakable && node.hovered"
                                 class="step_btns">
                     <md-button class="md-fab md-mini step_btn"
                                ng-click="addCandidates('or', node)">
@@ -84,6 +98,10 @@
                     <md-button class="md-fab md-mini step_btn"
                                ng-click="addCandidates('equi', node)">
                         <md-icon md-svg-src="img/icons/equi.svg"></md-icon>
+                    </md-button>
+                    <md-button class="md-fab md-mini step_btn"
+                               ng-click="addCandidates('double_not', node)">
+                        <md-icon md-svg-src="img/icons/double_not.svg"></md-icon>
                     </md-button>
                 </md-fab-actions>
             </md-fab-speed-dial>

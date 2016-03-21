@@ -4,6 +4,11 @@
     width: -moz-max-content
     width: -webkit-max-content
 
+=border-radius($r)
+  border-radius: $r
+  -webkit-border-radius: $r
+  -moz-border-radius: $r
+
 $vkb_width: 341px
 
 .tree
@@ -60,6 +65,7 @@ $formula_margin-top-bottom: 7px
 .formula
   margin-bottom: $formula_margin-top-bottom
   margin-top:    $formula_margin-top-bottom
+  padding: 8px
 
 $step_btn_margin-left-right: 7px
 
@@ -72,3 +78,11 @@ $step_btn_margin-left-right: 7px
 
 .candidate
   color: #cccccc
+
+#action_bar .md-button
+  min-width: 60px
+
+.highlighted
+  // Copy of MD focused btn style
+  background-color: #ebebeb
+  +border-radius(3px)

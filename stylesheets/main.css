@@ -43,7 +43,8 @@
 
 .formula {
   margin-bottom: 7px;
-  margin-top: 7px; }
+  margin-top: 7px;
+  padding: 8px; }
 
 .step_btn {
   margin-left: 7px;
@@ -54,5 +55,14 @@
 
 .candidate {
   color: #cccccc; }
+
+#action_bar .md-button {
+  min-width: 60px; }
+
+.highlighted {
+  background-color: #ebebeb;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px; }
 
 /*# sourceMappingURL=main.css.map */
