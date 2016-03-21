@@ -16,7 +16,7 @@ app.use(function forceHTTPS(req, res, next) {
         return next();
     }
 });
-app.use('/test', express.static(__dirname));
+app.use('/', express.static(__dirname));
 
 app.listen(port, host, function() {
     console.log('ruzsa listening on ' + host + ':' + port);
