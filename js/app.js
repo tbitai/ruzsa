@@ -205,19 +205,19 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
                         for (i in permutationsOfTwo) {
                             p = permutationsOfTwo[i];
                             correctContinuations.push({
-                                formula: node.formula,
+                                formula: null,
                                 children: [{formula: {ast: ast.or[p[0]]}},
                                            {formula: {ast: ast.or[p[1]]}}]
                             });
                         }
                     } else if ('impl' in ast) {
                         correctContinuations.push({
-                            formula: node.formula,
+                            formula: null,
                             children: [{formula: {ast: {not: ast.impl[0]}}},
                                        {formula: {ast: ast.impl[1]}}]
                         });
                         correctContinuations.push({
-                            formula: node.formula,
+                            formula: null,
                             children: [{formula: {ast: ast.impl[1]}},
                                        {formula: {ast: {not: ast.impl[0]}}}]
                         });
@@ -225,7 +225,7 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
                         for (i in permutationsOfTwo) {
                             p = permutationsOfTwo[i];
                             correctContinuations.push({
-                                formula: node.formula,
+                                formula: null,
                                 children: [{formula: {ast: ast.and[p[0]]},
                                             children: [{formula: {ast: ast.and[p[1]]}}]}]
                             });
@@ -236,14 +236,14 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
                             for (j in permutationsOfTwo) {
                                 pInner = permutationsOfTwo[j];
                                 correctContinuations.push({
-                                    formula: node.formula,
+                                    formula: null,
                                     children: [{formula: {ast: ast.equi[pOuter[0]]},
                                                 children: [{formula: {ast: ast.equi[pOuter[1]]}}]},
                                                {formula: {ast: {not: ast.equi[pInner[0]]}},
                                                 children: [{formula: {ast: {not: ast.equi[pInner[1]]}}}]}]
                                 });
                                 correctContinuations.push({
-                                    formula: node.formula,
+                                    formula: null,
                                     children: [{formula: {ast: {not: ast.equi[pOuter[0]]}},
                                                 children: [{formula: {ast: {not: ast.equi[pOuter[1]]}}}]},
                                                {formula: {ast: ast.equi[pInner[0]]},
@@ -253,7 +253,7 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
                         }
                     } else if ('not' in ast && 'not' in ast.not) {
                         correctContinuations.push({
-                            formula: node.formula,
+                            formula: null,
                             children: [{formula: {ast: ast.not.not}}]
                         });
                     }
@@ -268,8 +268,11 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
                                 });
                             }
                             var continuationIsCorrect = false;
+                            var cont;
                             for (var i in correctContinuations) {
-                                if (compareFormulaTrees(n, correctContinuations[i])) {
+                                cont = correctContinuations[i];
+                                cont.formula = n.formula;
+                                if (compareFormulaTrees(n, cont)) {
                                     continuationIsCorrect = true;
                                     break;
                                 }
