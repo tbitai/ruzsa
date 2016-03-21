@@ -71,7 +71,7 @@
                     <input type="text"
                            ng-model="node.input"
                            onfocus="makeActive(this)"
-                           oninput="checkComma(this)">
+                           oninput="checkCommaAndParenthesis(this)">
                     <div ng-messages="node.error" role="alert" md-auto-hide="false">
                         <div ng-message="unmatchedParenthesis">Unmatched parenthesis!</div>
                         <div ng-message="other">Not a sentence!</div>
@@ -139,11 +139,13 @@
                 }
             }
         }
-        function checkComma(el) {
+        function checkCommaAndParenthesis(el) {
             var p = el.selectionStart;
             var c = el.value[p];
             if (c == ',') {
                 setCursorPosition(el, p + 2);
+            } else if (c == ')') {
+                setCursorPosition(el, p + 1);
             }
         }
     </script>
