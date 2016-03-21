@@ -6,6 +6,15 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
     })
     .controller('treeController', function($scope, $mdDialog){
         $scope.treeData = null;
+
+        // Fix superfluous lines from leaves -- JS part
+        $scope.$watch('treeData', function () {
+            $('ul').removeClass('empty_ul');
+            $('ul').filter(function () {
+                return $(this).children().length === 0;
+            }).addClass('empty_ul');
+        }, true);
+
         $scope.setFormula = function (node, formula) {
             node.formula = formula;
             node.underEdit = false;
