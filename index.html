@@ -70,7 +70,8 @@
                 <md-input-container>
                     <input type="text"
                            ng-model="node.input"
-                           onfocus="makeActive(this)">
+                           onfocus="makeActive(this)"
+                           oninput="checkComma(this)">
                     <div ng-messages="node.error" role="alert" md-auto-hide="false">
                         <div ng-message="unmatchedParenthesis">Unmatched parenthesis!</div>
                         <div ng-message="other">Not a sentence!</div>
@@ -118,10 +119,32 @@
 </div>
 <div id="virtual_keyboard" md-whiteframe="4">
     <script>
-        function fireVirtualKey(keyStr) {
-            $('.active_input').val(
-                $('.active_input').val() + keyStr
-            );
+        function setCursorPosition(el, pos) {
+            el.setSelectionRange(pos, pos);
+        }
+        function fireVirtualKey(keyStr, cursorPos) {
+            var i = document.getElementsByClassName('active_input')[0];
+            if (i !== undefined) {
+                var p = i.selectionStart;
+                var v = i.value;
+                var before = v.slice(0, p);
+                var after =  v.slice(p);
+                i.value = before + keyStr + after;
+                var l = i.value.length;
+                var defaultPos = l - after.length;
+                setCursorPosition(i, defaultPos);
+                i.focus();
+                if (cursorPos !== undefined) {
+                    setCursorPosition(i, defaultPos + cursorPos);
+                }
+            }
+        }
+        function checkComma(el) {
+            var p = el.selectionStart;
+            var c = el.value[p];
+            if (c == ',') {
+                setCursorPosition(el, p + 2);
+            }
         }
     </script>
     <div id="connective_btns">
@@ -134,68 +157,68 @@
     <table>
         <tr>
             <td>
-                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('Tet()')">Tet</md-button>
+                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('Tet()', -1)">Tet</md-button>
             </td>
             <td>
-                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('Small()')">Small</md-button>
+                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('Small()', -1)">Small</md-button>
             </td>
             <td>
-                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('Smaller(, )')">Smaller</md-button>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('Cube()')">Cube</md-button>
-            </td>
-            <td>
-                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('Medium()')">Medium</md-button>
-            </td>
-            <td>
-                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('SameSize(, )')">SameSize</md-button>
+                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('Smaller(, )', -3)">Smaller</md-button>
             </td>
         </tr>
         <tr>
             <td>
-                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('Dodec()')">Dodec</md-button>
+                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('Cube()', -1)">Cube</md-button>
             </td>
             <td>
-                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('Large()')">Large</md-button>
+                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('Medium()', -1)">Medium</md-button>
             </td>
             <td>
-                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('Larger(, )')">Larger</md-button>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('Adjoins(, )')">Adjoins</md-button>
-            </td>
-            <td>
-                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('BackOf(, )')">BackOf</md-button>
-            </td>
-            <td>
-                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('SameShape(, )')">SameShape</md-button>
+                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('SameSize(, )', -3)">SameSize</md-button>
             </td>
         </tr>
         <tr>
             <td>
-                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('LeftOf(, )')">LeftOf</md-button>
+                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('Dodec()', -1)">Dodec</md-button>
             </td>
             <td>
-                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('Between(, , )')">Between</md-button>
+                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('Large()', -1)">Large</md-button>
             </td>
             <td>
-                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('RightOf(, )')">RightOf</md-button>
+                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('Larger(, )', -3)">Larger</md-button>
             </td>
         </tr>
         <tr>
             <td>
-                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('SameCol(, )')">SameCol</md-button>
+                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('Adjoins(, )', -3)">Adjoins</md-button>
             </td>
             <td>
-                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('FrontOf(, )')">FrontOf</md-button>
+                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('BackOf(, )', -3)">BackOf</md-button>
             </td>
             <td>
-                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('SameRow(, )')">SameRow</md-button>
+                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('SameShape(, )', -3)">SameShape</md-button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('LeftOf(, )', -3)">LeftOf</md-button>
+            </td>
+            <td>
+                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('Between(, , )', -5)">Between</md-button>
+            </td>
+            <td>
+                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('RightOf(, )', -3)">RightOf</md-button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('SameCol(, )', -3)">SameCol</md-button>
+            </td>
+            <td>
+                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('FrontOf(, )', -3)">FrontOf</md-button>
+            </td>
+            <td>
+                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('SameRow(, )', -3)">SameRow</md-button>
             </td>
         </tr>
     </table>

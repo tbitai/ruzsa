@@ -24,8 +24,10 @@ $vkb_width: 341px
 .toolbar
   position: fixed
 
-  // Adjust with content
-  padding-right: 5px
+  // Adjust right padding with content and left padding with right padding
+  $padding-left-right: 5px
+  padding-left:  $padding-left-right
+  padding-right: $padding-left-right
 
 $toolbar_height: 60px
 $toolbar_shadow_height: 4px
