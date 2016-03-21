@@ -5,7 +5,11 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
             .accentPalette('grey');
     })
     .controller('treeController', function($scope, $mdDialog){
-        $scope.treeData = null;
+        $scope.treeData = {formula: null,
+                          editable: true,
+                          breakable: true,
+                          underEdit: true,
+                          input: ''};
 
         // Fix superfluous lines from leaves -- JS part
         $scope.$watch('treeData', function () {
