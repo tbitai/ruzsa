@@ -71,7 +71,8 @@
                     <input type="text"
                            ng-model="node.input"
                            onfocus="makeActive(this)"
-                           oninput="checkCommaAndParenthesis(this)">
+                           oninput="checkCommaAndParenthesis(this)"
+                           aria-label="Input">
                     <div ng-messages="node.error" role="alert" md-auto-hide="false">
                         <div ng-message="unmatchedParenthesis">Unmatched parenthesis!</div>
                         <div ng-message="other">Not a sentence!</div>
@@ -93,19 +94,23 @@
                 <md-fab-actions ng-show="node.breakable && node.hovered"
                                 class="step_btns">
                     <md-button class="md-fab md-mini step_btn"
-                               ng-click="addCandidates('or', node)">
+                               ng-click="addCandidates('or', node)"
+                               aria-label="Branch">
                         <md-icon md-svg-src="img/icons/or.svg"></md-icon>
                     </md-button>
                     <md-button class="md-fab md-mini step_btn"
-                               ng-click="addCandidates('and', node)">
+                               ng-click="addCandidates('and', node)"
+                               aria-label="Add two nodes">
                         <md-icon md-svg-src="img/icons/and.svg"></md-icon>
                     </md-button>
                     <md-button class="md-fab md-mini step_btn"
-                               ng-click="addCandidates('equi', node)">
+                               ng-click="addCandidates('equi', node)"
+                               aria-label="Branch and add two nodes for each branch">
                         <md-icon md-svg-src="img/icons/equi.svg"></md-icon>
                     </md-button>
                     <md-button class="md-fab md-mini step_btn"
-                               ng-click="addCandidates('double_not', node)">
+                               ng-click="addCandidates('double_not', node)"
+                               aria-label="Add one node">
                         <md-icon md-svg-src="img/icons/double_not.svg"></md-icon>
                     </md-button>
                 </md-fab-actions>
@@ -150,11 +155,21 @@
         }
     </script>
     <div id="connective_btns">
-        <md-button class="md-raised connective_btn" onclick="fireVirtualKey(' ∨ ')">∨</md-button>
-        <md-button class="md-raised connective_btn" onclick="fireVirtualKey(' ∧ ')">∧</md-button>
-        <md-button class="md-raised connective_btn" onclick="fireVirtualKey('¬')">¬</md-button>
-        <md-button class="md-raised connective_btn" onclick="fireVirtualKey(' → ')">→</md-button>
-        <md-button class="md-raised connective_btn" onclick="fireVirtualKey(' ↔ ')">↔</md-button>
+        <md-button class="md-raised connective_btn"
+                   onclick="fireVirtualKey(' ∨ ')"
+                   aria-label="or">∨</md-button>
+        <md-button class="md-raised connective_btn"
+                   onclick="fireVirtualKey(' ∧ ')"
+                   aria-label="and">∧</md-button>
+        <md-button class="md-raised connective_btn"
+                   onclick="fireVirtualKey('¬')"
+                   aria-label="not">¬</md-button>
+        <md-button class="md-raised connective_btn"
+                   onclick="fireVirtualKey(' → ')"
+                   aria-label="implies">→</md-button>
+        <md-button class="md-raised connective_btn"
+                   onclick="fireVirtualKey(' ↔ ')"
+                   aria-label="equivalent">↔</md-button>
     </div>
     <table>
         <tr>
@@ -226,7 +241,8 @@
     </table>
 </div>
 <md-button class="md-fab plus_btn"
-           ng-click="addLeaves()">
+           ng-click="addLeaves()"
+           aria-label="Add">
     <md-icon md-svg-src="img/icons/ic_add_black_24px.svg"></md-icon>
 </md-button>
 </md-content>
