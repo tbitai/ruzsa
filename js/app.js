@@ -49,11 +49,13 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
                 }
             }
         };
+        $scope.dialogFocusOnOpen = false;
         $scope.showEmptyNodeAlert = function () {
             var alert = $mdDialog.alert({
                 title: 'This operation is not possible now',
                 textContent: 'You have to fill out empty sentence inputs first.',
-                ok: 'OK'
+                ok: 'OK',
+                focusOnOpen: $scope.dialogFocusOnOpen
             });
             $mdDialog.show(alert);
         };
@@ -76,7 +78,8 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
             var alert = $mdDialog.alert({
                 title: 'This operation is not possible now',
                 textContent: 'You have to finish or cancel step first.',
-                ok: 'OK'
+                ok: 'OK',
+                focusOnOpen: $scope.dialogFocusOnOpen
             });
             $mdDialog.show(alert);
         };
@@ -184,7 +187,8 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
             var alert = $mdDialog.alert({
                 title: 'Step is incorrect',
                 htmlContent: 'You can edit the sentence candidates and check again, <br>or cancel the step and initiate another operation.',
-                ok: 'OK'
+                ok: 'OK',
+                focusOnOpen: $scope.dialogFocusOnOpen
             });
             $mdDialog.show(alert);
         };
