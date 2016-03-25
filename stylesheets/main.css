@@ -57,7 +57,11 @@
   margin-right: 7px; }
 
 .step_btns {
-  margin-left: 10.5px; }
+  position: absolute;
+  z-index: 1; }
+
+.step_speed_dial {
+  z-index: auto; }
 
 .candidate {
   color: #cccccc; }

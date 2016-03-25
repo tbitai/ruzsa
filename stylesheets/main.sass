@@ -86,7 +86,13 @@ $step_btn_margin-left-right: 7px
   margin-right: $step_btn_margin-left-right
 
 .step_btns
-  margin-left:  $step_btn_margin-left-right * 1.5
+  position: absolute
+
+  // Fix mouse moving over stuff between btns
+  z-index: 1
+
+.step_speed_dial
+  z-index: auto
 
 .candidate
   color: #cccccc
