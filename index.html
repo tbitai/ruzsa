@@ -64,7 +64,8 @@
 </script>
 <ul>
     <li sf-treepeat="node in children of treeData">
-        <div ng-switch="node.underEdit">
+        <div ng-switch="node.underEdit"
+             class="node">
             <form ng-switch-when="true"
                   ng-submit="submit(node)">
                 <md-input-container>

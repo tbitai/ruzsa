@@ -1,5 +1,11 @@
 // Based on http://thecodeplayer.com/walkthrough/css3-family-tree
 
+=width($kw)
+  @if $kw == max-content
+    width: intrinsic
+    width: -moz-max-content
+    width: -webkit-max-content
+
 =border-radius($r)
   border-radius: $r
   -webkit-border-radius: $r
@@ -19,10 +25,14 @@ $line_height: 25px
 
   li
     float: left
-    text-align: center
     list-style-type: none
     position: relative
     padding: $line_height 5px 0 5px
+
+    .node
+      margin-left:  auto
+      margin-right: auto
+      +width(max-content)
 
     &::before
       content: ''

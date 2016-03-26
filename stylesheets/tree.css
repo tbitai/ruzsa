@@ -6,10 +6,15 @@
   position: relative; }
 .tree li {
   float: left;
-  text-align: center;
   list-style-type: none;
   position: relative;
   padding: 25px 5px 0 5px; }
+  .tree li .node {
+    margin-left: auto;
+    margin-right: auto;
+    width: intrinsic;
+    width: -moz-max-content;
+    width: -webkit-max-content; }
   .tree li::before {
     content: "";
     position: absolute;
