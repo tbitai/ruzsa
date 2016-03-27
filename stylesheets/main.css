@@ -8,6 +8,17 @@
   width: -moz-max-content;
   width: -webkit-max-content;
   padding-right: 341px; }
+  .tree ul.continuation_candidate li::before {
+    border-top: 1px solid #cccccc; }
+  .tree ul.continuation_candidate li::after {
+    border-top: 1px solid #cccccc;
+    border-left: 1px solid #cccccc; }
+  .tree ul.continuation_candidate li:last-child::before {
+    border-right: 1px solid #cccccc; }
+  .tree ul.continuation_candidate ul::before {
+    border-left: 1px solid #cccccc; }
+  .tree ul.continuation_candidate::before {
+    border-left: 1px solid #cccccc; }
 
 .toolbar {
   position: fixed;

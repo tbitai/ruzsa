@@ -39,9 +39,9 @@
     .tree li:only-child::after, .tree li:only-child::before {
       display: none; }
   .tree li:first-child::before {
-    border: 0 none; }
+    border: 0 none !important; }
   .tree li:last-child::after {
-    border: 0 none; }
+    border: 0 none !important; }
   .tree li:last-child::before {
     border-right: 1px solid black;
     border-radius: 0 5px 0 0;

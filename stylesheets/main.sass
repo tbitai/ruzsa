@@ -10,6 +10,7 @@
   -moz-border-radius: $r
 
 $vkb_width: 341px
+$candidate_color: #cccccc
 
 // Fix superfluous lines from leaves -- CSS part
 .tree .empty_ul::before
@@ -20,6 +21,22 @@ $vkb_width: 341px
   margin-right: auto
   +width(max-content)
   padding-right: $vkb_width
+
+  // Line style of continuation candidate subtrees
+  ul.continuation_candidate
+    $b: 1px solid $candidate_color
+    li
+      &::before
+        border-top:   $b
+      &::after
+        border-top:   $b
+        border-left:  $b
+      &:last-child::before
+        border-right: $b
+    ul::before
+      border-left:    $b
+    &::before
+      border-left:    $b
 
 .toolbar
   position: fixed
@@ -95,7 +112,7 @@ $step_btn_margin-left-right: 7px
   z-index: auto
 
 .candidate
-  color: #cccccc
+  color: $candidate_color
 
 #action_bar .md-button
   min-width: 60px
