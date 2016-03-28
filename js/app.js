@@ -196,6 +196,7 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
                     traverse(node, function (n) {
                         if (n.underContinuation) {
                             delete n.children;
+                            delete n.underContinuation;
                         }
                     });
                     node.underBreakingDown = false;
