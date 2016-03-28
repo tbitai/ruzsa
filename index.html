@@ -16,6 +16,7 @@
 <script src="node_modules/angular-messages/angular-messages.min.js"></script>
 <script src="node_modules/jquery/dist/jquery.min.js"></script>
 <link rel="stylesheet" href="stylesheets/tree.css">
+<script src="js/jquery.input-autoresize.js"></script>
 
 <!-- Own stuff -->
 <script src="js/equi.js"></script>
@@ -70,10 +71,11 @@
                   ng-submit="submit(node)">
                 <md-input-container>
                     <input type="text"
+                           aria-label="Input"
+                           class="formula_input"
                            ng-model="node.input"
                            onfocus="makeActive(this)"
-                           oninput="checkCommaAndParenthesis(this)"
-                           aria-label="Input">
+                           oninput="checkCommaAndParenthesis(this)">
                     <div ng-messages="node.error" role="alert" md-auto-hide="false">
                         <div ng-message="unmatchedParenthesis">Unmatched parenthesis!</div>
                         <div ng-message="other">Not a sentence!</div>
@@ -86,7 +88,7 @@
                                ng-mouseenter="node.hovered = true"
                                ng-mouseleave="node.hovered = false">
                 <md-fab-trigger>
-                    <div ng-click="node.editable ? node.underEdit = true : {}"
+                    <div ng-click="node.editable ? setUnderEdit(node) : {}"
                          ng-class="{formula: true,
                                     candidate: node.candidate,
                                     highlighted: node.underBreakingDown}">
@@ -137,6 +139,10 @@
                 var before = v.slice(0, p);
                 var after =  v.slice(p);
                 i.value = before + keyStr + after;
+
+                // Trigger input event for inputAutoresize
+                $(i).trigger('input');
+
                 var l = i.value.length;
                 var defaultPos = l - after.length;
                 setCursorPosition(i, defaultPos);

@@ -4,21 +4,44 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
             .primaryPalette('blue')
             .accentPalette('grey');
     })
-    .controller('treeController', function($scope, $mdDialog){
+    .controller('treeController', function($scope, $mdDialog, $timeout){
         $scope.treeData = {formula: null,
                           editable: true,
                           breakable: true,
                           underEdit: true,
                           input: ''};
-
-        // Fix superfluous lines from leaves -- JS part
         $scope.$watch('treeData', function () {
-            $('ul').removeClass('empty_ul');
-            $('ul').filter(function () {
-                return $(this).children().length === 0;
-            }).addClass('empty_ul');
-        }, true);
+            $timeout(function () {
+                // Fix superfluous lines from leaves -- JS part
+                $('ul').removeClass('empty_ul');
+                $('ul').filter(function () {
+                    return $(this).children().length === 0;
+                }).addClass('empty_ul');
 
+                $('.formula_input').inputAutoresize({
+                    padding: 20,
+                    minWidth: 225  // MD input width
+                });
+            }, 0, false);
+        }, true);
+        $scope.setUnderEdit = function (node) {
+            node.underEdit = true;
+
+            // Also trigger an input event on the newly created input
+            // (this is necessary because it already contains the value
+            // because of which the input possibly needs autoresize).
+            $timeout(
+                function () {
+                    $('.formula_input')  // Triggering on all formula inputs does no harm
+                        .trigger('input');
+                },
+
+                // Wait until autoresize input handler gets attached to the input
+                10,
+
+                false
+            );
+        };
         $scope.setFormula = function (node, formula) {
             node.formula = formula;
             node.underEdit = false;
