@@ -102,8 +102,17 @@ $step_btn_margin-left-right: 7px
   margin-left:  $step_btn_margin-left-right
   margin-right: $step_btn_margin-left-right
 
+.step_btns_positioner
+  position: relative
+
+  $step_btns_order: 2
+  order: $step_btns_order
+
 .step_btns
   position: absolute
+
+  $step_btn_height: 40px
+  top: -$step_btn_height / 2
 
   // Fix mouse moving over stuff between btns
   z-index: 1

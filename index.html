@@ -95,6 +95,7 @@
                         {{node.formula.unicode}}
                     </div>
                 </md-fab-trigger>
+                <div class="step_btns_positioner">
                 <md-fab-actions ng-show="node.breakable && node.hovered"
                                 class="step_btns">
                     <md-button class="md-fab md-mini step_btn"
@@ -118,6 +119,7 @@
                         <md-icon md-svg-src="img/icons/double_not.svg"></md-icon>
                     </md-button>
                 </md-fab-actions>
+                </div>
             </md-fab-speed-dial>
         </div>
         <ul ng-class="{continuation_candidate: node.underContinuation}">
