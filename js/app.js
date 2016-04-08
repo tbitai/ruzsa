@@ -47,18 +47,24 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
             node.underEdit = false;
             node.input = formula.unicode;
         };
+        $scope.greatestConnectId = 0;
+        $scope.doForConnected = function (node, f) {
+            f(node);
+            if ('connectId' in node) {
+                traverse($scope.treeData, function (n) {
+                    if (n.connectId == node.connectId) {
+                        f(n);
+                    }
+                });
+            }
+        };
         $scope.submit = function (node) {
             try {
                 node.error = {};
                 var newFormula = new WFF(node.input);
-                $scope.setFormula(node, newFormula);
-                if ('connectId' in node) {
-                    traverse($scope.treeData, function (n) {
-                        if (n.connectId == node.connectId) {
-                            $scope.setFormula(n, newFormula);
-                        }
-                    });
-                }
+                $scope.doForConnected(node, function (n) {
+                    $scope.setFormula(n, newFormula);
+                });
             } catch (ex) {
                 if (ex instanceof SyntaxError){
                     var msg = ex.message;
@@ -106,7 +112,6 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
             });
             $mdDialog.show(alert);
         };
-        $scope.greatestConnectId = 0;
         $scope.addLeaves = function () {
             if ($scope.stepInProgress) {
                 $scope.showStepInProgressAlert();
@@ -187,6 +192,9 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
                     n.underContinuation = true;
                 }
             });
+            $scope.doForConnected(node, function (n) {
+                n.editable = false;
+            });
             node.underBreakingDown = true;
             $scope.stepInProgress = true;
         };
@@ -198,6 +206,9 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
                             delete n.children;
                             delete n.underContinuation;
                         }
+                    });
+                    $scope.doForConnected(node, function (n) {
+                        n.editable = true;
                     });
                     node.underBreakingDown = false;
                     $scope.stepInProgress = false;
@@ -316,14 +327,6 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
                     if (stepIsCorrect) {
                         $scope.stepInProgress = false;
                         node.underBreakingDown = false;
-                        node.editable = false;
-                        if ('connectId' in node) {
-                            traverse($scope.treeData, function (n) {
-                                if (n.connectId == node.connectId) {
-                                    n.editable = false;
-                                }
-                            });
-                        }
                         node.breakable = false;
                         traverse(node, function (n) {
                             if (n.underContinuation) {
