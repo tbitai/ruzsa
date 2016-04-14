@@ -295,6 +295,70 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
                             formula: null,
                             children: [{formula: {ast: ast.not.not}}]
                         });
+                    } else if ('not' in ast && 'or' in ast.not) {
+                        for (i in permutationsOfTwo) {
+                            p = permutationsOfTwo[i];
+                            correctContinuations.push({
+                                formula: null,
+                                children: [{formula: {ast: {not: ast.not.or[p[0]]}},
+                                            children: [{formula: {ast: {not: ast.not.or[p[1]]}}}]}]
+                            });
+                        }
+                    } else if ('not' in ast && 'impl' in ast.not) {
+                        correctContinuations.push({
+                            formula: null,
+                            children: [{formula: {ast: ast.not.impl[0]},
+                                        children: [{formula: {ast: {not: ast.not.impl[1]}}}]}]
+                        });
+                        correctContinuations.push({
+                            formula: null,
+                            children: [{formula: {ast: {not: ast.not.impl[1]}},
+                                        children: [{formula: {ast: ast.not.impl[0]}}]}]
+                        });
+                    } else if ('not' in ast && 'and' in ast.not) {
+                        for (i in permutationsOfTwo) {
+                            p = permutationsOfTwo[i];
+                            correctContinuations.push({
+                                formula: null,
+                                children: [{formula: {ast: {not: ast.not.and[p[0]]}}},
+                                           {formula: {ast: {not: ast.not.and[p[1]]}}}]
+                            });
+                        }
+                    } else if ('not' in ast && 'equi' in ast.not) {
+                        for (i in permutationsOfTwo) {
+                            pOuter = permutationsOfTwo[i];
+                            for (j in permutationsOfTwo) {
+                                pInner = permutationsOfTwo[j];
+                                correctContinuations.push({
+                                    formula: null,
+                                    children: [{formula: {ast: {not: ast.not.equi[pOuter[0]]}},
+                                                children: [{formula: {ast: ast.not.equi[pOuter[1]]}}]},
+                                               {formula: {ast: {not: ast.not.equi[pInner[0]]}},
+                                                children: [{formula: {ast: ast.not.equi[pInner[1]]}}]}]
+                                });
+                                correctContinuations.push({
+                                    formula: null,
+                                    children: [{formula: {ast: ast.not.equi[pOuter[0]]},
+                                                children: [{formula: {ast: {not: ast.not.equi[pOuter[1]]}}}]},
+                                               {formula: {ast: ast.not.equi[pInner[0]]},
+                                                children: [{formula: {ast: {not: ast.not.equi[pInner[1]]}}}]}]
+                                });
+                                correctContinuations.push({
+                                    formula: null,
+                                    children: [{formula: {ast: {not: ast.not.equi[pOuter[0]]}},
+                                                children: [{formula: {ast: ast.not.equi[pOuter[1]]}}]},
+                                               {formula: {ast: ast.not.equi[pInner[0]]},
+                                                children: [{formula: {ast: {not: ast.not.equi[pInner[1]]}}}]}]
+                                });
+                                correctContinuations.push({
+                                    formula: null,
+                                    children: [{formula: {ast: ast.not.equi[pOuter[0]]},
+                                                children: [{formula: {ast: {not: ast.not.equi[pOuter[1]]}}}]},
+                                               {formula: {ast: {not: ast.not.equi[pInner[0]]}},
+                                                children: [{formula: {ast: ast.not.equi[pInner[1]]}}]}]
+                                });
+                            }
+                        }
                     }
                     traverse(node, function (n) {
                         if (n.underContinuation) {
