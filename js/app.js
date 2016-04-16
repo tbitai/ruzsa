@@ -9,7 +9,20 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
                           editable: true,
                           breakable: true,
                           underEdit: true,
-                          input: ''};
+                          input: '',
+                          inFocusQ: true,
+                          focusOrder: 0};
+        $scope.focusNext = function () {
+            var focusQ = $('.in_focus_q').sort(function (el1, el2) {
+                function o(el) {
+                    return parseInt(el.dataset.ruzsaFocusOrder);
+                }
+                return o(el1) - o(el2);
+            });
+            var elToFocus = $(focusQ[0]);
+            elToFocus.focus();
+            elToFocus.removeClass('in_focus_q');
+        };
         $scope.$watch('treeData', function () {
             $timeout(function () {
                 // Fix superfluous lines from leaves -- JS part
@@ -20,8 +33,12 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
 
                 $('.formula_input').inputAutoresize({
                     padding: 20,
-                    minWidth: 225  // MD input width
+                    minWidth: 160  // .formula_input width
                 });
+
+                var elToFocusFirst = $('.in_focus_q[data-ruzsa-focus-order=0]');
+                elToFocusFirst.focus();
+                elToFocusFirst.removeClass('in_focus_q');
             }, 0, false);
         }, true);
         $scope.setUnderEdit = function (node) {
@@ -65,6 +82,7 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
                 $scope.doForConnected(node, function (n) {
                     $scope.setFormula(n, newFormula);
                 });
+                $scope.focusNext();
             } catch (ex) {
                 if (ex instanceof SyntaxError){
                     var msg = ex.message;
@@ -127,16 +145,23 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
                              breakable: true,
                              underEdit: true,
                              input: '',
-                             connectId: id};
+                             connectId: id,
+                             inFocusQ: true};
             if (!$scope.treeData) {
+                emptyNode.focusOrder = 0;
                 $scope.treeData = emptyNode;
             } else {
+                var focusOrderSet = false;
                 traverse($scope.treeData, function (node) {
                     if (!('children' in node) &&
                         // Exclude newly added leaves
                         node.formula
                     ) {
                         var emptyNodeClone = clone(emptyNode);
+                        if (!focusOrderSet) {
+                            emptyNodeClone.focusOrder = 0;
+                            focusOrderSet = true;
+                        }
                         node.children = [emptyNodeClone];
                     }
                 });
@@ -151,17 +176,26 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
             if (emptyNodesPresent) {
                 return;
             }
+            function setFocusOrder(node, o) {
+                node.focusOrder = o;
+                return node;
+            }
             var candidate = {formula: null,
                              editable: true,
                              breakable: true,
                              underEdit: true,
                              input: '',
-                             candidate: true};
-            function makeDoubleCandidateClone() {
-                var doubleCandidateClone = clone(candidate);
-                doubleCandidateClone.children = [clone(candidate)];
+                             candidate: true,
+                             inFocusQ: true};
+            function makeCandidateClone(o) {
+                return setFocusOrder(clone(candidate), o);
+            }
+            function makeDoubleCandidateClone(oTop, oBtm) {
+                var doubleCandidateClone = setFocusOrder(clone(candidate), oTop);
+                doubleCandidateClone.children = [setFocusOrder(clone(candidate), oBtm)];
                 return doubleCandidateClone;
             }
+            var o = 0;
             traverse(node, function (n) {
                 if (!('children' in n) &&
                     // Exclude newly added nodes
@@ -169,21 +203,23 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
                 ) {
                     if (type == 'or') {
                         n.children = [
-                            clone(candidate),
-                            clone(candidate)
+                            makeCandidateClone(o++),
+                            makeCandidateClone(o++)
                         ];
                     } else if (type == 'and') {
                         n.children = [
-                            makeDoubleCandidateClone()
+                            makeDoubleCandidateClone(o, o + 1)
                         ];
+                        o += 2;
                     } else if (type == 'equi') {
                         n.children = [
-                            makeDoubleCandidateClone(),
-                            makeDoubleCandidateClone()
+                            makeDoubleCandidateClone(o, o + 1),
+                            makeDoubleCandidateClone(o + 2, o + 3)
                         ];
+                        o += 4;
                     } else if (type == 'double_not') {
                         n.children = [
-                            clone(candidate)
+                            makeCandidateClone(o++)
                         ];
                     } else {
                         throw new Error("Invalid type! " +

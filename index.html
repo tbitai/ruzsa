@@ -72,10 +72,12 @@
                 <md-input-container>
                     <input type="text"
                            aria-label="Input"
-                           class="formula_input"
+                           ng-class="{formula_input: true,
+                                      in_focus_q: node.inFocusQ}"
                            ng-model="node.input"
                            onfocus="makeActive(this)"
-                           oninput="checkCommaAndParenthesis(this)">
+                           oninput="checkCommaAndParenthesis(this)"
+                           data-ruzsa-focus-order="{{node.focusOrder}}">
                     <div ng-messages="node.error" role="alert" md-auto-hide="false">
                         <div ng-message="unmatchedParenthesis">Unmatched parenthesis!</div>
                         <div ng-message="other">Not a sentence!</div>
@@ -259,18 +261,22 @@
 
 <!-- Piwik -->
 <script type="text/javascript">
-  var _paq = _paq || [];
-  _paq.push(['trackPageView']);
-  _paq.push(['enableLinkTracking']);
-  (function() {
-    var u="//piwik.tbitai.me/";
-    _paq.push(['setTrackerUrl', u+'piwik.php']);
-    _paq.push(['setSiteId', 2]);
-    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
-  })();
+  if (location.hostname !== 'localhost') {
+      var _paq = _paq || [];
+      _paq.push(['trackPageView']);
+      _paq.push(['enableLinkTracking']);
+      (function() {
+        var u="//piwik.tbitai.me/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 2]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+        g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+      })();
+  }
 </script>
-<noscript><p><img src="//piwik.tbitai.me/piwik.php?idsite=2" style="border:0;" alt="" /></p></noscript>
+<!-- Don't track non-JS visits.
+    <noscript><p><img src="//piwik.tbitai.me/piwik.php?idsite=2" style="border:0;" alt="" /></p></noscript>
+-->
 <!-- End Piwik Code -->
 </body>
 
