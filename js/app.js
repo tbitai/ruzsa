@@ -154,8 +154,8 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
                 var focusOrderSet = false;
                 traverse($scope.treeData, function (node) {
                     if (!('children' in node) &&
-                        // Exclude newly added leaves
-                        node.formula
+                        node.formula &&  // Exclude newly added leaves
+                        !compareObjects(node.formula.ast, {var: '*'})  // Exclude closed branches
                     ) {
                         var emptyNodeClone = clone(emptyNode);
                         if (!focusOrderSet) {
@@ -198,8 +198,8 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
             var o = 0;
             traverse(node, function (n) {
                 if (!('children' in n) &&
-                    // Exclude newly added nodes
-                    n.formula
+                    n.formula &&  // Exclude newly added nodes
+                    !compareObjects(n.formula.ast, {var: '*'})  // Exclude closed branches
                 ) {
                     if (type == 'or') {
                         n.children = [
@@ -394,6 +394,22 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
                                                 children: [{formula: {ast: ast.not.equi[pInner[1]]}}]}]
                                 });
                             }
+                        }
+                    } else {
+                        var path = treePath($scope.treeData,
+                            function (n) {return n.underBreakingDown;},
+                            function (n) {return n.formula.ast;}
+                        );
+                        if (
+                            path.find(function (pathAst) {
+                                return 'not' in pathAst && compareObjects(pathAst.not, ast) ||
+                                       'not' in ast && compareObjects(pathAst, ast.not);
+                            })
+                        ) {
+                            correctContinuations.push({
+                                formula: null,
+                                children: [{formula: {ast: {var: '*'}}}]
+                            });
                         }
                     }
                     traverse(node, function (n) {
