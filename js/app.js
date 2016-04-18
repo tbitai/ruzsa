@@ -395,23 +395,27 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
                                 });
                             }
                         }
-                    } else {
-                        var path = treePath($scope.treeData,
-                            function (n) {return n.underBreakingDown;},
-                            function (n) {return n.formula.ast;}
-                        );
-                        if (
-                            path.find(function (pathAst) {
-                                return 'not' in pathAst && compareObjects(pathAst.not, ast) ||
-                                       'not' in ast && compareObjects(pathAst, ast.not);
-                            })
-                        ) {
-                            correctContinuations.push({
-                                formula: null,
-                                children: [{formula: {ast: {var: '*'}}}]
-                            });
-                        }
                     }
+
+                    // Check if the node makes the branch closed
+                    // by being the negation of or being negated by
+                    // one of its ancestors
+                    var path = treePath($scope.treeData,
+                        function (n) {return n.underBreakingDown;},
+                        function (n) {return n.formula.ast;}
+                    );
+                    if (
+                        path.find(function (pathAst) {
+                            return 'not' in pathAst && compareObjects(pathAst.not, ast) ||
+                                   'not' in ast && compareObjects(pathAst, ast.not);
+                        })
+                    ) {
+                        correctContinuations.push({
+                            formula: null,
+                            children: [{formula: {ast: {var: '*'}}}]
+                        });
+                    }
+
                     traverse(node, function (n) {
                         if (n.underContinuation) {
                             if (allCandidatesAreEmpty) {
