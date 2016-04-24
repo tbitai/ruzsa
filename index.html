@@ -38,11 +38,11 @@
         <div id="action_bar">
             <md-button ng-disabled="true">Open</md-button>
             <md-button ng-disabled="true">Save</md-button>
-            <md-button ng-disabled="!stepInProgress"
+            <md-button ng-disabled="!BDStepInProgress"
                        ng-click="checkStep()">
                 Check step
             </md-button>
-            <md-button ng-disabled="!stepInProgress"
+            <md-button ng-disabled="!BDStepInProgress && !cancelNewNodesPossible"
                        ng-click="cancelStep()">
                 Cancel step
             </md-button>
@@ -85,7 +85,7 @@
                 </md-input-container>
             </form>
             <md-fab-speed-dial ng-switch-default
-                               class="step_speed_dial"
+                               class="bd_step_speed_dial"
                                md-direction="right"
                                ng-mouseenter="node.hovered = true"
                                ng-mouseleave="node.hovered = false">
@@ -97,25 +97,25 @@
                         {{node.formula.unicode}}
                     </div>
                 </md-fab-trigger>
-                <div class="step_btns_positioner">
+                <div class="bd_step_btns_positioner">
                 <md-fab-actions ng-show="node.breakable && node.hovered"
-                                class="step_btns">
-                    <md-button class="md-fab md-mini step_btn"
+                                class="bd_step_btns">
+                    <md-button class="md-fab md-mini bd_step_btn"
                                ng-click="addCandidates('or', node)"
                                aria-label="Branch">
                         <md-icon md-svg-src="img/icons/or.svg"></md-icon>
                     </md-button>
-                    <md-button class="md-fab md-mini step_btn"
+                    <md-button class="md-fab md-mini bd_step_btn"
                                ng-click="addCandidates('and', node)"
                                aria-label="Add two nodes">
                         <md-icon md-svg-src="img/icons/and.svg"></md-icon>
                     </md-button>
-                    <md-button class="md-fab md-mini step_btn"
+                    <md-button class="md-fab md-mini bd_step_btn"
                                ng-click="addCandidates('equi', node)"
                                aria-label="Branch and add two nodes for each branch">
                         <md-icon md-svg-src="img/icons/equi.svg"></md-icon>
                     </md-button>
-                    <md-button class="md-fab md-mini step_btn"
+                    <md-button class="md-fab md-mini bd_step_btn"
                                ng-click="addCandidates('double_not', node)"
                                aria-label="Add one node">
                         <md-icon md-svg-src="img/icons/double_not.svg"></md-icon>

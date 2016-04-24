@@ -12,6 +12,7 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
                           input: '',
                           inFocusQ: true,
                           focusOrder: 0};
+        $scope.cancelNewNodesPossible = false;
         $scope.focusNext = function () {
             var focusQ = $('.in_focus_q').sort(function (el1, el2) {
                 function o(el) {
@@ -97,21 +98,11 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
             }
         };
         $scope.dialogFocusOnOpen = false;
-        $scope.showEmptyNodeAlert = function () {
-            var alert = $mdDialog.alert({
-                title: 'This operation is not possible now',
-                textContent: 'You have to fill out empty sentence inputs first.',
-                ok: 'OK',
-                focusOnOpen: $scope.dialogFocusOnOpen
-            });
-            $mdDialog.show(alert);
-        };
         $scope.checkForEmptyNodes = function () {
             var emptyNodesPresent = false;
             if ($scope.treeData) {
                 traverse($scope.treeData, function (node) {
                     if (!(node.formula)) {
-                        $scope.showEmptyNodeAlert();
                         emptyNodesPresent = true;
 
                         // Break traverse
@@ -121,24 +112,21 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
             }
             return emptyNodesPresent;
         };
-        $scope.showStepInProgressAlert = function () {
+        $scope.showBDStepInProgressAlert = function () {
             var alert = $mdDialog.alert({
-                title: 'This operation is not possible now',
-                textContent: 'You have to finish or cancel step first.',
+                title: 'Cannot do this step now',
+                textContent: 'First you have to finish or cancel the step in progress.',
                 ok: 'OK',
                 focusOnOpen: $scope.dialogFocusOnOpen
             });
             $mdDialog.show(alert);
         };
         $scope.addLeaves = function () {
-            if ($scope.stepInProgress) {
-                $scope.showStepInProgressAlert();
+            if ($scope.BDStepInProgress || $scope.checkForEmptyNodes()) {
+                $scope.showBDStepInProgressAlert();
                 return;
             }
-            var emptyNodesPresent = $scope.checkForEmptyNodes();
-            if (emptyNodesPresent) {
-                return;
-            }
+
             var id = ++$scope.greatestConnectId;
             var emptyNode = {formula: null,
                              editable: true,
@@ -166,16 +154,14 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
                     }
                 });
             }
+            $scope.cancelNewNodesPossible = true;
         };
         $scope.addCandidates = function (type, node) {
-            if ($scope.stepInProgress) {
-                $scope.showStepInProgressAlert();
+            if ($scope.BDStepInProgress || $scope.checkForEmptyNodes()) {
+                $scope.showBDStepInProgressAlert();
                 return;
             }
-            var emptyNodesPresent = $scope.checkForEmptyNodes();
-            if (emptyNodesPresent) {
-                return;
-            }
+
             function setFocusOrder(node, o) {
                 node.focusOrder = o;
                 return node;
@@ -232,9 +218,28 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
                 n.editable = false;
             });
             node.underBreakingDown = true;
-            $scope.stepInProgress = true;
+            $scope.BDStepInProgress = true;
+            $scope.cancelNewNodesPossible = false;
         };
         $scope.cancelStep = function () {
+            if ($scope.cancelNewNodesPossible) {
+                // Delete leaves from their parents
+                traverseBF($scope.treeData, function(node) {
+                    if ('children' in node) {
+                        for (var i = node.children.length - 1; i > -1; i--) {
+                            var child = node.children[i];
+                            if (!(child.children)) {
+                                node.children.splice(i, 1);
+                            }
+                        }
+                        if (node.children.length === 0) {  // No child remained
+                            delete node.children;
+                        }
+                    }
+                });
+                $scope.cancelNewNodesPossible = false;
+                return;
+            }
             traverse($scope.treeData, function (node) {
                 if (node.underBreakingDown) {
                     traverse(node, function (n) {
@@ -247,7 +252,7 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
                         n.editable = true;
                     });
                     node.underBreakingDown = false;
-                    $scope.stepInProgress = false;
+                    $scope.BDStepInProgress = false;
 
                     // Break traverse
                     return true;
@@ -257,7 +262,7 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
         $scope.showIncorrectStepAlert = function () {
             var alert = $mdDialog.alert({
                 title: 'Step is incorrect',
-                htmlContent: 'You can edit the sentence candidates and check again, <br>or cancel the step and initiate another operation.',
+                htmlContent: 'You can edit the sentence candidates and check again, or cancel the step and start another one.',
                 ok: 'OK',
                 focusOnOpen: $scope.dialogFocusOnOpen
             });
@@ -266,6 +271,7 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
         $scope.checkStep = function () {
             var emptyNodesPresent = $scope.checkForEmptyNodes();
             if (emptyNodesPresent) {
+                $scope.showIncorrectStepAlert();
                 return;
             }
             traverse($scope.treeData, function (node) {
@@ -445,7 +451,7 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
                         // TODO: automatic check step
                     }
                     if (stepIsCorrect) {
-                        $scope.stepInProgress = false;
+                        $scope.BDStepInProgress = false;
                         node.underBreakingDown = false;
                         node.breakable = false;
                         traverse(node, function (n) {

@@ -63,20 +63,20 @@
   margin-left: 15px;
   margin-right: 15px; }
 
-.step_btn {
+.bd_step_btn {
   margin-left: 7px;
   margin-right: 7px; }
 
-.step_btns_positioner {
+.bd_step_btns_positioner {
   position: relative;
   order: 2; }
 
-.step_btns {
+.bd_step_btns {
   position: absolute;
   top: -20px;
   z-index: 1; }
 
-.step_speed_dial {
+.bd_step_speed_dial {
   z-index: auto; }
 
 .candidate {
@@ -100,5 +100,8 @@ md-input-container .md-input.formula_input {
 
 .md-title {
   font-weight: 600; }
+
+md-dialog {
+  max-width: 500px; }
 
 /*# sourceMappingURL=main.css.map */

@@ -96,28 +96,28 @@ $formula_margin-top-bottom: 9px
   margin-left:  $margin-left-right
   margin-right: $margin-left-right
 
-$step_btn_margin-left-right: 7px
+$bd_step_btn_margin-left-right: 7px
 
-.step_btn
-  margin-left:  $step_btn_margin-left-right
-  margin-right: $step_btn_margin-left-right
+.bd_step_btn
+  margin-left:  $bd_step_btn_margin-left-right
+  margin-right: $bd_step_btn_margin-left-right
 
-.step_btns_positioner
+.bd_step_btns_positioner
   position: relative
 
-  $step_btns_order: 2
-  order: $step_btns_order
+  $bd_step_btns_order: 2
+  order: $bd_step_btns_order
 
-.step_btns
+.bd_step_btns
   position: absolute
 
-  $step_btn_height: 40px
-  top: -$step_btn_height / 2
+  $bd_step_btn_height: 40px
+  top: -$bd_step_btn_height / 2
 
   // Fix mouse moving over stuff between btns
   z-index: 1
 
-.step_speed_dial
+.bd_step_speed_dial
   z-index: auto
 
 .candidate
@@ -143,3 +143,6 @@ md-input-container .md-input.formula_input
 // Fix that Chrome doesn't interpret font weight 500 as bold
 .md-title
   font-weight: 600
+
+md-dialog
+  max-width: 500px

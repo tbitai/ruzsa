@@ -1,4 +1,4 @@
-function traverse(root, func){
+function traverseBF(root, func){
     var q = [root];
     while (q.length > 0) {
         var node = q.shift();
@@ -14,6 +14,8 @@ function traverse(root, func){
         }
     }
 }
+
+var traverse = traverseBF;
 
 function treePath(root, isDest, repr) {
     if (isDest(root)) {
