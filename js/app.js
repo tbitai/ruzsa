@@ -228,8 +228,9 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
                     if ('children' in node) {
                         for (var i = node.children.length - 1; i > -1; i--) {
                             var child = node.children[i];
-                            if (!(child.children)) {
-                                node.children.splice(i, 1);
+                            if (!(child.children) &&
+                                (!(child.formula) || !compareObjects(child.formula.ast, {var: '*'}))) {
+                                    node.children.splice(i, 1);
                             }
                         }
                         if (node.children.length === 0) {  // No child remained
