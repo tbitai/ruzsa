@@ -133,9 +133,14 @@ $bd_step_btn_margin-left-right: 7px
 
   padding: 8px
 
-#github-link
+#github-logo
   // Img has bottom padding; balance that.
   padding-top: 5px
+
+  // Adjust to text
+  position: relative
+  top: 4px
+  margin-right: 2px
 
 md-input-container .md-input.formula_input
   width: 160px
@@ -146,3 +151,11 @@ md-input-container .md-input.formula_input
 
 md-dialog
   max-width: 500px
+
+.md-button .material-icons
+  // Fix vertical position
+  position: relative
+  top: 6px
+
+.md-button sup
+  text-transform: none !important

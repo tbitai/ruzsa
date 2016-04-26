@@ -5,14 +5,115 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
             .accentPalette('grey');
     })
     .controller('treeController', function($scope, $mdDialog, $timeout){
-        $scope.treeData = {formula: null,
-                          editable: true,
-                          breakable: true,
-                          underEdit: true,
-                          input: '',
-                          inFocusQ: true,
-                          focusOrder: 0};
-        $scope.cancelNewNodesPossible = false;
+        // Settings
+        $scope.dialogFocusOnOpen = false;
+
+        $scope.getState = function() {
+            return {
+                treeData:               $scope.treeData,
+                cancelNewNodesPossible: $scope.cancelNewNodesPossible,
+                BDStepInProgress:       $scope.BDStepInProgress,
+                greatestConnectId:      $scope.greatestConnectId,
+                unsavedDataPresent:     $scope.unsavedDataPresent
+            };
+        };
+        $scope.setState = function(state, withDigest) {
+            $scope.treeData =               state.treeData;
+            $scope.cancelNewNodesPossible = state.cancelNewNodesPossible;
+            $scope.BDStepInProgress =       state.BDStepInProgress;
+            $scope.greatestConnectId =      state.greatestConnectId;
+            $scope.unsavedDataPresent =     state.unsavedDataPresent;
+            if (withDigest) {
+                $scope.$digest();
+            }
+        };
+
+        // Initial state
+        $scope.setState({
+            treeData: {
+                formula: null,
+                editable: true,
+                breakable: true,
+                underEdit: true,
+                input: '',
+                inFocusQ: true,
+                focusOrder: 0
+            },
+            cancelNewNodesPossible: false,
+            BDStepInProgress: false,
+            greatestConnectId: 0,
+            unsavedDataPresent: false
+        });
+
+        $scope.encode = function(str) {
+            return btoa(escape(str));
+        };
+        $scope.decode = function(str) {
+            return unescape(atob(str));
+        };
+        $scope.save = function() {
+            $scope.unsavedDataPresent = false;
+            $.getJSON('../package.json', function(data) {
+                var version = data.version;
+                var state = $scope.getState();
+                var downloadJSON = {
+                    version: version,
+                    state: state
+                };
+                var downloadStr = angular.toJson(downloadJSON);  // Properties with leading $$ characters will be stripped
+                var downloadStrEncoded = $scope.encode(downloadStr);
+                download(downloadStrEncoded, 'download.ruzsa');
+            });
+        };
+        $scope.loadFile = function(files) {
+            function resetInput() {  // We need this to allow to select the same file again later
+                document.getElementById('file_input').value = '';
+            }
+            function core() {
+                var file = files[0];
+                var reader = new FileReader();
+                reader.onload = function(event) {
+                    try {
+                        var text = event.target.result;
+                        var dataStr = $scope.decode(text);
+                        var dataJSON = JSON.parse(dataStr);
+
+                        // Below we will change treeData, but in this case we don't want
+                        // this to cause $scope.unsavedDataPresent to be true.
+                        $scope.savedDataJustLoaded = true;
+
+                        $scope.setState(dataJSON.state, true);
+                    } catch (ex) {
+                        var alert = $mdDialog.alert({
+                            title: 'Couldn\'t load file',
+                            textContent: 'Double check that you selected a Ruzsa file.',
+                            ok: 'OK',
+                            focusOnOpen: $scope.dialogFocusOnOpen
+                        });
+                        $mdDialog.show(alert);
+                        throw ex;  // For debugging.
+                    }
+                    resetInput();
+                };
+                reader.readAsText(file);
+            }
+            if ($scope.unsavedDataPresent) {
+                var confirm = $mdDialog.confirm({
+                    title: 'You have unsaved changes',
+                    htmlContent: 'If you continue, your current tableau will be lost.',
+                    ok: 'Continue',
+                    cancel: 'Cancel',
+                    focusOnOpen: $scope.dialogFocusOnOpen
+                });
+                $mdDialog.show(confirm).then(function() {
+                    core();
+                }, function() {
+                    resetInput();
+                });
+            } else {
+                core();
+            }
+        };
         $scope.focusNext = function () {
             var focusQ = $('.in_focus_q').sort(function (el1, el2) {
                 function o(el) {
@@ -24,7 +125,9 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
             elToFocus.focus();
             elToFocus.removeClass('in_focus_q');
         };
-        $scope.$watch('treeData', function () {
+
+        // Watches
+        $scope.$watch('treeData', function (newTreeData, oldTreeData) {
             $timeout(function () {
                 // Fix superfluous lines from leaves -- JS part
                 $('ul').removeClass('empty_ul');
@@ -40,8 +143,15 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
                 var elToFocusFirst = $('.in_focus_q[data-ruzsa-focus-order=0]');
                 elToFocusFirst.focus();
                 elToFocusFirst.removeClass('in_focus_q');
+
+                if (newTreeData !== oldTreeData &&  // Exclude initialization
+                    !$scope.savedDataJustLoaded) {
+                        $scope.unsavedDataPresent = true;
+                }
+                $scope.savedDataJustLoaded = false;
             }, 0, false);
         }, true);
+
         $scope.setUnderEdit = function (node) {
             node.underEdit = true;
 
@@ -65,7 +175,6 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
             node.underEdit = false;
             node.input = formula.unicode;
         };
-        $scope.greatestConnectId = 0;
         $scope.doForConnected = function (node, f) {
             f(node);
             if ('connectId' in node) {
@@ -97,7 +206,6 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
                 }
             }
         };
-        $scope.dialogFocusOnOpen = false;
         $scope.checkForEmptyNodes = function () {
             var emptyNodesPresent = false;
             if ($scope.treeData) {

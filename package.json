@@ -10,9 +10,11 @@
     "angular-messages": "^1.5.0",
     "angular-sanitize": "^1.5.2",
     "angular-tree-repeat": "https://github.com/tbitai/angular-tree-repeat/tarball/npm",
+    "downloadjs": "^1.4.2",
     "express": "^4.13.4",
     "formula-parser": "https://github.com/tbitai/formula-parser/tarball/npm",
     "helmet": "^1.1.0",
-    "jquery": "^2.2.1"
+    "jquery": "^2.2.1",
+    "material-design-icons": "^2.2.3"
   }
 }

@@ -17,6 +17,8 @@
 <script src="node_modules/jquery/dist/jquery.min.js"></script>
 <link rel="stylesheet" href="stylesheets/tree.css">
 <script src="js/jquery.input-autoresize.js"></script>
+<script src="node_modules/downloadjs/download.min.js"></script>
+<link rel="stylesheet" href="node_modules/material-design-icons/iconfont/material-icons.css">
 
 <!-- Own stuff -->
 <script src="js/equi.js"></script>
@@ -36,21 +38,33 @@
     <div class="md-toolbar-tools">
         <img src="img/ruzsa-logo.png" height="20" class="logo"></img>
         <div id="action_bar">
-            <md-button ng-disabled="true">Open</md-button>
-            <md-button ng-disabled="true">Save</md-button>
+            <!-- Has to be an anchor element with the script in its href,
+                 otherwise click won't be triggered. -->
+            <a href="javascript:document.getElementById('file_input').click();">
+                <md-button>
+                    <i class="material-icons">&#xE2C8;</i> Open <sup><i>β</i></sup>
+                </md-button>
+            </a>
+
+            <input type="file" id="file_input" style="display:none"
+                   onchange="angular.element(this).scope().loadFile(this.files)">  <!-- ng-change doesn't support file inputs -->
+            <md-button ng-click="save()"><i class="material-icons">&#xE161;</i> Save <sup><i>β</i></sup></md-button>
             <md-button ng-disabled="!BDStepInProgress"
                        ng-click="checkStep()">
-                Check step
+                <i class="material-icons">&#xE5CA;</i> Check step
             </md-button>
             <md-button ng-disabled="!BDStepInProgress && !cancelNewNodesPossible"
                        ng-click="cancelStep()">
-                Cancel step
+                <i class="material-icons">&#xE166;</i> Cancel step
             </md-button>
         </div>
         <span flex></span>
-        <a href="https://github.com/tbitai/ruzsa/issues">
-            <img src="img/icons/GitHub-Mark-Light-32px.png" height="26" id="github-link"></img>
-        </a>
+        <md-button href="https://github.com/tbitai/ruzsa/issues">
+            <i class="material-icons">&#xE868;</i> Issues
+        </md-button>
+        <md-button href="https://github.com/tbitai/ruzsa">
+            <img src="img/icons/GitHub-Mark-Light-32px.png" height="26" id="github-logo"></img> Code
+        </md-button>
     </div>
 </md-toolbar>
 <div class="toolbar-placeholder"></div>

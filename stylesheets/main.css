@@ -92,8 +92,11 @@
   -moz-border-radius: 3px;
   padding: 8px; }
 
-#github-link {
-  padding-top: 5px; }
+#github-logo {
+  padding-top: 5px;
+  position: relative;
+  top: 4px;
+  margin-right: 2px; }
 
 md-input-container .md-input.formula_input {
   width: 160px; }
@@ -103,5 +106,12 @@ md-input-container .md-input.formula_input {
 
 md-dialog {
   max-width: 500px; }
+
+.md-button .material-icons {
+  position: relative;
+  top: 6px; }
+
+.md-button sup {
+  text-transform: none !important; }
 
 /*# sourceMappingURL=main.css.map */
