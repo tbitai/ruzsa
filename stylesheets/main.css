@@ -127,8 +127,8 @@ md-dialog {
     height: 45px; }
 
   #virtual_keyboard {
-    top: 75px; }
-
+    top: 75px; } }
+@media (max-width: 959px), (max-height: 600px) {
   #virtual_keyboard .md-button {
     font-size: 12px;
     min-width: 75px;
@@ -141,5 +141,15 @@ md-dialog {
     min-height: 32px; }
     #virtual_keyboard .md-button.connective_btn {
       min-width: 38px; } }
+@media (max-height: 600px) {
+  #virtual_keyboard .md-button {
+    line-height: 28px;
+    min-height: 28px; }
+
+  .plus_btn {
+    bottom: 10px; } }
+@media (max-height: 500px) {
+  .plus_btn {
+    left: 15px; } }
 
 /*# sourceMappingURL=main.css.map */

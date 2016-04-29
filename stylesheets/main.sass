@@ -162,7 +162,9 @@ md-dialog
 .md-button sup
   text-transform: none !important
 
+$vkb_height_shrink_limit: 600px
 $md_toolbar_height_shrink_limit: 959px
+
 @media (max-width: $md_toolbar_height_shrink_limit)
   .tool_title
     display: none
@@ -177,6 +179,7 @@ $md_toolbar_height_shrink_limit: 959px
   #virtual_keyboard
     top: 75px
 
+@media (max-width: $md_toolbar_height_shrink_limit), (max-height: $vkb_height_shrink_limit)
   #virtual_keyboard .md-button
     font-size: 12px
     min-width: 75px
@@ -195,3 +198,16 @@ $md_toolbar_height_shrink_limit: 959px
 
     &.connective_btn
       min-width: 38px
+
+@media (max-height: $vkb_height_shrink_limit)
+  #virtual_keyboard .md-button
+    $height: 28px
+    line-height: $height
+    min-height:  $height
+
+  .plus_btn
+    bottom: 10px
+
+@media (max-height: 500px)
+  .plus_btn
+    left: 15px
