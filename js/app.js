@@ -45,7 +45,7 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
             BDStepInProgress: false,
             greatestConnectId: 0,
             unsavedDataPresent: false,
-            filename: 'untitled.tree'
+            filename: 'Untitled.tree'
         });
 
         $scope.encode = function(str) {
