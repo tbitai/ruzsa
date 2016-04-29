@@ -14,7 +14,8 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
                 cancelNewNodesPossible: $scope.cancelNewNodesPossible,
                 BDStepInProgress:       $scope.BDStepInProgress,
                 greatestConnectId:      $scope.greatestConnectId,
-                unsavedDataPresent:     $scope.unsavedDataPresent
+                unsavedDataPresent:     $scope.unsavedDataPresent,
+                filename:               $scope.filename
             };
         };
         $scope.setState = function(state, withDigest) {
@@ -23,6 +24,7 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
             $scope.BDStepInProgress =       state.BDStepInProgress;
             $scope.greatestConnectId =      state.greatestConnectId;
             $scope.unsavedDataPresent =     state.unsavedDataPresent;
+            $scope.filename =               state.filename;
             if (withDigest) {
                 $scope.$digest();
             }
@@ -42,7 +44,8 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
             cancelNewNodesPossible: false,
             BDStepInProgress: false,
             greatestConnectId: 0,
-            unsavedDataPresent: false
+            unsavedDataPresent: false,
+            filename: 'untitled.tree'
         });
 
         $scope.encode = function(str) {
@@ -62,7 +65,7 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
                 };
                 var downloadStr = angular.toJson(downloadJSON);  // Properties with leading $$ characters will be stripped
                 var downloadStrEncoded = $scope.encode(downloadStr);
-                download(downloadStrEncoded, 'download.ruzsa');
+                download(downloadStrEncoded, $scope.filename);
             });
         };
         $scope.loadFile = function(files) {
@@ -82,7 +85,9 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
                         // this to cause $scope.unsavedDataPresent to be true.
                         $scope.savedDataJustLoaded = true;
 
-                        $scope.setState(dataJSON.state, true);
+                        var state = dataJSON.state;
+                        state.filename = file.name;
+                        $scope.setState(state, true);
                     } catch (ex) {
                         var alert = $mdDialog.alert({
                             title: 'Couldn\'t load file',
@@ -100,7 +105,7 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
             if ($scope.unsavedDataPresent) {
                 var confirm = $mdDialog.confirm({
                     title: 'You have unsaved changes',
-                    htmlContent: 'If you continue, your current tableau will be lost.',
+                    htmlContent: 'If you continue, your current tree will be lost.',
                     ok: 'Continue',
                     cancel: 'Cancel',
                     focusOnOpen: $scope.dialogFocusOnOpen
