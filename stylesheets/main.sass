@@ -78,6 +78,8 @@ $formula_margin-top-bottom: 9px
   padding-left:  $padding-left-right
   padding-right: $padding-left-right
 
+  background-color: white  // Fixes tree sliding between keyboard element and btns
+
 .connective_btn
   min-width: 43px
 
@@ -159,3 +161,37 @@ md-dialog
 
 .md-button sup
   text-transform: none !important
+
+$md_toolbar_height_shrink_limit: 959px
+@media (max-width: $md_toolbar_height_shrink_limit)
+  .tool_title
+    display: none
+
+  .toolbar .md-button
+    min-width: 0 !important
+    max-width: 45px
+
+  .toolbar-placeholder
+    height: 45px
+
+  #virtual_keyboard
+    top: 75px
+
+  #virtual_keyboard .md-button
+    font-size: 12px
+    min-width: 75px
+    max-width: 75px
+
+    $margin-left-right: 4px
+    $margin-top-bottom: 6px
+    margin-left:  $margin-left-right
+    margin-right: $margin-left-right
+    margin-top:    $margin-top-bottom
+    margin-bottom: $margin-top-bottom
+
+    $height: 32px
+    line-height: $height
+    min-height:  $height
+
+    &.connective_btn
+      min-width: 38px

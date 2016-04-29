@@ -43,28 +43,28 @@
                  otherwise click won't be triggered. -->
             <a href="javascript:document.getElementById('file_input').click();">
                 <md-button>
-                    <i class="material-icons">&#xE2C8;</i> Open <sup><i>β</i></sup>
+                    <i class="material-icons">&#xE2C8;</i> <span class="tool_title">Open</span> <sup><i>β</i></sup>
                 </md-button>
             </a>
 
             <input type="file" id="file_input" style="display:none"
                    onchange="angular.element(this).scope().loadFile(this.files)">  <!-- ng-change doesn't support file inputs -->
-            <md-button ng-click="save()"><i class="material-icons">&#xE161;</i> Save <sup><i>β</i></sup></md-button>
+            <md-button ng-click="save()"><i class="material-icons">&#xE161;</i> <span class="tool_title">Save</span> <sup><i>β</i></sup></md-button>
             <md-button ng-disabled="!BDStepInProgress"
                        ng-click="checkStep()">
-                <i class="material-icons">&#xE5CA;</i> Check step
+                <i class="material-icons">&#xE5CA;</i> <span class="tool_title">Check step</span>
             </md-button>
             <md-button ng-disabled="!BDStepInProgress && !cancelNewNodesPossible"
                        ng-click="cancelStep()">
-                <i class="material-icons">&#xE166;</i> Undo
+                <i class="material-icons">&#xE166;</i> <span class="tool_title">Undo</span>
             </md-button>
         </div>
         <span flex></span>
         <md-button href="https://github.com/tbitai/ruzsa/issues">
-            <i class="material-icons">&#xE868;</i> Issues
+            <i class="material-icons">&#xE868;</i> <span class="tool_title">Issues</span>
         </md-button>
         <md-button href="https://github.com/tbitai/ruzsa">
-            <img src="img/icons/GitHub-Mark-Light-32px.png" height="26" id="github-logo"></img> Code
+            <img src="img/icons/GitHub-Mark-Light-32px.png" height="26" id="github-logo"></img> <span class="tool_title">Code</span>
         </md-button>
     </div>
 </md-toolbar>
