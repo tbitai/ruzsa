@@ -49,7 +49,10 @@
 
             <input type="file" id="file_input" style="display:none"
                    onchange="angular.element(this).scope().loadFile(this.files)">  <!-- ng-change doesn't support file inputs -->
-            <md-button ng-click="save()"><i class="material-icons">&#xE161;</i> <span class="tool_title">Save</span> <sup><i>β</i></sup></md-button>
+            <md-button ng-disabled="!unsavedDataPresent"
+                       ng-click="save()">
+                <i class="material-icons">&#xE161;</i> <span class="tool_title">Save</span> <sup><i>β</i></sup>
+            </md-button>
             <md-button ng-disabled="!BDStepInProgress"
                        ng-click="checkStep()">
                 <i class="material-icons">&#xE5CA;</i> <span class="tool_title">Check step</span>
