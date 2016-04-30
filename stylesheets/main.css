@@ -147,7 +147,7 @@ md-dialog {
     min-height: 28px; }
 
   .plus_btn {
-    bottom: 10px; } }
+    bottom: 15px; } }
 @media (max-height: 500px) {
   .plus_btn {
     left: 15px; } }
