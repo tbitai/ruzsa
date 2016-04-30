@@ -147,9 +147,26 @@ md-dialog {
     min-height: 28px; }
 
   .plus_btn {
-    bottom: 15px; } }
+    bottom: 15px; }
+
+  .tree ul {
+    padding-top: 20px; }
+  .tree li {
+    padding-top: 20px; }
+    .tree li::before {
+      height: 20px; }
+    .tree li::after {
+      height: 20px; }
+  .tree ul ul::before {
+    height: 20px; } }
+.plus_btn_tool {
+  display: none; }
+
 @media (max-height: 500px) {
   .plus_btn {
-    left: 15px; } }
+    display: none; }
+
+  .plus_btn_tool {
+    display: inline-block; } }
 
 /*# sourceMappingURL=main.css.map */

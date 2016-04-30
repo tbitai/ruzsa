@@ -208,6 +208,24 @@ $md_toolbar_height_shrink_limit: 959px
   .plus_btn
     bottom: 15px
 
+  // Shrink tree lines
+  $line_height: 20px
+  .tree
+    ul
+      padding-top: $line_height
+    li
+      padding-top: $line_height
+      &::before
+        height: $line_height
+      &::after
+        height: $line_height
+    ul ul::before
+      height: $line_height
+
+.plus_btn_tool
+  display: none
 @media (max-height: 500px)
   .plus_btn
-    left: 15px
+    display: none
+  .plus_btn_tool
+    display: inline-block
