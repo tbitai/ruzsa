@@ -11,18 +11,20 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
         $scope.getState = function() {
             return {
                 treeData:               $scope.treeData,
+                greatestConnectId:      $scope.greatestConnectId,
+                undoStepPossible:       $scope.undoStepPossible,
                 cancelNewNodesPossible: $scope.cancelNewNodesPossible,
                 BDStepInProgress:       $scope.BDStepInProgress,
-                greatestConnectId:      $scope.greatestConnectId,
                 unsavedDataPresent:     $scope.unsavedDataPresent,
                 filename:               $scope.filename
             };
         };
         $scope.setState = function(state, withDigest) {
             $scope.treeData =               state.treeData;
+            $scope.greatestConnectId =      state.greatestConnectId;
+            $scope.undoStepPossible =       state.undoStepPossible;
             $scope.cancelNewNodesPossible = state.cancelNewNodesPossible;
             $scope.BDStepInProgress =       state.BDStepInProgress;
-            $scope.greatestConnectId =      state.greatestConnectId;
             $scope.unsavedDataPresent =     state.unsavedDataPresent;
             $scope.filename =               state.filename;
             if (withDigest) {
@@ -41,9 +43,10 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
                 inFocusQ: true,
                 focusOrder: 0
             },
+            greatestConnectId: 0,
+            undoStepPossible: false,
             cancelNewNodesPossible: false,
             BDStepInProgress: false,
-            greatestConnectId: 0,
             unsavedDataPresent: false,
             filename: 'Untitled.tree'
         });
@@ -225,21 +228,35 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
             }
             return emptyNodesPresent;
         };
-        $scope.showBDStepInProgressAlert = function () {
+        $scope.showStepInProgressAlert = function () {
             var alert = $mdDialog.alert({
                 title: 'Cannot do this step now',
-                textContent: 'First you have to finish or cancel the step in progress.',
+                textContent: 'First you have to finish or undo the step in progress.',
                 ok: 'OK',
                 focusOnOpen: $scope.dialogFocusOnOpen
             });
             $mdDialog.show(alert);
         };
+        $scope.removeBDStepMemory = function() {
+            traverse($scope.treeData, function(node) {
+                if (node.lastBrokenDown) {
+                    delete node.lastBrokenDown;
+                    traverse(node, function(n) {
+                        if (n.lastContinued) {
+                            delete n.lastContinued;
+                        }
+                    });
+                    return true;
+                }
+            });
+        };
         $scope.addLeaves = function () {
             if ($scope.BDStepInProgress || $scope.checkForEmptyNodes()) {
-                $scope.showBDStepInProgressAlert();
+                $scope.showStepInProgressAlert();
                 return;
             }
 
+            $scope.removeBDStepMemory();
             var id = ++$scope.greatestConnectId;
             var emptyNode = {formula: null,
                              editable: true,
@@ -267,14 +284,16 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
                     }
                 });
             }
+            $scope.undoStepPossible = true;
             $scope.cancelNewNodesPossible = true;
         };
         $scope.addCandidates = function (type, node) {
             if ($scope.BDStepInProgress || $scope.checkForEmptyNodes()) {
-                $scope.showBDStepInProgressAlert();
+                $scope.showStepInProgressAlert();
                 return;
             }
 
+            $scope.removeBDStepMemory();
             function setFocusOrder(node, o) {
                 node.focusOrder = o;
                 return node;
@@ -331,10 +350,11 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
                 n.editable = false;
             });
             node.underBreakingDown = true;
+            $scope.undoStepPossible = true;
             $scope.BDStepInProgress = true;
             $scope.cancelNewNodesPossible = false;
         };
-        $scope.cancelStep = function () {
+        $scope.undoStep = function () {
             if ($scope.cancelNewNodesPossible) {
                 // Delete leaves from their parents
                 traverseBF($scope.treeData, function(node) {
@@ -352,31 +372,50 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
                     }
                 });
                 $scope.cancelNewNodesPossible = false;
-                return;
-            }
-            traverse($scope.treeData, function (node) {
-                if (node.underBreakingDown) {
-                    traverse(node, function (n) {
-                        if (n.underContinuation) {
-                            delete n.children;
-                            delete n.underContinuation;
-                        }
-                    });
-                    $scope.doForConnected(node, function (n) {
-                        n.editable = true;
-                    });
-                    node.underBreakingDown = false;
-                    $scope.BDStepInProgress = false;
+            } else if ($scope.BDStepInProgress) {
+                traverse($scope.treeData, function (node) {
+                    if (node.underBreakingDown) {
+                        traverse(node, function (n) {
+                            if (n.underContinuation) {
+                                delete n.children;
+                                delete n.underContinuation;
+                            }
+                        });
+                        $scope.doForConnected(node, function (n) {
+                            n.editable = true;
+                        });
+                        node.underBreakingDown = false;
+                        $scope.BDStepInProgress = false;
 
-                    // Break traverse
-                    return true;
-                }
-            });
+                        // Break traverse
+                        return true;
+                    }
+                });
+            } else {  // Last step was a BD step, or there was no step before
+                traverse($scope.treeData, function(node) {
+                    if (node.lastBrokenDown) {
+                        delete node.lastBrokenDown;
+                        node.breakable = true;
+                        // Maybe the node was also editable before breaking down,
+                        // but it would be complicated to track this,
+                        // and probably no one wants to edit a formula after
+                        // undoing its breaking-down.
+                        traverse(node, function(n) {
+                            if (n.lastContinued) {
+                                delete n.lastContinued;
+                                delete n.children;
+                            }
+                        });
+                        return true;
+                    }
+                });
+            }
+            $scope.undoStepPossible = false;
         };
         $scope.showIncorrectStepAlert = function () {
             var alert = $mdDialog.alert({
                 title: 'Step is incorrect',
-                htmlContent: 'You can edit the sentence candidates and check again, or cancel the step and start another one.',
+                htmlContent: 'You can edit the sentence candidates and check again, or undo the step and start another one.',
                 ok: 'OK',
                 focusOnOpen: $scope.dialogFocusOnOpen
             });
@@ -568,9 +607,11 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
                         $scope.BDStepInProgress = false;
                         node.underBreakingDown = false;
                         node.breakable = false;
+                        node.lastBrokenDown = true;
                         traverse(node, function (n) {
                             if (n.underContinuation) {
                                 n.underContinuation = false;
+                                n.lastContinued = true;
                                 traverse(n, function (c) {
                                     if (c !== n) {
                                         c.editable = false;
