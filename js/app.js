@@ -134,7 +134,6 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
             elToFocus.removeClass('in_focus_q');
         };
 
-        // Watches
         $scope.$watch('treeData', function (newTreeData, oldTreeData) {
             $timeout(function () {
                 // Fix superfluous lines from leaves -- JS part
@@ -159,6 +158,19 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
                 $scope.savedDataJustLoaded = false;
             }, 0, false);
         }, true);
+
+        // Have to update title in a watch, see comment in the HTML.
+        $scope.updateTitle = function(filename, unsavedDataPresent) {
+            filename = filename === undefined ? $scope.filename : filename;
+            unsavedDataPresent = unsavedDataPresent === undefined ? $scope.unsavedDataPresent : unsavedDataPresent;
+            $('title').text(filename + (unsavedDataPresent ? '*' : '') + ' – Ruzsa');
+        };
+        $scope.$watch('filename', function(newFilename, oldFilename) {
+            $scope.updateTitle(newFilename);
+        });
+        $scope.$watch('unsavedDataPresent', function(newUnsavedDataPresent, oldUnsavedDataPresent) {
+            $scope.updateTitle(undefined, newUnsavedDataPresent);
+        });
 
         $scope.setUnderEdit = function (node) {
             node.underEdit = true;
