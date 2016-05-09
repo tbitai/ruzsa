@@ -552,6 +552,7 @@ angular.module('ruzsa', [
             } else {  // Last step was a BD step, or there was no step before
                 traverse($scope.treeData, function(node) {
                     if (node.lastBrokenDown) {
+                        delete node.brokenDown;
                         delete node.lastBrokenDown;
                         node.breakable = true;
                         // Maybe the node was also editable before breaking down,
@@ -765,6 +766,7 @@ angular.module('ruzsa', [
                         $scope.BDStepInProgress = false;
                         node.underBreakingDown = false;
                         node.breakable = false;
+                        node.brokenDown = true;
                         node.lastBrokenDown = true;
                         traverse(node, function (n) {
                             if (n.underContinuation) {

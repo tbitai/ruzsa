@@ -186,5 +186,7 @@ md-dialog {
 
   .plus_btn_tool {
     display: inline-block; } }
+.broken_down {
+  text-decoration: line-through; }
 
 /*# sourceMappingURL=main.css.map */

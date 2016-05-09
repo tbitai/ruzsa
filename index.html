@@ -124,7 +124,8 @@
                     <div ng-click="node.editable ? setUnderEdit(node) : {}"
                          ng-class="{formula: true,
                                     candidate: node.candidate,
-                                    highlighted: node.underBreakingDown}">
+                                    highlighted: node.underBreakingDown,
+                                    broken_down: node.brokenDown}">
                         {{node.formula.unicode}}
                     </div>
                 </md-fab-trigger>
