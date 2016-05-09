@@ -1,9 +1,4 @@
-var variableKey = 'var';
-var unaries = [
-    // Logical symbols
-    {symbol: '¬',         key: 'not',       precedence: 5},
-
-    // Tarski predicate symbols
+var tarskiUnaryOperators = [
     {symbol: 'Tet',       key: 'tet',       precedence: 5},
     {symbol: 'Small',     key: 'small',     precedence: 5},
     {symbol: 'Smaller',   key: 'smaller',   precedence: 5},
@@ -21,23 +16,36 @@ var unaries = [
     {symbol: 'RightOf',   key: 'rightof',   precedence: 5},
     {symbol: 'SameCol',   key: 'samecol',   precedence: 5},
     {symbol: 'FrontOf',   key: 'frontof',   precedence: 5},
-    {symbol: 'SameRow',   key: 'samerow',   precedence: 5},
+    {symbol: 'SameRow',   key: 'samerow',   precedence: 5}
 ];
-var binaries = [
-    // Logical symbols
-    {symbol: '∧',         key: 'and',       precedence: 3, associativity: 'right'},
-    {symbol: '∨',         key: 'or',        precedence: 2, associativity: 'right'},
-    {symbol: '→',         key: 'impl',      precedence: 1, associativity: 'right'},
-    {symbol: '↔',         key: 'equi',      precedence: 0, associativity: 'right'},
 
-    // Tarski predicate symbols
-    {symbol: '=',         key: 'equa',      precedence: 4, associativity: 'right'},
-
-    // Smart way to parse argument lists of Tarski predicates.
-    // Suggested by Ross Kirsling: https://github.com/rkirsling/formula-parser/pull/1
-    {symbol: ',',         key: 'comma',     precedence: 4, associativity: 'right'},
+var tarskiBinaryOperators = [
+    {symbol: '=',         key: 'equa',      precedence: 4, associativity: 'right'}
 ];
-var TarskiPropositionalFormulaParser = new FormulaParser(variableKey, unaries, binaries);
+
+var TarskiPropositionalFormulaParser = new FormulaParser(
+    // variableKey
+    'var',
+
+    // unaries
+    [
+        // Logical symbols
+        {symbol: '¬',         key: 'not',       precedence: 5},
+    ].concat(tarskiUnaryOperators),
+
+    // binaries
+    [
+        // Logical symbols
+        {symbol: '∧',         key: 'and',       precedence: 3, associativity: 'right'},
+        {symbol: '∨',         key: 'or',        precedence: 2, associativity: 'right'},
+        {symbol: '→',         key: 'impl',      precedence: 1, associativity: 'right'},
+        {symbol: '↔',         key: 'equi',      precedence: 0, associativity: 'right'},
+
+        // Smart way to parse argument lists of Tarski predicates.
+        // Suggested by Ross Kirsling: https://github.com/rkirsling/formula-parser/pull/1
+        {symbol: ',',         key: 'comma',     precedence: 4, associativity: 'right'},
+    ].concat(tarskiBinaryOperators)
+);
 
 
 // Tarski propositional well-formed formula class

@@ -144,6 +144,7 @@ angular.module('ruzsa', [
         $scope.getState = function() {
             return {
                 treeData:               $scope.treeData,
+                greatestId:             $scope.greatestId,
                 greatestConnectId:      $scope.greatestConnectId,
                 undoStepPossible:       $scope.undoStepPossible,
                 cancelNewNodesPossible: $scope.cancelNewNodesPossible,
@@ -154,6 +155,7 @@ angular.module('ruzsa', [
         };
         $scope.setState = function(state, withDigest) {
             $scope.treeData =               state.treeData;
+            $scope.greatestId =             state.greatestId;
             $scope.greatestConnectId =      state.greatestConnectId;
             $scope.undoStepPossible =       state.undoStepPossible;
             $scope.cancelNewNodesPossible = state.cancelNewNodesPossible;
@@ -168,6 +170,7 @@ angular.module('ruzsa', [
         // Initial state
         $scope.setInitialState = function() {$scope.setState({
             treeData: {
+                id: 1,
                 formula: null,
                 editable: true,
                 breakable: true,
@@ -176,6 +179,7 @@ angular.module('ruzsa', [
                 inFocusQ: true,
                 focusOrder: 0
             },
+            greatestId: 1,
             greatestConnectId: 0,
             undoStepPossible: false,
             cancelNewNodesPossible: false,
@@ -241,9 +245,22 @@ angular.module('ruzsa', [
                         // this to cause $scope.unsavedDataPresent to be true.
                         $scope.savedDataJustLoaded = true;
 
+                        var version = dataJSON.version;
                         var state = dataJSON.state;
                         state.filename = file.name;
                         $scope.setState(state, true);
+                        if (semver.lt(version, '0.3.0')) {
+                            // Add id's
+                            $scope.greatestId = 0;
+                            traverse($scope.treeData, function(node) {
+                                $scope.setId(node);
+                            });
+
+                            // Fix false positive `breakable` properties
+                            traverse($scope.treeData, function(node) {
+                                node.breakable = node.breakable && $scope.isOnceBreakable(node);
+                            });
+                        }
                     } catch (ex) {
                         var alert = $mdDialog.alert({
                             title: $scope.loadFileErrorAlertTitle,
@@ -351,12 +368,40 @@ angular.module('ruzsa', [
                 });
             }
         };
+        $scope.closesBranch = function(node) {
+            var ast = node.formula.ast;
+            var path = treePath($scope.treeData,
+                function(n) { return n.id === node.id; },
+                function(n) { return n.formula.ast; }
+            );
+            return path.find(function(pathAst) {
+                return 'not' in pathAst && compareObjects(pathAst.not, ast) ||
+                       'not' in ast && compareObjects(pathAst, ast.not);
+            });
+        };
+        $scope.atomicKeys = tarskiUnaryOperators.concat(tarskiBinaryOperators)
+            .map(function(op) { return op.key; })
+            .concat(TarskiPropositionalFormulaParser.variableKey);
+        $scope.isLiteral = function(formula) {
+            var ast = formula.ast;
+            var maybeAtomic = 'not' in ast ? ast.not : ast;
+            for (var i in $scope.atomicKeys) {
+                if ($scope.atomicKeys[i] in maybeAtomic) {
+                    return true;
+                }
+            }
+            return false;
+        };
+        $scope.isOnceBreakable = function(node) {
+            return !$scope.isLiteral(node.formula) || $scope.closesBranch(node);
+        };
         $scope.submit = function (node) {
             try {
                 node.error = {};
                 var newFormula = new WFF(node.input);
                 $scope.doForConnected(node, function (n) {
                     $scope.setFormula(n, newFormula);
+                    n.breakable = $scope.isOnceBreakable(n);
                 });
                 $scope.focusNext();
             } catch (ex) {
@@ -408,6 +453,10 @@ angular.module('ruzsa', [
                 }
             });
         };
+        $scope.setId = function(node) {
+            node.id = ++$scope.greatestId;
+            return node;
+        };
         $scope.addLeaves = function () {
             if ($scope.BDStepInProgress || $scope.checkForEmptyNodes()) {
                 $scope.showStepInProgressAlert();
@@ -415,16 +464,17 @@ angular.module('ruzsa', [
             }
 
             $scope.removeBDStepMemory();
-            var id = ++$scope.greatestConnectId;
+            var connectId = ++$scope.greatestConnectId;
             var emptyNode = {formula: null,
                              editable: true,
                              breakable: true,
                              underEdit: true,
                              input: '',
-                             connectId: id,
+                             connectId: connectId,
                              inFocusQ: true};
             if (!$scope.treeData) {
                 emptyNode.focusOrder = 0;
+                $scope.setId(emptyNode);
                 $scope.treeData = emptyNode;
             } else {
                 var focusOrderSet = false;
@@ -434,6 +484,7 @@ angular.module('ruzsa', [
                         !compareObjects(node.formula.ast, {var: '*'})  // Exclude closed branches
                     ) {
                         var emptyNodeClone = clone(emptyNode);
+                        $scope.setId(emptyNodeClone);
                         if (!focusOrderSet) {
                             emptyNodeClone.focusOrder = 0;
                             focusOrderSet = true;
@@ -464,11 +515,11 @@ angular.module('ruzsa', [
                              candidate: true,
                              inFocusQ: true};
             function makeCandidateClone(o) {
-                return setFocusOrder(clone(candidate), o);
+                return $scope.setId(setFocusOrder(clone(candidate), o));
             }
             function makeDoubleCandidateClone(oTop, oBtm) {
-                var doubleCandidateClone = setFocusOrder(clone(candidate), oTop);
-                doubleCandidateClone.children = [setFocusOrder(clone(candidate), oBtm)];
+                var doubleCandidateClone = $scope.setId(setFocusOrder(clone(candidate), oTop));
+                doubleCandidateClone.children = [$scope.setId(setFocusOrder(clone(candidate), oBtm))];
                 return doubleCandidateClone;
             }
             var o = 0;
@@ -715,19 +766,7 @@ angular.module('ruzsa', [
                         }
                     }
 
-                    // Check if the node makes the branch closed
-                    // by being the negation of or being negated by
-                    // one of its ancestors
-                    var path = treePath($scope.treeData,
-                        function (n) {return n.underBreakingDown;},
-                        function (n) {return n.formula.ast;}
-                    );
-                    if (
-                        path.find(function (pathAst) {
-                            return 'not' in pathAst && compareObjects(pathAst.not, ast) ||
-                                   'not' in ast && compareObjects(pathAst, ast.not);
-                        })
-                    ) {
+                    if ($scope.closesBranch(node)) {
                         correctContinuations.push({
                             formula: null,
                             children: [{formula: {ast: {var: '*'}}}]
@@ -775,6 +814,7 @@ angular.module('ruzsa', [
                                 traverse(n, function (c) {
                                     if (c !== n) {
                                         c.editable = false;
+                                        c.breakable = $scope.isOnceBreakable(c);
                                     }
                                     c.candidate = false;
                                 });
