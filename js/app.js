@@ -1,10 +1,143 @@
-angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitize'])
+angular.module('ruzsa', [
+    'sf.treeRepeat',
+    'ngMaterial',
+    'ngMessages',
+    'ngSanitize',
+    'pascalprecht.translate',
+    'ngCookies'
+])
     .config(function($mdThemingProvider) {
         $mdThemingProvider.theme('default')
             .primaryPalette('blue')
             .accentPalette('grey');
     })
-    .controller('treeController', function($scope, $mdDialog, $timeout){
+    .config(['$translateProvider', function ($translateProvider) {
+        $translateProvider.translations('en', {
+            'OTHER_LANGUAGE': 'Magyar',
+            'OTHER_LANGUAGE_ABBR': 'HU',
+
+            // Toolbar buttons
+            'OPEN': 'Open',
+            'SAVE': 'Save',
+            'CHECK_STEP': 'Check step',
+            'UNDO': 'Undo',
+            'ISSUES': 'Issues',
+            'CODE': 'Code',
+
+            // Action buttons
+            'ADD': 'Add',
+            'BRANCH': 'Branch',
+            'ADD_TWO_NODES': 'Add two nodes',
+            'BRANCH_ETC': 'Branch and add two nodes for each branch',
+            'ADD_ONE_NODE': 'Add one node',
+
+            // Virtual keyboard buttons
+            'OR': 'or',
+            'AND': 'and',
+            'NOT': 'not',
+            'IMPLIES': 'implies',
+            'EQUIVALENT': 'equivalent',
+
+            'INPUT': 'input',
+
+            // Alerts and confirms
+            'LOAD_FILE_ERROR_ALERT_TITLE': 'Couldn\'t load file',
+            'LOAD_FILE_ERROR_ALERT_TEXT': 'Double check that you selected a Ruzsa file.',
+            'STEP_IN_PROGRESS_ALERT_TITLE': 'Cannot do this step now',
+            'STEP_IN_PROGRESS_ALERT_TEXT': 'First you have to finish or undo the step in progress.',
+            'INCORRECT_STEP_ALERT_TITLE': 'Step is incorrect',
+            'INCORRECT_STEP_ALERT_TEXT': 'You can edit the sentence candidates and check again, or undo the step and start another one.',
+            'LOAD_FILE_CONFIRM_UNSAVED_TITLE': 'You have unsaved changes',
+            'LOAD_FILE_CONFIRM_UNSAVED_TEXT': 'If you continue, your current tree will be lost.',
+            'CONFIRM_CANCEL': 'Cancel',
+            'CONFIRM_CONTINUE': 'Continue',
+            'WINDOW_UNLOAD_CONFIRM_UNSAVED': 'There are unsaved changes in your Ruzsa tree. These will be lost.'
+        });
+        $translateProvider.translations('hu', {
+            'OTHER_LANGUAGE': 'English',
+            'OTHER_LANGUAGE_ABBR': 'EN',
+
+            // Toolbar buttons
+            'OPEN': 'Megnyitás',
+            'SAVE': 'Mentés',
+            'CHECK_STEP': 'Lépés ellenőrzése',
+            'UNDO': 'Visszavonás',
+            'ISSUES': 'Észrevételek',
+            'CODE': 'Kód',
+
+            // Action buttons
+            'ADD': 'Hozzáadás',
+            'BRANCH': 'Elágazás',
+            'ADD_TWO_NODES': 'Két csúcs hozzáadása',
+            'BRANCH_ETC': 'Elágazás és két csúcs hozzáadása mindkét ághoz',
+            'ADD_ONE_NODE': 'Egy csúcs hozzáadása',
+
+            // Virtual keyboard buttons
+            'OR': 'vagy',
+            'AND': 'és',
+            'NOT': 'nem',
+            'IMPLIES': 'következik',
+            'EQUIVALENT': 'ekvivalens',
+
+            'INPUT': 'beviteli mező',
+
+            // Alerts and confirms
+            'LOAD_FILE_ERROR_ALERT_TITLE': 'Nem sikerült betölteni a fájlt',
+            'LOAD_FILE_ERROR_ALERT_TEXT': 'Ellenőrizd, hogy Ruzsa-fájlt választottál-e ki.',
+            'STEP_IN_PROGRESS_ALERT_TITLE': 'Ezt a lépést most nem lehet megtenni',
+            'STEP_IN_PROGRESS_ALERT_TEXT': 'Először fejezd be vagy vond vissza a folyamatban lévő lépést.',
+            'INCORRECT_STEP_ALERT_TITLE': 'Helytelen lépés',
+            'INCORRECT_STEP_ALERT_TEXT': 'Átírhatod a mondatjelölteket és újra ellenőrizheted, vagy visszavonhatod a lépést és másikat kezdhetsz.',
+            'LOAD_FILE_CONFIRM_UNSAVED_TITLE': 'Mentetlen változtatásaid vannak',
+            'LOAD_FILE_CONFIRM_UNSAVED_TEXT': 'Ha folytatod, a jelenlegi fád el fog veszni.',
+            'CONFIRM_CANCEL': 'Mégsem',
+            'CONFIRM_CONTINUE': 'Folytatás',
+            'WINDOW_UNLOAD_CONFIRM_UNSAVED': 'Mentetlen változtatások vannak a Ruzsa-fádban. Ezek el fognak veszni.'
+        });
+        $translateProvider.preferredLanguage('en');
+        $translateProvider.useCookieStorage();
+        $translateProvider.useSanitizeValueStrategy('escape');
+    }])
+    .controller('treeController', function($scope, $rootScope, $mdDialog, $timeout, $translate, $window){
+        $scope.generateTranslationsForScope = function() {
+            $translate([
+                // Alerts and confirms
+                'LOAD_FILE_ERROR_ALERT_TITLE',
+                'LOAD_FILE_ERROR_ALERT_TEXT',
+                'STEP_IN_PROGRESS_ALERT_TITLE',
+                'STEP_IN_PROGRESS_ALERT_TEXT',
+                'INCORRECT_STEP_ALERT_TITLE',
+                'INCORRECT_STEP_ALERT_TEXT',
+                'LOAD_FILE_CONFIRM_UNSAVED_TITLE',
+                'LOAD_FILE_CONFIRM_UNSAVED_TEXT',
+                'CONFIRM_CANCEL',
+                'CONFIRM_CONTINUE',
+                'WINDOW_UNLOAD_CONFIRM_UNSAVED'
+            ]).then(function(tr) {
+                // Alerts and confirms
+                $scope.loadFileErrorAlertTitle = tr.LOAD_FILE_ERROR_ALERT_TITLE;
+                $scope.loadFileErrorAlertText = tr.LOAD_FILE_ERROR_ALERT_TEXT;
+                $scope.stepInProgressAlertTitle = tr.STEP_IN_PROGRESS_ALERT_TITLE;
+                $scope.stepInProgressAlertText = tr.STEP_IN_PROGRESS_ALERT_TEXT;
+                $scope.incorrectStepAlertTitle = tr.INCORRECT_STEP_ALERT_TITLE;
+                $scope.incorrectStepAlertText = tr.INCORRECT_STEP_ALERT_TEXT;
+                $scope.loadFileConfirmUnsavedTitle = tr.LOAD_FILE_CONFIRM_UNSAVED_TITLE;
+                $scope.loadFileConfirmUnsavedText = tr.LOAD_FILE_CONFIRM_UNSAVED_TEXT;
+                $scope.confirmCancel = tr.CONFIRM_CANCEL;
+                $scope.confirmContinue = tr.CONFIRM_CONTINUE;
+                $scope.windowUnloadConfirmUnsaved = tr.WINDOW_UNLOAD_CONFIRM_UNSAVED;
+            });
+        };
+        $scope.generateTranslationsForScope();
+        $rootScope.$on('$translateChangeSuccess', function() {
+            $scope.generateTranslationsForScope();
+        });
+        $scope.swapLanguage = function() {
+            $translate.use(
+                $translate.use() === 'en' ? 'hu' : 'en'
+            );
+        };
+
         // Settings
         $scope.dialogFocusOnOpen = false;
 
@@ -33,7 +166,7 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
         };
 
         // Initial state
-        $scope.setState({
+        $scope.setInitialState = function() {$scope.setState({
             treeData: {
                 formula: null,
                 editable: true,
@@ -49,7 +182,27 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
             BDStepInProgress: false,
             unsavedDataPresent: false,
             filename: 'Untitled.tree'
-        });
+        });};
+        $scope.setInitialState();
+
+        $scope.getLoadFileConfirmUnsaved = function() {
+            return $mdDialog.confirm({
+                title: $scope.loadFileConfirmUnsavedTitle,
+                htmlContent: $scope.loadFileConfirmUnsavedText,
+                ok: $scope.confirmContinue,
+                cancel: $scope.confirmCancel,
+                focusOnOpen: $scope.dialogFocusOnOpen
+            });
+        };
+        $scope.setInitialStateWithConfirm = function() {
+            if ($scope.unsavedDataPresent) {
+                $mdDialog.show($scope.getLoadFileConfirmUnsaved()).then(function() {
+                    $scope.setInitialState();
+                });
+            } else {
+                $scope.setInitialState();
+            }
+        };
 
         $scope.encode = function(str) {
             return btoa(escape(str));
@@ -93,8 +246,8 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
                         $scope.setState(state, true);
                     } catch (ex) {
                         var alert = $mdDialog.alert({
-                            title: 'Couldn\'t load file',
-                            textContent: 'Double check that you selected a Ruzsa file.',
+                            title: $scope.loadFileErrorAlertTitle,
+                            textContent: $scope.loadFileErrorAlertText,
                             ok: 'OK',
                             focusOnOpen: $scope.dialogFocusOnOpen
                         });
@@ -106,14 +259,7 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
                 reader.readAsText(file);
             }
             if ($scope.unsavedDataPresent) {
-                var confirm = $mdDialog.confirm({
-                    title: 'You have unsaved changes',
-                    htmlContent: 'If you continue, your current tree will be lost.',
-                    ok: 'Continue',
-                    cancel: 'Cancel',
-                    focusOnOpen: $scope.dialogFocusOnOpen
-                });
-                $mdDialog.show(confirm).then(function() {
+                $mdDialog.show($scope.getLoadFileConfirmUnsaved()).then(function() {
                     core();
                 }, function() {
                     resetInput();
@@ -242,8 +388,8 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
         };
         $scope.showStepInProgressAlert = function () {
             var alert = $mdDialog.alert({
-                title: 'Cannot do this step now',
-                textContent: 'First you have to finish or undo the step in progress.',
+                title: $scope.stepInProgressAlertTitle,
+                textContent: $scope.stepInProgressAlertText,
                 ok: 'OK',
                 focusOnOpen: $scope.dialogFocusOnOpen
             });
@@ -426,8 +572,8 @@ angular.module('ruzsa', ['sf.treeRepeat', 'ngMaterial', 'ngMessages', 'ngSanitiz
         };
         $scope.showIncorrectStepAlert = function () {
             var alert = $mdDialog.alert({
-                title: 'Step is incorrect',
-                htmlContent: 'You can edit the sentence candidates and check again, or undo the step and start another one.',
+                title: $scope.incorrectStepAlertTitle,
+                htmlContent: $scope.incorrectStepAlertText,
                 ok: 'OK',
                 focusOnOpen: $scope.dialogFocusOnOpen
             });

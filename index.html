@@ -20,6 +20,9 @@
 <script src="js/jquery.input-autoresize.js"></script>
 <script src="node_modules/downloadjs/download.min.js"></script>
 <link rel="stylesheet" href="node_modules/material-design-icons/iconfont/material-icons.css">
+<script src="node_modules/angular-translate/dist/angular-translate.min.js"></script>
+<script src="node_modules/angular-cookies/angular-cookies.min.js"></script>
+<script src="node_modules/angular-translate-storage-cookie/angular-translate-storage-cookie.min.js"></script>
 
 <!-- Own stuff -->
 <script src="js/equi.js"></script>
@@ -38,13 +41,15 @@
 <body ng-cloak>
 <md-toolbar md-whiteframe="4" class="toolbar">
     <div class="md-toolbar-tools">
-        <img src="img/ruzsa-logo.png" height="20" class="logo"></img>
+        <md-button ng-click="setInitialStateWithConfirm()" aria-label="RUZSA" id="logo_btn">
+            <img src="img/ruzsa-logo.png" class="logo"></img>
+        </md-button>
         <div id="action_bar">
             <!-- Has to be an anchor element with the script in its href,
                  otherwise click won't be triggered. -->
             <a href="javascript:document.getElementById('file_input').click();">
                 <md-button>
-                    <i class="material-icons">&#xE2C8;</i> <span class="tool_title">Open</span> <sup><i>β</i></sup>
+                    <i class="material-icons">&#xE2C8;</i> <span class="tool_title">{{'OPEN' | translate}}</span> <sup><i>β</i></sup>
                 </md-button>
             </a>
 
@@ -52,27 +57,30 @@
                    onchange="angular.element(this).scope().loadFile(this.files)">  <!-- ng-change doesn't support file inputs -->
             <md-button ng-disabled="!unsavedDataPresent"
                        ng-click="save()">
-                <i class="material-icons">&#xE161;</i> <span class="tool_title">Save</span> <sup><i>β</i></sup>
+                <i class="material-icons">&#xE161;</i> <span class="tool_title">{{'SAVE' | translate}}</span> <sup><i>β</i></sup>
             </md-button>
             <md-button ng-disabled="!BDStepInProgress"
                        ng-click="checkStep()">
-                <i class="material-icons">&#xE5CA;</i> <span class="tool_title">Check step</span>
+                <i class="material-icons">&#xE5CA;</i> <span class="tool_title">{{'CHECK_STEP' | translate}}</span>
             </md-button>
             <md-button ng-disabled="!undoStepPossible"
                        ng-click="undoStep()">
-                <i class="material-icons">&#xE166;</i> <span class="tool_title">Undo</span>
+                <i class="material-icons">&#xE166;</i> <span class="tool_title">{{'UNDO' | translate}}</span>
             </md-button>
             <md-button class="plus_btn_tool"
                        ng-click="addLeaves()">
-                <i class="material-icons">&#xE145;</i> <span class="tool_title">Add</span>
+                <i class="material-icons">&#xE145;</i> <span class="tool_title">{{'ADD' | translate}}</span>
             </md-button>
         </div>
         <span flex></span>
         <md-button href="https://github.com/tbitai/ruzsa/issues">
-            <i class="material-icons">&#xE868;</i> <span class="tool_title">Issues</span>
+            <i class="material-icons">&#xE868;</i> <span class="tool_title">{{'ISSUES' | translate}}</span>
         </md-button>
         <md-button href="https://github.com/tbitai/ruzsa">
-            <img src="img/icons/GitHub-Mark-Light-32px.png" height="26" id="github-logo"></img> <span class="tool_title">Code</span>
+            <img src="img/icons/GitHub-Mark-Light-32px.png" height="26" id="github-logo"></img> <span class="tool_title">{{'CODE' | translate}}</span>
+        </md-button>
+        <md-button ng-click="swapLanguage()" id="lang_swapper">
+            <i class=material-icons>&#xE894;</i> <span class="tool_title">{{'OTHER_LANGUAGE' | translate}}</span><span class="tool_title_abbr">{{'OTHER_LANGUAGE_ABBR' | translate}}</span>
         </md-button>
     </div>
 </md-toolbar>
@@ -94,7 +102,7 @@
                   ng-submit="submit(node)">
                 <md-input-container>
                     <input type="text"
-                           aria-label="Input"
+                           aria-label="{{'INPUT' | translate}}"
                            ng-class="{formula_input: true,
                                       in_focus_q: node.inFocusQ}"
                            ng-model="node.input"
@@ -125,22 +133,22 @@
                                 class="bd_step_btns">
                     <md-button class="md-fab md-mini bd_step_btn"
                                ng-click="addCandidates('or', node)"
-                               aria-label="Branch">
+                               aria-label="{{'BRANCH' | translate}}">
                         <md-icon md-svg-src="img/icons/or.svg"></md-icon>
                     </md-button>
                     <md-button class="md-fab md-mini bd_step_btn"
                                ng-click="addCandidates('and', node)"
-                               aria-label="Add two nodes">
+                               aria-label="{{'ADD_TWO_NODES' | translate}}">
                         <md-icon md-svg-src="img/icons/and.svg"></md-icon>
                     </md-button>
                     <md-button class="md-fab md-mini bd_step_btn"
                                ng-click="addCandidates('equi', node)"
-                               aria-label="Branch and add two nodes for each branch">
+                               aria-label="{{'BRANCH_ETC' | translate}}">
                         <md-icon md-svg-src="img/icons/equi.svg"></md-icon>
                     </md-button>
                     <md-button class="md-fab md-mini bd_step_btn"
                                ng-click="addCandidates('double_not', node)"
-                               aria-label="Add one node">
+                               aria-label="{{'ADD_ONE_NODE' | translate}}">
                         <md-icon md-svg-src="img/icons/double_not.svg"></md-icon>
                     </md-button>
                 </md-fab-actions>
@@ -192,19 +200,19 @@
     <div id="connective_btns">
         <md-button class="md-raised connective_btn"
                    onclick="fireVirtualKey(' ∨ ')"
-                   aria-label="or">∨</md-button>
+                   aria-label="{{'OR' | translate}}">∨</md-button>
         <md-button class="md-raised connective_btn"
                    onclick="fireVirtualKey(' ∧ ')"
-                   aria-label="and">∧</md-button>
+                   aria-label="{{'AND' | translate}}">∧</md-button>
         <md-button class="md-raised connective_btn"
                    onclick="fireVirtualKey('¬')"
-                   aria-label="not">¬</md-button>
+                   aria-label="{{'NOT' | translate}}">¬</md-button>
         <md-button class="md-raised connective_btn"
                    onclick="fireVirtualKey(' → ')"
-                   aria-label="implies">→</md-button>
+                   aria-label="{{'IMPLIES' | translate}}">→</md-button>
         <md-button class="md-raised connective_btn"
                    onclick="fireVirtualKey(' ↔ ')"
-                   aria-label="equivalent">↔</md-button>
+                   aria-label="{{'EQUIVALENT' | translate}}">↔</md-button>
     </div>
     <table>
         <tr>
@@ -277,10 +285,20 @@
 </div>
 <md-button class="md-fab plus_btn"
            ng-click="addLeaves()"
-           aria-label="Add">
+           aria-label="{{'ADD' | translate}}">
     <md-icon md-svg-src="img/icons/ic_add_black_24px.svg"></md-icon>
 </md-button>
 </md-content>
+
+<script>
+    window.onbeforeunload = function() {
+        var sc = angular.element(document.body).scope();
+        if (sc.unsavedDataPresent) {
+            return sc.windowUnloadConfirmUnsaved;
+        }
+        return undefined;
+    };
+</script>
 
 <!-- Piwik -->
 <script type="text/javascript">

@@ -41,6 +41,10 @@ $candidate_color: #cccccc
 .toolbar
   position: fixed
 
+  .md-button#lang_swapper
+    min-width: 100px !important  // Persist width after swap
+
+
   // Adjust right padding with content and left padding with right padding
   $padding-left-right: 5px
   padding-left:  $padding-left-right
@@ -57,8 +61,20 @@ $toolbar_shadow_height: 4px
   bottom: 20px
   right: 10px
 
-.logo
-  margin-right: 30px
+#logo_btn
+  $width: 100px
+  width: $width !important
+  min-width: $width !important
+  max-width: $width !important
+
+  margin-right: 20px
+
+  .logo
+    // Vertically center
+    $padding-top: 13px
+    padding-top: $padding-top
+
+    height: 20px + $padding-top
 
 $formula_margin-top-bottom: 9px
 
@@ -163,15 +179,25 @@ md-dialog
   text-transform: none !important
 
 $vkb_height_shrink_limit: 600px
-$md_toolbar_height_shrink_limit: 959px
+$toolbar_width_shrink_limit: 1400px
 
-@media (max-width: $md_toolbar_height_shrink_limit)
+.tool_title_abbr
+  display: none
+
+@media (max-width: $toolbar_width_shrink_limit)
   .tool_title
     display: none
+
+  .tool_title_abbr
+    display: inline
 
   .toolbar .md-button
     min-width: 0 !important
     max-width: 45px
+
+  .toolbar .md-button#lang_swapper
+    max-width: 60px
+    min-width: 60px !important  // Persist width after swap
 
   .toolbar-placeholder
     height: 45px
@@ -179,7 +205,7 @@ $md_toolbar_height_shrink_limit: 959px
   #virtual_keyboard
     top: 75px
 
-@media (max-width: $md_toolbar_height_shrink_limit), (max-height: $vkb_height_shrink_limit)
+@media (max-width: $toolbar_width_shrink_limit), (max-height: $vkb_height_shrink_limit)
   #virtual_keyboard .md-button
     font-size: 12px
     min-width: 75px
