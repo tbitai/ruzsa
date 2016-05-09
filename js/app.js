@@ -249,6 +249,14 @@ angular.module('ruzsa', [
                         var state = dataJSON.state;
                         state.filename = file.name;
                         $scope.setState(state, true);
+                        if (semver.lt(version, '0.2.0')) {
+                            // Add missing `brokenDown`s
+                            traverse($scope.treeData, function(node) {
+                                if (!node.breakable) {
+                                    node.brokenDown = true;
+                                }
+                            });
+                        }
                         if (semver.lt(version, '0.3.0')) {
                             // Add id's
                             $scope.greatestId = 0;
