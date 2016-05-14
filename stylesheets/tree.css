@@ -35,6 +35,7 @@
     left: 50%;
     border-left: 1px solid black; }
   .tree li:only-child {
+    float: none;
     padding-top: 0; }
     .tree li:only-child::after, .tree li:only-child::before {
       display: none; }

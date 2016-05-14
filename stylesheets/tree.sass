@@ -56,6 +56,10 @@ $line_height: 25px
       border-left: $border
 
     &:only-child
+      // Fix horizontal position of subtrees that are narrower than their
+      // parents (bug in TheCodePlayer's code)
+      float: none
+
       &::after, &::before
         display: none
 
