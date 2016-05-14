@@ -56,8 +56,19 @@ $line_height: 25px
       border-left: $border
 
     &:only-child
-      // Fix horizontal position of subtrees that are narrower than their
-      // parents (bug in TheCodePlayer's code)
+      // Partially fix the problem that if we have a subforest (i.e. a collection
+      // of subtrees) with its trees stemming from the same parent such that the
+      // subforest is narrower than the parent then it won't be centered with
+      // respect to the parent.
+      //
+      // This is a bug in TheCodePlayer's code.
+      //
+      // For the fixer's use case, it's good enough to fix this only in the case
+      // when the subforest is just one subtree, so he fixed only this case.
+      // If you need a general fix then probably you should do something else
+      // instead of setting `float`s for the `li`s, as suggested in some comments
+      // at http://thecodeplayer.com/walkthrough/css3-family-tree (you can find
+      // these comments if you search for 'float' on the page).
       float: none
 
       &::after, &::before
