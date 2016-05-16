@@ -216,16 +216,17 @@ angular.module('ruzsa', [
         };
         $scope.save = function() {
             $scope.unsavedDataPresent = false;
-            $.getJSON('../package.json', function(data) {
-                var version = data.version;
+            $.getJSON('../package.json', function(packageData) {
+                var version = packageData.version;
                 var state = $scope.getState();
-                var downloadJSON = {
+                var dataJSON = {
                     version: version,
                     state: state
                 };
-                var downloadStr = angular.toJson(downloadJSON);  // Properties with leading $$ characters will be stripped
-                var downloadStrEncoded = $scope.encode(downloadStr);
-                download(downloadStrEncoded, $scope.filename);
+                var dataStr = angular.toJson(dataJSON);  // Properties with leading $$ characters will be stripped
+                var dataStrEncoded = $scope.encode(dataStr);
+                var downloadStr = 'Ruzsa v' + version + ' ' + dataStrEncoded;
+                download(downloadStr, $scope.filename);
             });
         };
         $scope.loadFile = function(files) {
@@ -238,6 +239,10 @@ angular.module('ruzsa', [
                 reader.onload = function(event) {
                     try {
                         var text = event.target.result;
+
+                        // Remove program and version info
+                        text = text.replace(/^Ruzsa \S+\s/, '');
+
                         var dataStr = $scope.decode(text);
                         var dataJSON = JSON.parse(dataStr);
 
@@ -781,8 +786,11 @@ angular.module('ruzsa', [
                         });
                     }
 
+                    var continuedWithClosing = false;
+
                     traverse(node, function (n) {
                         if (n.underContinuation) {
+                            // Update allCandidatesAreEmpty
                             if (allCandidatesAreEmpty) {
                                 traverse(n, function (c) {
                                     if (c !== n && c.formula) {
@@ -791,6 +799,14 @@ angular.module('ruzsa', [
                                     }
                                 });
                             }
+
+                            // Update continuedWithClosing
+                            continuedWithClosing = compareObjects(
+                                n.children[0].formula.ast,
+                                {var: '*'}
+                            );  // If only this update was in the traverse, we could break here.
+
+                            // Update stepIsCorrect
                             var continuationIsCorrect = false;
                             var cont;
                             for (var i in correctContinuations) {
@@ -798,11 +814,23 @@ angular.module('ruzsa', [
                                 cont.formula = n.formula;
                                 if (compareFormulaTrees(n, cont)) {
                                     continuationIsCorrect = true;
+
+                                    // From now on, allow only this continuation.
+                                    // (Multiple continuations are correct for
+                                    // ¬¬A if ¬A or ¬¬¬A is among its ancestors,
+                                    // and potentially we will have similar possible
+                                    // mixings of the breaking-down rules in the
+                                    // future. Note that this breaks the possibility
+                                    // of using different orders of a continuation
+                                    // according to the same rule; this is a tradeoff
+                                    // for the code being simple.)
+                                    correctContinuations = [correctContinuations[i]];
+
                                     break;
                                 }
                             }
                             if (!continuationIsCorrect) {
-                                stepIsCorrect = false;
+                                stepIsCorrect = false;  // If only this update was in the traverse, we could break here.
                             }
                         }
                     });
@@ -813,7 +841,9 @@ angular.module('ruzsa', [
                         $scope.BDStepInProgress = false;
                         node.underBreakingDown = false;
                         node.breakable = false;
-                        node.brokenDown = true;
+                        if (!continuedWithClosing) {
+                            node.brokenDown = true;
+                        }
                         node.lastBrokenDown = true;
                         traverse(node, function (n) {
                             if (n.underContinuation) {
