@@ -50,7 +50,7 @@
                  otherwise click won't be triggered. -->
             <a href="javascript:document.getElementById('file_input').click();">
                 <md-button>
-                    <i class="material-icons">&#xE2C8;</i> <span class="tool_title">{{'OPEN' | translate}}</span> <sup><i>β</i></sup>
+                    <i class="material-icons">&#xE2C8;</i> <span class="tool_title">{{'OPEN' | translate}}</span>
                 </md-button>
             </a>
 
@@ -58,7 +58,7 @@
                    onchange="angular.element(this).scope().loadFile(this.files)">  <!-- ng-change doesn't support file inputs -->
             <md-button ng-disabled="!unsavedDataPresent"
                        ng-click="save()">
-                <i class="material-icons">&#xE161;</i> <span class="tool_title">{{'SAVE' | translate}}</span> <sup><i>β</i></sup>
+                <i class="material-icons">&#xE161;</i> <span class="tool_title">{{'SAVE' | translate}}</span>
             </md-button>
             <md-button ng-disabled="!BDStepInProgress"
                        ng-click="checkStep()">
