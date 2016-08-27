@@ -1,0 +1,13 @@
+{
+  "hosting": {
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      ".git/**",
+      ".sass-cache/**",
+      "**/node_modules/**",
+      "js/lib/**",
+      "js/app.js"
+    ]
+  }
+}

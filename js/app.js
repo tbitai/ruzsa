@@ -1,3 +1,7 @@
+import 'angular';
+import 'angular-tree-repeat';
+import clone from './lib/clone.js';
+
 angular.module('ruzsa', [
     'sf.treeRepeat',
     'ngMaterial',

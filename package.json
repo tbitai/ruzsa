@@ -3,7 +3,10 @@
   "version": "0.3.1",
   "private": true,
   "scripts": {
-    "now-start": "node server-now.js"
+    "build": "rollup -c",
+    "postinstall": "npm run build",
+    "deploy": "firebase login && firebase deploy --project default",
+    "deploy-staging": "firebase login && firebase deploy --project staging"
   },
   "dependencies": {
     "angular": "^1.5.0",
@@ -17,10 +20,14 @@
     "angular-translate-storage-cookie": "^2.11.0",
     "angular-tree-repeat": "https://github.com/tbitai/angular-tree-repeat/tarball/npm",
     "downloadjs": "^1.4.2",
-    "express": "^4.13.4",
     "formula-parser": "https://github.com/tbitai/formula-parser/tarball/npm",
-    "helmet": "^1.1.0",
     "jquery": "^2.2.1",
-    "material-design-icons": "^2.2.3"
+    "material-design-icons": "^2.2.3",
+    "rollup": "^0.34.10",
+    "rollup-plugin-commonjs": "^3.3.1",
+    "rollup-plugin-node-resolve": "^2.0.0"
+  },
+  "devDependencies": {
+    "firebase-tools": "^3.0.7"
   }
 }
