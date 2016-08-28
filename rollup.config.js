@@ -1,5 +1,6 @@
 import commonjs from 'rollup-plugin-commonjs';
 import nodeResolve from 'rollup-plugin-node-resolve';
+import uglify from 'rollup-plugin-uglify';
 
 export default {
   entry: 'js/app.js',
@@ -41,6 +42,19 @@ export default {
     // Convert CommonJS modules to ES6, so they can be included in the bundle
     commonjs({
       include: 'node_modules/**'
+    }),
+    uglify({
+      output: {
+        // Preserve license comments.
+        comments: function(node, comment) {
+            var text = comment.value;
+            var type = comment.type;
+            if (type == "comment2") {
+                // multiline comment
+                return /@preserve|@license|@cc_on/i.test(text);
+            }
+        }
+      }
     })
   ]
 };

@@ -25,7 +25,8 @@
     "material-design-icons": "^2.2.3",
     "rollup": "^0.34.10",
     "rollup-plugin-commonjs": "^3.3.1",
-    "rollup-plugin-node-resolve": "^2.0.0"
+    "rollup-plugin-node-resolve": "^2.0.0",
+    "rollup-plugin-uglify": "^1.0.1"
   },
   "devDependencies": {
     "firebase-tools": "^3.0.7"
