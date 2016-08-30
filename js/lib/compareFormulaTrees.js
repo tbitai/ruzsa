@@ -19,3 +19,6 @@ function compareFormulaTrees(tree, ref) {
         return true;
     }
 }
+
+export default compareFormulaTrees;
+

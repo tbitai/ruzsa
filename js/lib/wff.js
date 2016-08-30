@@ -63,3 +63,12 @@ WFF.prototype.edit = function(unicode) {
 function compareFormulas(formula, ref) {
     return compareObjects(formula.ast, ref.ast);
 }
+
+export default {
+	tarskiUnaryOperators: tarskiUnaryOperators, 
+	tarskiBinaryOperators: tarskiBinaryOperators,
+	TarskiPropositionalFormulaParser: TarskiPropositionalFormulaParser,
+	WFF: WFF,
+	compareFormulas: compareFormulas
+};
+

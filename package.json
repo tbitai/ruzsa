@@ -3,8 +3,10 @@
   "version": "0.3.1",
   "private": true,
   "scripts": {
-    "build": "rollup -c",
-    "postinstall": "npm run build",
+    "build-js": "rollup -c",
+    "build-css": "node-sass -t compressed stylesheets/main.sass stylesheets/bundle.css",
+    "collect-fonts": "./collect_fonts.sh",
+    "postinstall": "npm run build-js && npm run collect-fonts && npm run build-css",
     "deploy": "firebase login && firebase deploy --project default",
     "deploy-staging": "firebase login && firebase deploy --project staging"
   },
@@ -23,9 +25,11 @@
     "formula-parser": "https://github.com/tbitai/formula-parser/tarball/npm",
     "jquery": "^2.2.1",
     "material-design-icons": "^2.2.3",
+    "node-sass": "^3.8.0",
     "rollup": "^0.34.10",
     "rollup-plugin-commonjs": "^3.3.1",
-    "rollup-plugin-node-resolve": "^2.0.0"
+    "rollup-plugin-node-resolve": "^2.0.0",
+    "semver": "^5.3.0"
   },
   "devDependencies": {
     "firebase-tools": "^3.0.7"

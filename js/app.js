@@ -1,6 +1,28 @@
 import 'angular';
 import 'angular-tree-repeat';
+import 'formula-parser';
+import 'angular-animate';
+import 'angular-aria';
+import 'angular-sanitize';
+import 'angular-material';
+import 'angular-messages';
+import 'jquery';
+import 'angular-translate';
+import 'angular-cookies';
+import 'angular-translate-storage-cookie';
+import semver from 'semver';
+import equi from './lib/equi.js';
+import compareObjects from './lib/compareObjects.js';
 import clone from './lib/clone.js';
+import { tarskiUnaryOperators } from './lib/wff.js';
+import { tarskiBinaryOperators } from './lib/wff.js';
+import { TarskiPropositionalFormulaParser } from './lib/wff.js';
+import { WFF } from './lib/wff.js';
+import { compareFormulas } from './lib/wff.js';
+import { traverse } from './lib/treeUtils.js';
+import { traverseBF } from './lib/treeUtils.js';
+import { treePath } from './lib/treeUtils.js';
+import compareFormulaTrees from './lib/compareFormulaTrees.js';
 
 angular.module('ruzsa', [
     'sf.treeRepeat',
