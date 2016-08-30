@@ -34,9 +34,9 @@ function treePath(root, isDest, repr) {
     return false;
 }
 
-export default {
-	traverse: traverse,
-	traverseBF: traverseBF,
-	treePath: treePath
+export {
+	traverse,
+	traverseBF,
+	treePath
 };
 
