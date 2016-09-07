@@ -2,11 +2,15 @@
   "name": "ruzsa",
   "version": "0.3.1",
   "private": true,
+  "jshintConfig": {
+      "esversion": 6
+  },
   "scripts": {
     "build-js": "rollup -c",
-    "build-css": "node-sass -t compressed stylesheets/main.sass stylesheets/bundle.css",
+    "build-js-watch": "rollup -cw",
+    "build-css": "node-sass --output-style compressed stylesheets/main.sass stylesheets/bundle.css",
     "collect-fonts": "./collect_fonts.sh",
-    "postinstall": "npm run build-js && npm run collect-fonts && npm run build-css",
+    "build": "npm run build-js && npm run collect-fonts && npm run build-css",
     "deploy": "firebase login && firebase deploy --project default",
     "deploy-staging": "firebase login && firebase deploy --project staging"
   },
@@ -33,6 +37,7 @@
     "semver": "^5.3.0"
   },
   "devDependencies": {
-    "firebase-tools": "^3.0.7"
+    "firebase-tools": "^3.0.7",
+    "rollup-watch": "^2.5.0"
   }
 }

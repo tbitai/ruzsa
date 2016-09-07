@@ -2,12 +2,17 @@
   "hosting": {
     "public": ".",
     "ignore": [
-      "firebase.json",
-      ".git/**",
-      ".sass-cache/**",
-      "**/node_modules/**",
-      "js/lib/**",
-      "js/app.js"
+      "**",
+      "!index.html",
+      "!*/**",
+      ".*/**",
+      "node_modules/**",
+      "fonts/**",
+      "!fonts/collected/**",
+      "js/**",
+      "!js/bundle.js",
+      "stylesheets/**",
+      "!stylesheets/bundle.css"
     ]
   }
 }

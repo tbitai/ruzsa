@@ -1,3 +1,7 @@
+import FormulaParser from '../../node_modules/formula-parser/formulaParser.js';
+import compareObjects from './compareObjects.js';
+
+
 var tarskiUnaryOperators = [
     {symbol: 'Tet',       key: 'tet',       precedence: 5},
     {symbol: 'Small',     key: 'small',     precedence: 5},
@@ -69,6 +73,5 @@ export {
 	tarskiBinaryOperators,
 	TarskiPropositionalFormulaParser,
 	WFF,
-	compareFormulas 
+	compareFormulas
 };
-

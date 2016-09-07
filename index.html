@@ -61,12 +61,6 @@
 
 <md-content class="content">
 <div class="tree">
-<script>
-    function makeActive(el) {
-        $('.active_input').removeClass('active_input');
-        $(el).addClass('active_input');
-    }
-</script>
 <ul>
     <li sf-treepeat="node in children of treeData">
         <div ng-switch="node.underEdit"
@@ -136,41 +130,6 @@
 </ul>
 </div>
 <div id="virtual_keyboard" md-whiteframe="4">
-    <script>
-        function setCursorPosition(el, pos) {
-            el.setSelectionRange(pos, pos);
-        }
-        function fireVirtualKey(keyStr, cursorPos) {
-            var i = document.getElementsByClassName('active_input')[0];
-            if (i !== undefined) {
-                var p = i.selectionStart;
-                var v = i.value;
-                var before = v.slice(0, p);
-                var after =  v.slice(p);
-                i.value = before + keyStr + after;
-
-                // Trigger input event for inputAutoresize
-                $(i).trigger('input');
-
-                var l = i.value.length;
-                var defaultPos = l - after.length;
-                setCursorPosition(i, defaultPos);
-                i.focus();
-                if (cursorPos !== undefined) {
-                    setCursorPosition(i, defaultPos + cursorPos);
-                }
-            }
-        }
-        function checkCommaAndParenthesis(el) {
-            var p = el.selectionStart;
-            var c = el.value[p];
-            if (c == ',') {
-                setCursorPosition(el, p + 2);
-            } else if (c == ')') {
-                setCursorPosition(el, p + 1);
-            }
-        }
-    </script>
     <div id="connective_btns">
         <md-button class="md-raised connective_btn"
                    onclick="fireVirtualKey(' ∨ ')"

@@ -3,5 +3,7 @@ npm-debug.log
 .sass-cache
 js/bundle.js
 stylesheets/bundle.*
-fonts/collected
+fonts/collected/*
+!fonts/collected/.gitkeep
+js/bundle.js.map
 

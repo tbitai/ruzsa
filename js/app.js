@@ -1,22 +1,63 @@
 import 'angular';
 import 'angular-tree-repeat';
-import 'formula-parser';
 import 'angular-animate';
 import 'angular-aria';
 import 'angular-sanitize';
 import 'angular-material';
 import 'angular-messages';
-import 'jquery';
+import $ from 'jquery';
 import 'angular-translate';
 import 'angular-cookies';
 import 'angular-translate-storage-cookie';
+import './lib/jquery.input-autoresize.js';
+import download from 'downloadjs';
 import semver from 'semver';
-import equi from './lib/equi.js';
 import compareObjects from './lib/compareObjects.js';
 import clone from './lib/clone.js';
-import { tarskiUnaryOperators, tarskiBinaryOperators, TarskiPropositionalFormulaParser, WFF, compareFormulas } from './lib/wff.js';
+import { tarskiUnaryOperators, tarskiBinaryOperators, TarskiPropositionalFormulaParser, WFF } from './lib/wff.js';
 import { traverse, traverseBF, treePath } from './lib/treeUtils.js';
 import compareFormulaTrees from './lib/compareFormulaTrees.js';
+
+
+window.makeActive = function (el) {
+    $('.active_input').removeClass('active_input');
+    $(el).addClass('active_input');
+};
+
+// Virtual keyboard
+function setCursorPosition(el, pos) {
+    el.setSelectionRange(pos, pos);
+}
+window.fireVirtualKey = function (keyStr, cursorPos) {
+    var i = document.getElementsByClassName('active_input')[0];
+    if (i !== undefined) {
+        var p = i.selectionStart;
+        var v = i.value;
+        var before = v.slice(0, p);
+        var after =  v.slice(p);
+        i.value = before + keyStr + after;
+
+        // Trigger input event for inputAutoresize
+        $(i).trigger('input');
+
+        var l = i.value.length;
+        var defaultPos = l - after.length;
+        setCursorPosition(i, defaultPos);
+        i.focus();
+        if (cursorPos !== undefined) {
+            setCursorPosition(i, defaultPos + cursorPos);
+        }
+    }
+};
+window.checkCommaAndParenthesis = function (el) {
+    var p = el.selectionStart;
+    var c = el.value[p];
+    if (c == ',') {
+        setCursorPosition(el, p + 2);
+    } else if (c == ')') {
+        setCursorPosition(el, p + 1);
+    }
+};
 
 angular.module('ruzsa', [
     'sf.treeRepeat',
@@ -26,11 +67,11 @@ angular.module('ruzsa', [
     'pascalprecht.translate',
     'ngCookies'
 ])
-    .config(function($mdThemingProvider) {
+    .config(['$mdThemingProvider', function($mdThemingProvider) {
         $mdThemingProvider.theme('default')
             .primaryPalette('blue')
             .accentPalette('grey');
-    })
+    }])
     .config(['$translateProvider', function ($translateProvider) {
         $translateProvider.translations('en', {
             'OTHER_LANGUAGE': 'Magyar',
@@ -118,7 +159,11 @@ angular.module('ruzsa', [
         $translateProvider.useCookieStorage();
         $translateProvider.useSanitizeValueStrategy('escape');
     }])
-    .controller('treeController', function($scope, $rootScope, $mdDialog, $timeout, $translate, $window){
+    .controller('treeController', [
+        '$scope', '$rootScope', '$mdDialog', '$timeout', '$translate', '$window',
+        function(
+            $scope, $rootScope, $mdDialog, $timeout, $translate, $window
+        ){
         $scope.generateTranslationsForScope = function() {
             $translate([
                 // Alerts and confirms
@@ -245,7 +290,7 @@ angular.module('ruzsa', [
                 };
                 var downloadStr = angular.toJson(downloadJSON);  // Properties with leading $$ characters will be stripped
                 var downloadStrEncoded = $scope.encode(downloadStr);
-                download(downloadStrEncoded, $scope.filename);
+                download(downloadStrEncoded, $scope.filename, 'application/octet-stream');
             });
         };
         $scope.loadFile = function(files) {
@@ -857,4 +902,4 @@ angular.module('ruzsa', [
                 }
             });
         };
-    });
+    }]);

@@ -1,3 +1,6 @@
+import { compareFormulas } from './wff.js';
+import equi from './equi.js';
+
 function compareFormulaTrees(tree, ref) {
     if (!compareFormulas(tree.formula, ref.formula)) {
         return false;
@@ -21,4 +24,3 @@ function compareFormulaTrees(tree, ref) {
 }
 
 export default compareFormulaTrees;
-

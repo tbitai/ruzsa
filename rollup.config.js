@@ -5,6 +5,11 @@ import uglify from 'rollup-plugin-uglify';
 export default {
   entry: 'js/app.js',
   dest: 'js/bundle.js', // equivalent to --output
+  format: 'iife',
+  sourceMap: true,
+  globals: {
+      angular: 'angular'
+  },
   plugins: [
     nodeResolve({
         // use "module" field for ES6 module if possible
