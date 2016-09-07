@@ -1,6 +1,7 @@
 import commonjs from 'rollup-plugin-commonjs';
 import nodeResolve from 'rollup-plugin-node-resolve';
 import uglify from 'rollup-plugin-uglify';
+import json from 'rollup-plugin-json';
 
 export default {
   entry: 'js/app.js',
@@ -43,10 +44,11 @@ export default {
         // local ones with the same names
         preferBuiltins: false  // Default: true
     }),
-
-    // Convert CommonJS modules to ES6, so they can be included in the bundle
     commonjs({
       include: 'node_modules/**'
+    }),
+    json({
+      include: 'package.json'
     }),
     uglify({
       output: {

@@ -1,3 +1,4 @@
+import { version } from '../package.json';
 import 'angular';
 import 'angular-tree-repeat';
 import 'angular-animate';
@@ -281,17 +282,14 @@ angular.module('ruzsa', [
         };
         $scope.save = function() {
             $scope.unsavedDataPresent = false;
-            $.getJSON('../package.json', function(data) {
-                var version = data.version;
-                var state = $scope.getState();
-                var downloadJSON = {
-                    version: version,
-                    state: state
-                };
-                var downloadStr = angular.toJson(downloadJSON);  // Properties with leading $$ characters will be stripped
-                var downloadStrEncoded = $scope.encode(downloadStr);
-                download(downloadStrEncoded, $scope.filename, 'application/octet-stream');
-            });
+            var state = $scope.getState();
+            var downloadJSON = {
+                version: version,
+                state: state
+            };
+            var downloadStr = angular.toJson(downloadJSON);  // Properties with leading $$ characters will be stripped
+            var downloadStrEncoded = $scope.encode(downloadStr);
+            download(downloadStrEncoded, $scope.filename, 'application/octet-stream');
         };
         $scope.loadFile = function(files) {
             function resetInput() {  // We need this to allow to select the same file again later
