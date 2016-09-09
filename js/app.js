@@ -283,13 +283,14 @@ angular.module('ruzsa', [
         $scope.save = function() {
             $scope.unsavedDataPresent = false;
             var state = $scope.getState();
-            var downloadJSON = {
+            var dataJSON = {
                 version: version,
                 state: state
             };
-            var downloadStr = angular.toJson(downloadJSON);  // Properties with leading $$ characters will be stripped
-            var downloadStrEncoded = $scope.encode(downloadStr);
-            download(downloadStrEncoded, $scope.filename, 'application/octet-stream');
+            var dataStr = angular.toJson(dataJSON);  // Properties with leading $$ characters will be stripped
+            var dataStrEncoded = $scope.encode(dataStr);
+            var downloadStr = 'Ruzsa v' + version + ' ' + dataStrEncoded;
+            download(downloadStr, $scope.filename, 'application/octet-stream');
         };
         $scope.loadFile = function(files) {
             function resetInput() {  // We need this to allow to select the same file again later
@@ -301,6 +302,10 @@ angular.module('ruzsa', [
                 reader.onload = function(event) {
                     try {
                         var text = event.target.result;
+
+                        // Remove program and version info
+                        text = text.replace(/^Ruzsa \S+\s/, '');
+
                         var dataStr = $scope.decode(text);
                         var dataJSON = JSON.parse(dataStr);
 
@@ -713,51 +718,58 @@ angular.module('ruzsa', [
                     var allCandidatesAreEmpty = true;
                     var stepIsCorrect = true;
                     var ast = node.formula.ast;
-                    var correctContinuations = [];
+                    var correctContinuationGroups = [];
                     var permutationsOfTwo = [[0, 1], [1, 0]],
-                        i, j, p, pOuter, pInner;
+                        i, j, p, pOuter, pInner, group;
                     if ('or' in ast) {
+                        group = [];
                         for (i in permutationsOfTwo) {
                             p = permutationsOfTwo[i];
-                            correctContinuations.push({
+                            group.push({
                                 formula: null,
                                 children: [{formula: {ast: ast.or[p[0]]}},
                                            {formula: {ast: ast.or[p[1]]}}]
                             });
                         }
+                        correctContinuationGroups.push(group);
                     } else if ('impl' in ast) {
-                        correctContinuations.push({
-                            formula: null,
-                            children: [{formula: {ast: {not: ast.impl[0]}}},
-                                       {formula: {ast: ast.impl[1]}}]
-                        });
-                        correctContinuations.push({
-                            formula: null,
-                            children: [{formula: {ast: ast.impl[1]}},
-                                       {formula: {ast: {not: ast.impl[0]}}}]
-                        });
+                        correctContinuationGroups.push([
+                            {
+                                formula: null,
+                                children: [{formula: {ast: {not: ast.impl[0]}}},
+                                           {formula: {ast: ast.impl[1]}}]
+                            },
+                            {
+                                formula: null,
+                                children: [{formula: {ast: ast.impl[1]}},
+                                           {formula: {ast: {not: ast.impl[0]}}}]
+                            }
+                        ]);
                     } else if ('and' in ast) {
+                        group = [];
                         for (i in permutationsOfTwo) {
                             p = permutationsOfTwo[i];
-                            correctContinuations.push({
+                            group.push({
                                 formula: null,
                                 children: [{formula: {ast: ast.and[p[0]]},
                                             children: [{formula: {ast: ast.and[p[1]]}}]}]
                             });
                         }
+                        correctContinuationGroups.push(group);
                     } else if ('equi' in ast) {
+                        group = [];
                         for (i in permutationsOfTwo) {
                             pOuter = permutationsOfTwo[i];
                             for (j in permutationsOfTwo) {
                                 pInner = permutationsOfTwo[j];
-                                correctContinuations.push({
+                                group.push({
                                     formula: null,
                                     children: [{formula: {ast: ast.equi[pOuter[0]]},
                                                 children: [{formula: {ast: ast.equi[pOuter[1]]}}]},
                                                {formula: {ast: {not: ast.equi[pInner[0]]}},
                                                 children: [{formula: {ast: {not: ast.equi[pInner[1]]}}}]}]
                                 });
-                                correctContinuations.push({
+                                group.push({
                                     formula: null,
                                     children: [{formula: {ast: {not: ast.equi[pOuter[0]]}},
                                                 children: [{formula: {ast: {not: ast.equi[pOuter[1]]}}}]},
@@ -766,67 +778,75 @@ angular.module('ruzsa', [
                                 });
                             }
                         }
+                        correctContinuationGroups.push(group);
                     } else if ('not' in ast && 'not' in ast.not) {
-                        correctContinuations.push({
+                        correctContinuationGroups.push([{
                             formula: null,
                             children: [{formula: {ast: ast.not.not}}]
-                        });
+                        }]);
                     } else if ('not' in ast && 'or' in ast.not) {
+                        group = [];
                         for (i in permutationsOfTwo) {
                             p = permutationsOfTwo[i];
-                            correctContinuations.push({
+                            group.push({
                                 formula: null,
                                 children: [{formula: {ast: {not: ast.not.or[p[0]]}},
                                             children: [{formula: {ast: {not: ast.not.or[p[1]]}}}]}]
                             });
                         }
+                        correctContinuationGroups.push(group);
                     } else if ('not' in ast && 'impl' in ast.not) {
-                        correctContinuations.push({
+                        group = [];
+                        group.push({
                             formula: null,
                             children: [{formula: {ast: ast.not.impl[0]},
                                         children: [{formula: {ast: {not: ast.not.impl[1]}}}]}]
                         });
-                        correctContinuations.push({
+                        group.push({
                             formula: null,
                             children: [{formula: {ast: {not: ast.not.impl[1]}},
                                         children: [{formula: {ast: ast.not.impl[0]}}]}]
                         });
+                        correctContinuationGroups.push(group);
                     } else if ('not' in ast && 'and' in ast.not) {
+                        group = [];
                         for (i in permutationsOfTwo) {
                             p = permutationsOfTwo[i];
-                            correctContinuations.push({
+                            group.push({
                                 formula: null,
                                 children: [{formula: {ast: {not: ast.not.and[p[0]]}}},
                                            {formula: {ast: {not: ast.not.and[p[1]]}}}]
                             });
                         }
+                        correctContinuationGroups.push(group);
                     } else if ('not' in ast && 'equi' in ast.not) {
+                        group = [];
                         for (i in permutationsOfTwo) {
                             pOuter = permutationsOfTwo[i];
                             for (j in permutationsOfTwo) {
                                 pInner = permutationsOfTwo[j];
-                                correctContinuations.push({
+                                group.push({
                                     formula: null,
                                     children: [{formula: {ast: {not: ast.not.equi[pOuter[0]]}},
                                                 children: [{formula: {ast: ast.not.equi[pOuter[1]]}}]},
                                                {formula: {ast: {not: ast.not.equi[pInner[0]]}},
                                                 children: [{formula: {ast: ast.not.equi[pInner[1]]}}]}]
                                 });
-                                correctContinuations.push({
+                                group.push({
                                     formula: null,
                                     children: [{formula: {ast: ast.not.equi[pOuter[0]]},
                                                 children: [{formula: {ast: {not: ast.not.equi[pOuter[1]]}}}]},
                                                {formula: {ast: ast.not.equi[pInner[0]]},
                                                 children: [{formula: {ast: {not: ast.not.equi[pInner[1]]}}}]}]
                                 });
-                                correctContinuations.push({
+                                group.push({
                                     formula: null,
                                     children: [{formula: {ast: {not: ast.not.equi[pOuter[0]]}},
                                                 children: [{formula: {ast: ast.not.equi[pOuter[1]]}}]},
                                                {formula: {ast: ast.not.equi[pInner[0]]},
                                                 children: [{formula: {ast: {not: ast.not.equi[pInner[1]]}}}]}]
                                 });
-                                correctContinuations.push({
+                                group.push({
                                     formula: null,
                                     children: [{formula: {ast: ast.not.equi[pOuter[0]]},
                                                 children: [{formula: {ast: {not: ast.not.equi[pOuter[1]]}}}]},
@@ -835,17 +855,21 @@ angular.module('ruzsa', [
                                 });
                             }
                         }
+                        correctContinuationGroups.push(group);
                     }
 
                     if ($scope.closesBranch(node)) {
-                        correctContinuations.push({
+                        correctContinuationGroups.push([{
                             formula: null,
                             children: [{formula: {ast: {var: '*'}}}]
-                        });
+                        }]);
                     }
+
+                    var continuedWithClosing = false;
 
                     traverse(node, function (n) {
                         if (n.underContinuation) {
+                            // Update allCandidatesAreEmpty
                             if (allCandidatesAreEmpty) {
                                 traverse(n, function (c) {
                                     if (c !== n && c.formula) {
@@ -854,18 +878,40 @@ angular.module('ruzsa', [
                                     }
                                 });
                             }
+
+                            // Update continuedWithClosing
+                            continuedWithClosing = compareObjects(
+                                n.children[0].formula.ast,
+                                {var: '*'}
+                            );  // If only this update was in the traverse, we could break here.
+
+                            // Update stepIsCorrect
                             var continuationIsCorrect = false;
-                            var cont;
-                            for (var i in correctContinuations) {
-                                cont = correctContinuations[i];
-                                cont.formula = n.formula;
-                                if (compareFormulaTrees(n, cont)) {
-                                    continuationIsCorrect = true;
-                                    break;
+                            var group, cont;
+                            outerCCGLoop:
+                            for (var i in correctContinuationGroups) {
+                                group = correctContinuationGroups[i];
+                                innerCCGLoop:
+                                for (var j in group) {
+                                    cont = group[j];
+                                    cont.formula = n.formula;
+                                    if (compareFormulaTrees(n, cont)) {
+                                        continuationIsCorrect = true;
+
+                                        // From now on, allow only this continuation group.
+                                        // (Continuations from multiple groups are correct for
+                                        // ¬¬A if ¬A or ¬¬¬A is among its ancestors,
+                                        // and potentially we will have similar possible
+                                        // mixings of the breaking-down rules in the
+                                        // future.)
+                                        correctContinuationGroups = [group];
+
+                                        break outerCCGLoop;
+                                    }
                                 }
                             }
                             if (!continuationIsCorrect) {
-                                stepIsCorrect = false;
+                                stepIsCorrect = false;  // If only this update was in the traverse, we could break here.
                             }
                         }
                     });
@@ -876,7 +922,9 @@ angular.module('ruzsa', [
                         $scope.BDStepInProgress = false;
                         node.underBreakingDown = false;
                         node.breakable = false;
-                        node.brokenDown = true;
+                        if (!continuedWithClosing) {
+                            node.brokenDown = true;
+                        }
                         node.lastBrokenDown = true;
                         traverse(node, function (n) {
                             if (n.underContinuation) {
