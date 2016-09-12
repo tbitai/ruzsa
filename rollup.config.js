@@ -5,7 +5,7 @@ import json from 'rollup-plugin-json';
 
 export default {
   entry: 'js/app.js',
-  dest: 'js/bundle.js', // equivalent to --output
+  dest: 'dist/js/bundle.js', // equivalent to --output
   format: 'iife',
   sourceMap: true,
   globals: {

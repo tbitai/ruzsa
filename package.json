@@ -8,7 +8,7 @@
   "scripts": {
     "build-js": "rollup -c",
     "build-js-watch": "rollup -cw",
-    "build-css": "node-sass --output-style compressed stylesheets/main.sass stylesheets/bundle.css",
+    "build-css": "node-sass --output-style compressed --source-map stylesheets stylesheets/main.sass dist/stylesheets/bundle.css",
     "collect-fonts": "./collect_fonts.sh",
     "build": "npm run build-js && npm run collect-fonts && npm run build-css",
     "deploy": "firebase login && firebase deploy --project default",
