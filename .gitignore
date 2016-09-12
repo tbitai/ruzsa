@@ -13,4 +13,3 @@ dist/js/*
 !dist/js/.gitkeep
 !dist/index.html
 !dist/img
-stylesheets/bundle.css.map
