@@ -1,9 +1,0 @@
-{
-  "hosting": {
-    "public": "dist",
-    "ignore": [
-      "**/*.map",
-      "**/.gitkeep"
-    ]
-  }
-}

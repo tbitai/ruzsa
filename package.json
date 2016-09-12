@@ -13,8 +13,8 @@
     "build": "npm run build-js && npm run collect-fonts && npm run build-css",
     "clean-sourcemaps": "./clean_sourcemaps.sh",
     "build-for-deploy": "npm run build && npm run clean-sourcemaps",
-    "deploy": "firebase login && firebase deploy --project default",
-    "deploy-staging": "firebase login && firebase deploy --project staging"
+    "deploy": "netlify deploy -e production",
+    "deploy-staging": "netlify deploy -e staging"
   },
   "dependencies": {
     "angular": "^1.5.0",
@@ -40,7 +40,7 @@
     "semver": "^5.3.0"
   },
   "devDependencies": {
-    "firebase-tools": "^3.0.7",
+    "netlify-cli": "^1.0.2",
     "rollup-watch": "^2.5.0"
   }
 }
