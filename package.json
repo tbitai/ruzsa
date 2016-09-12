@@ -11,6 +11,8 @@
     "build-css": "node-sass --output-style compressed --source-map dist/stylesheets stylesheets/main.sass dist/stylesheets/bundle.css",
     "collect-fonts": "./collect_fonts.sh",
     "build": "npm run build-js && npm run collect-fonts && npm run build-css",
+    "clean-sourcemaps": "./clean_sourcemaps.sh",
+    "build-for-deploy": "npm run build && npm run clean-sourcemaps",
     "deploy": "firebase login && firebase deploy --project default",
     "deploy-staging": "firebase login && firebase deploy --project staging"
   },
