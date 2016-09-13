@@ -263,7 +263,8 @@ angular.module('ruzsa', [
         $scope.isVersionTesting = function (v) {
             return v.indexOf('-') >= 0;
         };
-        if ($scope.isVersionTesting(version)) {
+        $scope.isRunningVersionTesting = $scope.isVersionTesting(version);
+        if ($scope.isRunningVersionTesting) {
             $translate([
                 'TEST_VERSION_ALERT_TITLE',
                 'TEST_VERSION_ALERT_TEXT'
@@ -338,7 +339,7 @@ angular.module('ruzsa', [
                         $scope.savedDataJustLoaded = true;
 
                         var loadedVersion = dataJSON.version;
-                        if ($scope.isVersionTesting(loadedVersion) && !($scope.isVersionTesting(version))) {
+                        if ($scope.isVersionTesting(loadedVersion) && !($scope.isRunningVersionTesting)) {
                             throw new Error('File saved in testing version: v' + loadedVersion);
                         }
                         var state = dataJSON.state;
