@@ -113,7 +113,9 @@ angular.module('ruzsa', [
             'LOAD_FILE_CONFIRM_UNSAVED_TEXT': 'If you continue, your current tree will be lost.',
             'CONFIRM_CANCEL': 'Cancel',
             'CONFIRM_CONTINUE': 'Continue',
-            'WINDOW_UNLOAD_CONFIRM_UNSAVED': 'There are unsaved changes in your Ruzsa tree. These will be lost.'
+            'WINDOW_UNLOAD_CONFIRM_UNSAVED': 'There are unsaved changes in your Ruzsa tree. These will be lost.',
+            'TEST_VERSION_ALERT_TITLE': 'This is a test version of Ruzsa',
+            'TEST_VERSION_ALERT_TEXT': 'Files saved here won\'t work in stable versions.'
         });
         $translateProvider.translations('hu', {
             'OTHER_LANGUAGE': 'English',
@@ -154,7 +156,9 @@ angular.module('ruzsa', [
             'LOAD_FILE_CONFIRM_UNSAVED_TEXT': 'Ha folytatod, a jelenlegi fád el fog veszni.',
             'CONFIRM_CANCEL': 'Mégsem',
             'CONFIRM_CONTINUE': 'Folytatás',
-            'WINDOW_UNLOAD_CONFIRM_UNSAVED': 'Mentetlen változtatások vannak a Ruzsa-fádban. Ezek el fognak veszni.'
+            'WINDOW_UNLOAD_CONFIRM_UNSAVED': 'Mentetlen változtatások vannak a Ruzsa-fádban. Ezek el fognak veszni.',
+            'TEST_VERSION_ALERT_TITLE': 'Ez a Ruzsa teszt verziója',
+            'TEST_VERSION_ALERT_TEXT': 'Az itt mentett fájlok nem fognak működni a stabil verziókban.'
         });
         $translateProvider.preferredLanguage('en');
         $translateProvider.useCookieStorage();
@@ -255,6 +259,26 @@ angular.module('ruzsa', [
         });};
         $scope.setInitialState();
 
+        // Show alert in test versions
+        $scope.isVersionTesting = function (v) {
+            return v.indexOf('-') >= 0;
+        };
+        if ($scope.isVersionTesting(version)) {
+            $translate([
+                'TEST_VERSION_ALERT_TITLE',
+                'TEST_VERSION_ALERT_TEXT'
+            ]).then(function(tr) {
+                $timeout(function() {
+                    $mdDialog.show($mdDialog.alert({
+                        title: tr.TEST_VERSION_ALERT_TITLE,
+                        textContent: tr.TEST_VERSION_ALERT_TEXT,
+                        ok: 'OK',
+                        focusOnOpen: $scope.dialogFocusOnOpen
+                    }));
+                }, 0, false);
+            });
+        }
+
         $scope.getLoadFileConfirmUnsaved = function() {
             return $mdDialog.confirm({
                 title: $scope.loadFileConfirmUnsavedTitle,
@@ -313,11 +337,14 @@ angular.module('ruzsa', [
                         // this to cause $scope.unsavedDataPresent to be true.
                         $scope.savedDataJustLoaded = true;
 
-                        var version = dataJSON.version;
+                        var loadedVersion = dataJSON.version;
+                        if ($scope.isVersionTesting(loadedVersion) && !($scope.isVersionTesting(version))) {
+                            throw new Error('File saved in testing version: v' + loadedVersion);
+                        }
                         var state = dataJSON.state;
                         state.filename = file.name;
                         $scope.setState(state, true);
-                        if (semver.lt(version, '0.2.0')) {
+                        if (semver.lt(loadedVersion, '0.2.0')) {
                             // Add missing `brokenDown`s
                             traverse($scope.treeData, function(node) {
                                 if (!node.breakable) {
@@ -325,7 +352,7 @@ angular.module('ruzsa', [
                                 }
                             });
                         }
-                        if (semver.lt(version, '0.3.0')) {
+                        if (semver.lt(loadedVersion, '0.3.0')) {
                             // Add id's
                             $scope.greatestId = 0;
                             traverse($scope.treeData, function(node) {
