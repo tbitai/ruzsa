@@ -13,3 +13,4 @@ dist/js/*
 !dist/js/.gitkeep
 !dist/index.html
 !dist/img
+.idea/
