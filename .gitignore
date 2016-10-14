@@ -1,6 +1,8 @@
 node_modules
 npm-debug.log
 .sass-cache
+
+# Ignore `dist`, except a part of its subdirectory structure.
 dist/*
 !dist/fonts
 dist/fonts/*
@@ -11,6 +13,5 @@ dist/stylesheets/*
 !dist/js
 dist/js/*
 !dist/js/.gitkeep
-!dist/index.html
-!dist/img
+
 .idea/
