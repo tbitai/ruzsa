@@ -9,5 +9,5 @@ Handler = http.server.SimpleHTTPRequestHandler
 
 httpd = socketserver.TCPServer((HOST, PORT), Handler)
 
-print('Serving ruzsa at', HOST + ':' + str(PORT))
+print('Serving ruzsa at http://' + HOST + ':' + str(PORT) + '/dist')
 httpd.serve_forever()
