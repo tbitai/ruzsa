@@ -24,17 +24,11 @@ Build:
 npm run build
 ```
 
-Serve the project root directory (not the `dist` directory!) with a static server, e.g. with Python 3:
-
-```
-python -m http.server 8000
-```
-
-Now the app is available at `http://localhost:8000/dist`.
+Serve the project root directory (not the `dist` directory!) with a static server, for example if you have Python 3, you can run the included `dev_server.py` script, and the app will be available at `http://localhost:8000/dist`.
 
 Serving the project root directory is necessary in order to use the source map files, which point outside of the `dist` directory.
 
-Besides the `build` NPM script, scripts for the individual build steps are available for using during development.
+Besides the `build` NPM script, scripts for the individual build steps are available for using during development. Have a look at the `package.json`'s `"scripts"` field to examine them!
 
 ### Deploying
 
