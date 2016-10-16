@@ -1,5 +1,11 @@
+### NPM
+
 node_modules
 npm-debug.log
+
+
+### Build
+
 .sass-cache
 
 # Ignore `dist`, except a part of its subdirectory structure.
@@ -13,5 +19,10 @@ dist/stylesheets/*
 !dist/js
 dist/js/*
 !dist/js/.gitkeep
+
+js/lib/tarskiPL.js
+
+
+### IDE
 
 .idea/

@@ -1,7 +1,9 @@
 import FormulaParser from '../../node_modules/formula-parser/formulaParser.js';
+import {parser} from '../lib/tarskiPL';
 import compareObjects from './compareObjects.js';
 
 
+console.log(parser.parse('Tet(a)∧¬Tet(b)'));
 var tarskiUnaryOperators = [
     {symbol: 'Tet',       key: 'tet',       precedence: 5},
     {symbol: 'Small',     key: 'small',     precedence: 5},

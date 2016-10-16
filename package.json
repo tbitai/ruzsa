@@ -6,6 +6,7 @@
     "esversion": 6
   },
   "scripts": {
+    "generate-parser": "jison js/lib/tarskiPL.jison -o js/lib/tarskiPL.js && ./clean_parser_export.sh",
     "build-js": "rollup -c",
     "build-js-watch": "rollup -cw",
     "build-css": "node-sass --output-style compressed --source-map dist/stylesheets stylesheets/main.sass dist/stylesheets/bundle.css",
@@ -37,6 +38,7 @@
     "semver": "^5.3.0"
   },
   "devDependencies": {
+    "jison": "^0.4.17",
     "netlify-cli": "^1.0.2",
     "node-sass": "^3.8.0",
     "rollup": "^0.34.10",

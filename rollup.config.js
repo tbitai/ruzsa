@@ -45,7 +45,7 @@ export default {
         preferBuiltins: false  // Default: true
     }),
     commonjs({
-      include: 'node_modules/**'
+      include: ['node_modules/**', 'js/lib/tarskiPL.js']
     }),
     json({
       include: 'package.json'
