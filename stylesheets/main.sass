@@ -1,3 +1,42 @@
+@import '../node_modules/angular-material/angular-material.scss'
+@import '../node_modules/mdi/scss/materialdesignicons.scss'
+@import './lib/tree.sass'
+
+
+@font-face
+  font-family: 'Material Icons'
+  font-style: normal
+  font-weight: 400
+  src: url(../fonts/MaterialIcons-Regular.eot) /* For IE6-8 */
+  src: local('Material Icons'), local('MaterialIcons-Regular'), url(../fonts/MaterialIcons-Regular.woff2) format('woff2'), url(../fonts/MaterialIcons-Regular.woff) format('woff'), url(../fonts/MaterialIcons-Regular.ttf) format('truetype')
+
+.material-icons
+  font-family: 'Material Icons'
+  font-weight: normal
+  font-style: normal
+  font-size: 24px  /* Preferred icon size */
+  display: inline-block
+  width: 1em
+  height: 1em
+  line-height: 1
+  text-transform: none
+  letter-spacing: normal
+  word-wrap: normal
+  white-space: nowrap
+  direction: ltr
+
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale
+
+  /* Support for IE. */
+  font-feature-settings: 'liga'
+
+
 =width($kw)
   @if $kw == max-content
     width: intrinsic
@@ -62,12 +101,11 @@ $toolbar_shadow_height: 4px
   right: 10px
 
 #logo_btn
-  $width: 100px
-  width: $width !important
-  min-width: $width !important
-  max-width: $width !important
+  min-width: 100px !important
+  max-width: 110px !important
 
   margin-right: 20px
+  font-size: 20px
 
   .logo
     // Vertically center

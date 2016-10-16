@@ -33,3 +33,10 @@ function treePath(root, isDest, repr) {
     }
     return false;
 }
+
+export {
+	traverse,
+	traverseBF,
+	treePath
+};
+

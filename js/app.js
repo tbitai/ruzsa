@@ -1,3 +1,65 @@
+import { version } from '../package.json';
+import 'angular';
+import 'angular-tree-repeat';
+import 'angular-animate';
+import 'angular-aria';
+import 'angular-sanitize';
+import 'angular-material';
+import 'angular-messages';
+import $ from 'jquery';
+import 'angular-translate';
+import 'angular-cookies';
+import 'angular-translate-storage-cookie';
+import './lib/jquery.input-autoresize.js';
+import download from 'downloadjs';
+import semver from 'semver';
+import compareObjects from './lib/compareObjects.js';
+import clone from './lib/clone.js';
+import { tarskiUnaryOperators, tarskiBinaryOperators, TarskiPropositionalFormulaParser, WFF } from './lib/wff.js';
+import { traverse, traverseBF, treePath } from './lib/treeUtils.js';
+import compareFormulaTrees from './lib/compareFormulaTrees.js';
+
+
+window.makeActive = function (el) {
+    $('.active_input').removeClass('active_input');
+    $(el).addClass('active_input');
+};
+
+// Virtual keyboard
+function setCursorPosition(el, pos) {
+    el.setSelectionRange(pos, pos);
+}
+window.fireVirtualKey = function (keyStr, cursorPos) {
+    var i = document.getElementsByClassName('active_input')[0];
+    if (i !== undefined) {
+        var p = i.selectionStart;
+        var v = i.value;
+        var before = v.slice(0, p);
+        var after =  v.slice(p);
+        i.value = before + keyStr + after;
+
+        // Trigger input event for inputAutoresize
+        $(i).trigger('input');
+
+        var l = i.value.length;
+        var defaultPos = l - after.length;
+        setCursorPosition(i, defaultPos);
+        i.focus();
+        if (cursorPos !== undefined) {
+            setCursorPosition(i, defaultPos + cursorPos);
+        }
+    }
+};
+window.checkCommaAndParenthesis = function (el) {
+    var p = el.selectionStart;
+    var c = el.value[p];
+    if (c == ',') {
+        setCursorPosition(el, p + 2);
+    } else if (c == ')') {
+        setCursorPosition(el, p + 1);
+    }
+};
+
 angular.module('ruzsa', [
     'sf.treeRepeat',
     'ngMaterial',
@@ -6,11 +68,11 @@ angular.module('ruzsa', [
     'pascalprecht.translate',
     'ngCookies'
 ])
-    .config(function($mdThemingProvider) {
+    .config(['$mdThemingProvider', function($mdThemingProvider) {
         $mdThemingProvider.theme('default')
             .primaryPalette('blue')
             .accentPalette('grey');
-    })
+    }])
     .config(['$translateProvider', function ($translateProvider) {
         $translateProvider.translations('en', {
             'OTHER_LANGUAGE': 'Magyar',
@@ -51,7 +113,9 @@ angular.module('ruzsa', [
             'LOAD_FILE_CONFIRM_UNSAVED_TEXT': 'If you continue, your current tree will be lost.',
             'CONFIRM_CANCEL': 'Cancel',
             'CONFIRM_CONTINUE': 'Continue',
-            'WINDOW_UNLOAD_CONFIRM_UNSAVED': 'There are unsaved changes in your Ruzsa tree. These will be lost.'
+            'WINDOW_UNLOAD_CONFIRM_UNSAVED': 'There are unsaved changes in your Ruzsa tree. These will be lost.',
+            'TEST_VERSION_ALERT_TITLE': 'This is a test version of Ruzsa',
+            'TEST_VERSION_ALERT_TEXT': 'Files saved here won\'t work in stable versions.'
         });
         $translateProvider.translations('hu', {
             'OTHER_LANGUAGE': 'English',
@@ -92,13 +156,19 @@ angular.module('ruzsa', [
             'LOAD_FILE_CONFIRM_UNSAVED_TEXT': 'Ha folytatod, a jelenlegi fád el fog veszni.',
             'CONFIRM_CANCEL': 'Mégsem',
             'CONFIRM_CONTINUE': 'Folytatás',
-            'WINDOW_UNLOAD_CONFIRM_UNSAVED': 'Mentetlen változtatások vannak a Ruzsa-fádban. Ezek el fognak veszni.'
+            'WINDOW_UNLOAD_CONFIRM_UNSAVED': 'Mentetlen változtatások vannak a Ruzsa-fádban. Ezek el fognak veszni.',
+            'TEST_VERSION_ALERT_TITLE': 'Ez a Ruzsa teszt verziója',
+            'TEST_VERSION_ALERT_TEXT': 'Az itt mentett fájlok nem fognak működni a stabil verziókban.'
         });
         $translateProvider.preferredLanguage('en');
         $translateProvider.useCookieStorage();
         $translateProvider.useSanitizeValueStrategy('escape');
     }])
-    .controller('treeController', function($scope, $rootScope, $mdDialog, $timeout, $translate, $window){
+    .controller('treeController', [
+        '$scope', '$rootScope', '$mdDialog', '$timeout', '$translate', '$window',
+        function(
+            $scope, $rootScope, $mdDialog, $timeout, $translate, $window
+        ){
         $scope.generateTranslationsForScope = function() {
             $translate([
                 // Alerts and confirms
@@ -189,6 +259,27 @@ angular.module('ruzsa', [
         });};
         $scope.setInitialState();
 
+        // Show alert in test versions
+        $scope.isVersionTesting = function (v) {
+            return v.indexOf('-') >= 0;
+        };
+        $scope.isRunningVersionTesting = $scope.isVersionTesting(version);
+        if ($scope.isRunningVersionTesting) {
+            $translate([
+                'TEST_VERSION_ALERT_TITLE',
+                'TEST_VERSION_ALERT_TEXT'
+            ]).then(function(tr) {
+                $timeout(function() {
+                    $mdDialog.show($mdDialog.alert({
+                        title: tr.TEST_VERSION_ALERT_TITLE,
+                        textContent: tr.TEST_VERSION_ALERT_TEXT,
+                        ok: 'OK',
+                        focusOnOpen: $scope.dialogFocusOnOpen
+                    }));
+                }, 0, false);
+            });
+        }
+
         $scope.getLoadFileConfirmUnsaved = function() {
             return $mdDialog.confirm({
                 title: $scope.loadFileConfirmUnsavedTitle,
@@ -216,17 +307,15 @@ angular.module('ruzsa', [
         };
         $scope.save = function() {
             $scope.unsavedDataPresent = false;
-            $.getJSON('../package.json', function(data) {
-                var version = data.version;
-                var state = $scope.getState();
-                var downloadJSON = {
-                    version: version,
-                    state: state
-                };
-                var downloadStr = angular.toJson(downloadJSON);  // Properties with leading $$ characters will be stripped
-                var downloadStrEncoded = $scope.encode(downloadStr);
-                download(downloadStrEncoded, $scope.filename);
-            });
+            var state = $scope.getState();
+            var dataJSON = {
+                version: version,
+                state: state
+            };
+            var dataStr = angular.toJson(dataJSON);  // Properties with leading $$ characters will be stripped
+            var dataStrEncoded = $scope.encode(dataStr);
+            var downloadStr = 'Ruzsa v' + version + ' ' + dataStrEncoded;
+            download(downloadStr, $scope.filename, 'application/octet-stream');
         };
         $scope.loadFile = function(files) {
             function resetInput() {  // We need this to allow to select the same file again later
@@ -238,6 +327,10 @@ angular.module('ruzsa', [
                 reader.onload = function(event) {
                     try {
                         var text = event.target.result;
+
+                        // Remove program and version info
+                        text = text.replace(/^Ruzsa \S+\s/, '');
+
                         var dataStr = $scope.decode(text);
                         var dataJSON = JSON.parse(dataStr);
 
@@ -245,11 +338,14 @@ angular.module('ruzsa', [
                         // this to cause $scope.unsavedDataPresent to be true.
                         $scope.savedDataJustLoaded = true;
 
-                        var version = dataJSON.version;
+                        var loadedVersion = dataJSON.version;
+                        if ($scope.isVersionTesting(loadedVersion) && !($scope.isRunningVersionTesting)) {
+                            throw new Error('File saved in testing version: v' + loadedVersion);
+                        }
                         var state = dataJSON.state;
                         state.filename = file.name;
                         $scope.setState(state, true);
-                        if (semver.lt(version, '0.2.0')) {
+                        if (semver.lt(loadedVersion, '0.2.0')) {
                             // Add missing `brokenDown`s
                             traverse($scope.treeData, function(node) {
                                 if (!node.breakable) {
@@ -257,7 +353,7 @@ angular.module('ruzsa', [
                                 }
                             });
                         }
-                        if (semver.lt(version, '0.3.0')) {
+                        if (semver.lt(loadedVersion, '0.3.0')) {
                             // Add id's
                             $scope.greatestId = 0;
                             traverse($scope.treeData, function(node) {
@@ -650,51 +746,58 @@ angular.module('ruzsa', [
                     var allCandidatesAreEmpty = true;
                     var stepIsCorrect = true;
                     var ast = node.formula.ast;
-                    var correctContinuations = [];
+                    var correctContinuationGroups = [];
                     var permutationsOfTwo = [[0, 1], [1, 0]],
-                        i, j, p, pOuter, pInner;
+                        i, j, p, pOuter, pInner, group;
                     if ('or' in ast) {
+                        group = [];
                         for (i in permutationsOfTwo) {
                             p = permutationsOfTwo[i];
-                            correctContinuations.push({
+                            group.push({
                                 formula: null,
                                 children: [{formula: {ast: ast.or[p[0]]}},
                                            {formula: {ast: ast.or[p[1]]}}]
                             });
                         }
+                        correctContinuationGroups.push(group);
                     } else if ('impl' in ast) {
-                        correctContinuations.push({
-                            formula: null,
-                            children: [{formula: {ast: {not: ast.impl[0]}}},
-                                       {formula: {ast: ast.impl[1]}}]
-                        });
-                        correctContinuations.push({
-                            formula: null,
-                            children: [{formula: {ast: ast.impl[1]}},
-                                       {formula: {ast: {not: ast.impl[0]}}}]
-                        });
+                        correctContinuationGroups.push([
+                            {
+                                formula: null,
+                                children: [{formula: {ast: {not: ast.impl[0]}}},
+                                           {formula: {ast: ast.impl[1]}}]
+                            },
+                            {
+                                formula: null,
+                                children: [{formula: {ast: ast.impl[1]}},
+                                           {formula: {ast: {not: ast.impl[0]}}}]
+                            }
+                        ]);
                     } else if ('and' in ast) {
+                        group = [];
                         for (i in permutationsOfTwo) {
                             p = permutationsOfTwo[i];
-                            correctContinuations.push({
+                            group.push({
                                 formula: null,
                                 children: [{formula: {ast: ast.and[p[0]]},
                                             children: [{formula: {ast: ast.and[p[1]]}}]}]
                             });
                         }
+                        correctContinuationGroups.push(group);
                     } else if ('equi' in ast) {
+                        group = [];
                         for (i in permutationsOfTwo) {
                             pOuter = permutationsOfTwo[i];
                             for (j in permutationsOfTwo) {
                                 pInner = permutationsOfTwo[j];
-                                correctContinuations.push({
+                                group.push({
                                     formula: null,
                                     children: [{formula: {ast: ast.equi[pOuter[0]]},
                                                 children: [{formula: {ast: ast.equi[pOuter[1]]}}]},
                                                {formula: {ast: {not: ast.equi[pInner[0]]}},
                                                 children: [{formula: {ast: {not: ast.equi[pInner[1]]}}}]}]
                                 });
-                                correctContinuations.push({
+                                group.push({
                                     formula: null,
                                     children: [{formula: {ast: {not: ast.equi[pOuter[0]]}},
                                                 children: [{formula: {ast: {not: ast.equi[pOuter[1]]}}}]},
@@ -703,67 +806,75 @@ angular.module('ruzsa', [
                                 });
                             }
                         }
+                        correctContinuationGroups.push(group);
                     } else if ('not' in ast && 'not' in ast.not) {
-                        correctContinuations.push({
+                        correctContinuationGroups.push([{
                             formula: null,
                             children: [{formula: {ast: ast.not.not}}]
-                        });
+                        }]);
                     } else if ('not' in ast && 'or' in ast.not) {
+                        group = [];
                         for (i in permutationsOfTwo) {
                             p = permutationsOfTwo[i];
-                            correctContinuations.push({
+                            group.push({
                                 formula: null,
                                 children: [{formula: {ast: {not: ast.not.or[p[0]]}},
                                             children: [{formula: {ast: {not: ast.not.or[p[1]]}}}]}]
                             });
                         }
+                        correctContinuationGroups.push(group);
                     } else if ('not' in ast && 'impl' in ast.not) {
-                        correctContinuations.push({
+                        group = [];
+                        group.push({
                             formula: null,
                             children: [{formula: {ast: ast.not.impl[0]},
                                         children: [{formula: {ast: {not: ast.not.impl[1]}}}]}]
                         });
-                        correctContinuations.push({
+                        group.push({
                             formula: null,
                             children: [{formula: {ast: {not: ast.not.impl[1]}},
                                         children: [{formula: {ast: ast.not.impl[0]}}]}]
                         });
+                        correctContinuationGroups.push(group);
                     } else if ('not' in ast && 'and' in ast.not) {
+                        group = [];
                         for (i in permutationsOfTwo) {
                             p = permutationsOfTwo[i];
-                            correctContinuations.push({
+                            group.push({
                                 formula: null,
                                 children: [{formula: {ast: {not: ast.not.and[p[0]]}}},
                                            {formula: {ast: {not: ast.not.and[p[1]]}}}]
                             });
                         }
+                        correctContinuationGroups.push(group);
                     } else if ('not' in ast && 'equi' in ast.not) {
+                        group = [];
                         for (i in permutationsOfTwo) {
                             pOuter = permutationsOfTwo[i];
                             for (j in permutationsOfTwo) {
                                 pInner = permutationsOfTwo[j];
-                                correctContinuations.push({
+                                group.push({
                                     formula: null,
                                     children: [{formula: {ast: {not: ast.not.equi[pOuter[0]]}},
                                                 children: [{formula: {ast: ast.not.equi[pOuter[1]]}}]},
                                                {formula: {ast: {not: ast.not.equi[pInner[0]]}},
                                                 children: [{formula: {ast: ast.not.equi[pInner[1]]}}]}]
                                 });
-                                correctContinuations.push({
+                                group.push({
                                     formula: null,
                                     children: [{formula: {ast: ast.not.equi[pOuter[0]]},
                                                 children: [{formula: {ast: {not: ast.not.equi[pOuter[1]]}}}]},
                                                {formula: {ast: ast.not.equi[pInner[0]]},
                                                 children: [{formula: {ast: {not: ast.not.equi[pInner[1]]}}}]}]
                                 });
-                                correctContinuations.push({
+                                group.push({
                                     formula: null,
                                     children: [{formula: {ast: {not: ast.not.equi[pOuter[0]]}},
                                                 children: [{formula: {ast: ast.not.equi[pOuter[1]]}}]},
                                                {formula: {ast: ast.not.equi[pInner[0]]},
                                                 children: [{formula: {ast: {not: ast.not.equi[pInner[1]]}}}]}]
                                 });
-                                correctContinuations.push({
+                                group.push({
                                     formula: null,
                                     children: [{formula: {ast: ast.not.equi[pOuter[0]]},
                                                 children: [{formula: {ast: {not: ast.not.equi[pOuter[1]]}}}]},
@@ -772,17 +883,21 @@ angular.module('ruzsa', [
                                 });
                             }
                         }
+                        correctContinuationGroups.push(group);
                     }
 
                     if ($scope.closesBranch(node)) {
-                        correctContinuations.push({
+                        correctContinuationGroups.push([{
                             formula: null,
                             children: [{formula: {ast: {var: '*'}}}]
-                        });
+                        }]);
                     }
+
+                    var continuedWithClosing = false;
 
                     traverse(node, function (n) {
                         if (n.underContinuation) {
+                            // Update allCandidatesAreEmpty
                             if (allCandidatesAreEmpty) {
                                 traverse(n, function (c) {
                                     if (c !== n && c.formula) {
@@ -791,18 +906,40 @@ angular.module('ruzsa', [
                                     }
                                 });
                             }
+
+                            // Update continuedWithClosing
+                            continuedWithClosing = compareObjects(
+                                n.children[0].formula.ast,
+                                {var: '*'}
+                            );  // If only this update was in the traverse, we could break here.
+
+                            // Update stepIsCorrect
                             var continuationIsCorrect = false;
-                            var cont;
-                            for (var i in correctContinuations) {
-                                cont = correctContinuations[i];
-                                cont.formula = n.formula;
-                                if (compareFormulaTrees(n, cont)) {
-                                    continuationIsCorrect = true;
-                                    break;
+                            var group, cont;
+                            outerCCGLoop:
+                            for (var i in correctContinuationGroups) {
+                                group = correctContinuationGroups[i];
+                                innerCCGLoop:
+                                for (var j in group) {
+                                    cont = group[j];
+                                    cont.formula = n.formula;
+                                    if (compareFormulaTrees(n, cont)) {
+                                        continuationIsCorrect = true;
+
+                                        // From now on, allow only this continuation group.
+                                        // (Continuations from multiple groups are correct for
+                                        // ¬¬A if ¬A or ¬¬¬A is among its ancestors,
+                                        // and potentially we will have similar possible
+                                        // mixings of the breaking-down rules in the
+                                        // future.)
+                                        correctContinuationGroups = [group];
+
+                                        break outerCCGLoop;
+                                    }
                                 }
                             }
                             if (!continuationIsCorrect) {
-                                stepIsCorrect = false;
+                                stepIsCorrect = false;  // If only this update was in the traverse, we could break here.
                             }
                         }
                     });
@@ -813,7 +950,9 @@ angular.module('ruzsa', [
                         $scope.BDStepInProgress = false;
                         node.underBreakingDown = false;
                         node.breakable = false;
-                        node.brokenDown = true;
+                        if (!continuedWithClosing) {
+                            node.brokenDown = true;
+                        }
                         node.lastBrokenDown = true;
                         traverse(node, function (n) {
                             if (n.underContinuation) {
@@ -837,4 +976,4 @@ angular.module('ruzsa', [
                 }
             });
         };
-    });
+    }]);
