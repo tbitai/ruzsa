@@ -59,6 +59,12 @@ sentence
     | literal[l] '∧' '(' sentence[r] ')'             {$$ = {and: [$l, $r]};}
     | '(' sentence[l] ')' '∧' literal[r]             {$$ = {and: [$l, $r]};}
     | '(' sentence[l] ')' '∧' '(' sentence[r] ')'    {$$ = {and: [$l, $r]};}
+    
+    /* ∨ */
+    | literal[l] '∨' literal[r]                      {$$ = {or: [$l, $r]};}
+    | literal[l] '∨' '(' sentence[r] ')'             {$$ = {or: [$l, $r]};}
+    | '(' sentence[l] ')' '∨' literal[r]             {$$ = {or: [$l, $r]};}
+    | '(' sentence[l] ')' '∨' '(' sentence[r] ')'    {$$ = {or: [$l, $r]};}
 
     /* TODO: other binary logical connectives */
 
