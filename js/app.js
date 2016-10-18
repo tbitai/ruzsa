@@ -15,7 +15,7 @@ import download from 'downloadjs';
 import semver from 'semver';
 import compareObjects from './lib/compareObjects.js';
 import clone from './lib/clone.js';
-import { tarskiUnaryOperators, tarskiBinaryOperators, TarskiPropositionalFormulaParser, WFF } from './lib/wff.js';
+import { WFF } from './lib/wff.js';
 import { traverse, traverseBF, treePath } from './lib/treeUtils.js';
 import compareFormulaTrees from './lib/compareFormulaTrees.js';
 
@@ -483,15 +483,19 @@ angular.module('ruzsa', [
                        'not' in ast && compareObjects(pathAst, ast.not);
             });
         };
-        $scope.atomicKeys = tarskiUnaryOperators.concat(tarskiBinaryOperators)
-            .map(function(op) { return op.key; })
-            .concat(TarskiPropositionalFormulaParser.variableKey);
         $scope.isLiteral = function(formula) {
             var ast = formula.ast;
             var maybeAtomic = 'not' in ast ? ast.not : ast;
-            for (var i in $scope.atomicKeys) {
-                if ($scope.atomicKeys[i] in maybeAtomic) {
-                    return true;
+            if (maybeAtomic.hasOwnProperty('sentenceVar') || maybeAtomic.hasOwnProperty('sentenceConst')) {
+                return true;
+            }
+            var v;
+            for (var p in maybeAtomic) {
+                if (maybeAtomic.hasOwnProperty(p)) {
+                    v = maybeAtomic[p];
+                    if (v.hasOwnProperty('blockVar') || (Array.isArray(v) && v[0].hasOwnProperty('blockVar'))) {
+                        return true;
+                    }
                 }
             }
             return false;
@@ -509,13 +513,8 @@ angular.module('ruzsa', [
                 });
                 $scope.focusNext();
             } catch (ex) {
-                if (ex instanceof SyntaxError){
-                    var msg = ex.message;
-                    if (msg == 'Invalid formula! Found unmatched parenthesis.'){
-                        node.error = {unmatchedParenthesis: true};
-                    } else {
-                        node.error = {other: true};
-                    }
+                if (ex.message.substr(0, 11) === 'Parse error'){
+                    node.error = {other: true};
                 } else {
                     throw ex;
                 }
@@ -585,7 +584,7 @@ angular.module('ruzsa', [
                 traverse($scope.treeData, function (node) {
                     if (!('children' in node) &&
                         node.formula &&  // Exclude newly added leaves
-                        !compareObjects(node.formula.ast, {var: '*'})  // Exclude closed branches
+                        !compareObjects(node.formula.ast, {sentenceConst: '*'})  // Exclude closed branches
                     ) {
                         var emptyNodeClone = clone(emptyNode);
                         $scope.setId(emptyNodeClone);
@@ -630,7 +629,7 @@ angular.module('ruzsa', [
             traverse(node, function (n) {
                 if (!('children' in n) &&
                     n.formula &&  // Exclude newly added nodes
-                    !compareObjects(n.formula.ast, {var: '*'})  // Exclude closed branches
+                    !compareObjects(n.formula.ast, {sentenceConst: '*'})  // Exclude closed branches
                 ) {
                     if (type == 'or') {
                         n.children = [
@@ -675,7 +674,7 @@ angular.module('ruzsa', [
                         for (var i = node.children.length - 1; i > -1; i--) {
                             var child = node.children[i];
                             if (!(child.children) &&
-                                (!(child.formula) || !compareObjects(child.formula.ast, {var: '*'}))) {
+                                (!(child.formula) || !compareObjects(child.formula.ast, {sentenceConst: '*'}))) {
                                     node.children.splice(i, 1);
                             }
                         }
@@ -889,7 +888,7 @@ angular.module('ruzsa', [
                     if ($scope.closesBranch(node)) {
                         correctContinuationGroups.push([{
                             formula: null,
-                            children: [{formula: {ast: {var: '*'}}}]
+                            children: [{formula: {ast: {sentenceConst: '*'}}}]
                         }]);
                     }
 
@@ -910,7 +909,7 @@ angular.module('ruzsa', [
                             // Update continuedWithClosing
                             continuedWithClosing = compareObjects(
                                 n.children[0].formula.ast,
-                                {var: '*'}
+                                {sentenceConst: '*'}
                             );  // If only this update was in the traverse, we could break here.
 
                             // Update stepIsCorrect
