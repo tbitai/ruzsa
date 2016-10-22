@@ -66,7 +66,17 @@ sentence
     | '(' sentence[l] ')' '∨' literal[r]             {$$ = {or: [$l, $r]};}
     | '(' sentence[l] ')' '∨' '(' sentence[r] ')'    {$$ = {or: [$l, $r]};}
 
-    /* TODO: other binary logical connectives */
+    /* → */
+    | literal[l] '→' literal[r]                      {$$ = {impl: [$l, $r]};}
+    | literal[l] '→' '(' sentence[r] ')'             {$$ = {impl: [$l, $r]};}
+    | '(' sentence[l] ')' '→' literal[r]             {$$ = {impl: [$l, $r]};}
+    | '(' sentence[l] ')' '→' '(' sentence[r] ')'    {$$ = {impl: [$l, $r]};}
+    
+    /* ↔ */
+    | literal[l] '↔' literal[r]                      {$$ = {equi: [$l, $r]};}
+    | literal[l] '↔' '(' sentence[r] ')'             {$$ = {equi: [$l, $r]};}
+    | '(' sentence[l] ')' '↔' literal[r]             {$$ = {equi: [$l, $r]};}
+    | '(' sentence[l] ')' '↔' '(' sentence[r] ')'    {$$ = {equi: [$l, $r]};}
 
     | '*'                                            {$$ = {sentenceConst: '*'};}
     | '(' sentence[s] ')' %prec SENTENCE             {$$ = $s;}
@@ -80,7 +90,23 @@ literal
 
 atomic_sentence
     : 'Tet' '(' block_var[v] ')'                          {$$ = {tet: $v};}
-    /* TODO: other predicates */
+    | 'Cube' '(' block_var[v] ')'                         {$$ = {cube: $v};}
+    | 'Dodec' '(' block_var[v] ')'                        {$$ = {dodec: $v};}
+    | 'Small' '(' block_var[v] ')'                        {$$ = {small: $v};}
+    | 'Medium' '(' block_var[v] ')'                       {$$ = {medium: $v};}
+    | 'Large' '(' block_var[v] ')'                        {$$ = {large: $v};}
+    | 'Smaller' '(' block_var[u] ',' block_var[v] ')'     {$$ = {smaller: [$u, $v]};}
+    | 'SameSize' '(' block_var[u] ',' block_var[v] ')'    {$$ = {sameSize: [$u, $v]};}
+    | 'Larger' '(' block_var[u] ',' block_var[v] ')'      {$$ = {larger: [$u, $v]};}
+    | 'Adjoins' '(' block_var[u] ',' block_var[v] ')'     {$$ = {adjoins: [$u, $v]};}
+    | 'LeftOf' '(' block_var[u] ',' block_var[v] ')'      {$$ = {leftOf: [$u, $v]};}
+    | 'SameCol' '(' block_var[u] ',' block_var[v] ')'     {$$ = {sameCol: [$u, $v]};}
+    | 'BackOf' '(' block_var[u] ',' block_var[v] ')'      {$$ = {backOf: [$u, $v]};}
+    | 'Between' '(' block_var[u] ',' block_var[v] ',' block_var[w] ')'     {$$ = {between: [$u, $v, $w]};}
+    | 'FrontOf' '(' block_var[u] ',' block_var[v] ')'     {$$ = {frontOf: [$u, $v]};}
+    | 'SameShape' '(' block_var[u] ',' block_var[v] ')'   {$$ = {sameShape: [$u, $v]};}
+    | 'RightOf' '(' block_var[u] ',' block_var[v] ')'     {$$ = {rightOf: [$u, $v]};}
+    | 'SameRow' '(' block_var[u] ',' block_var[v] ')'     {$$ = {sameRow: [$u, $v]};}
     | SENTENCE_VAR                                        {$$ = {sentenceVar: yytext};}
     | '(' atomic_sentence[a] ')' %prec ATOMIC_SENTENCE    {$$ = $a;}
     ;
