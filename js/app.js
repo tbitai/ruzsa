@@ -513,7 +513,9 @@ angular.module('ruzsa', [
                 });
                 $scope.focusNext();
             } catch (ex) {
-                if (ex.message.substr(0, 11) === 'Parse error'){
+                if (ex.message.substr(0, 13) === 'Lexical error' ||
+                    ex.message.substr(0, 11) === 'Parse error')
+                {
                     node.error = {other: true};
                 } else {
                     throw ex;

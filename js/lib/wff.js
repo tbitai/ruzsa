@@ -2,7 +2,7 @@ import {parser} from '../lib/tarskiPL';
 import compareObjects from './compareObjects.js';
 
 
-// Tarski propositional well-formed formula class
+/** Tarski propositional well-formed formula class */
 function WFF(unicode){
     this.edit(unicode);
 }
