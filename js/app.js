@@ -99,6 +99,11 @@ angular.module('ruzsa', [
             'NOT': 'not',
             'IMPLIES': 'implies',
             'EQUIVALENT': 'equivalent',
+            'FOR_ALL': 'for all',
+            'EXISTS': 'exists',
+            'EQUALS': 'equals',
+            'NOT_EQUALS': 'not equals',
+            'FALSE': 'false',
 
             'INPUT': 'input',
 
@@ -142,6 +147,11 @@ angular.module('ruzsa', [
             'NOT': 'nem',
             'IMPLIES': 'következik',
             'EQUIVALENT': 'ekvivalens',
+            'FOR_ALL': 'minden',
+            'EXISTS': 'létezik',
+            'EQUALS': 'egyenlő',
+            'NOT_EQUALS': 'nem egyenlő',
+            'FALSE': 'hamis',
 
             'INPUT': 'beviteli mező',
 

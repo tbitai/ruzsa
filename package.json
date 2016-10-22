@@ -1,6 +1,6 @@
 {
   "name": "ruzsa",
-  "version": "0.5.0-alpha",
+  "version": "0.5.0-alpha.1",
   "private": true,
   "jshintConfig": {
     "esversion": 6

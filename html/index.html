@@ -130,22 +130,39 @@
 </ul>
 </div>
 <div id="virtual_keyboard" md-whiteframe="4">
-    <div id="connective_btns">
-        <md-button class="md-raised connective_btn"
+    <div class="small_vkb_btns">
+        <md-button class="md-raised small_vkb_btn"
                    onclick="fireVirtualKey(' ∨ ')"
                    aria-label="{{'OR' | translate}}">∨</md-button>
-        <md-button class="md-raised connective_btn"
+        <md-button class="md-raised small_vkb_btn"
                    onclick="fireVirtualKey(' ∧ ')"
                    aria-label="{{'AND' | translate}}">∧</md-button>
-        <md-button class="md-raised connective_btn"
+        <md-button class="md-raised small_vkb_btn"
                    onclick="fireVirtualKey('¬')"
                    aria-label="{{'NOT' | translate}}">¬</md-button>
-        <md-button class="md-raised connective_btn"
+        <md-button class="md-raised small_vkb_btn"
                    onclick="fireVirtualKey(' → ')"
                    aria-label="{{'IMPLIES' | translate}}">→</md-button>
-        <md-button class="md-raised connective_btn"
+        <md-button class="md-raised small_vkb_btn"
                    onclick="fireVirtualKey(' ↔ ')"
                    aria-label="{{'EQUIVALENT' | translate}}">↔</md-button>
+    </div>
+    <div class="small_vkb_btns">
+      <md-button class="md-raised small_vkb_btn"
+                 onclick="fireVirtualKey('∀')"
+                 aria-label="{{'FOR_ALL' | translate}}">∀</md-button>
+      <md-button class="md-raised small_vkb_btn"
+                 onclick="fireVirtualKey('∃')"
+                 aria-label="{{'EXISTS' | translate}}">∃</md-button>
+      <md-button class="md-raised small_vkb_btn"
+                 onclick="fireVirtualKey(' = ')"
+                 aria-label="{{'EQUALS' | translate}}">=</md-button>
+      <md-button class="md-raised small_vkb_btn"
+                 onclick="fireVirtualKey(' ≠ ')"
+                 aria-label="{{'NOT_EQUALS' | translate}}">≠</md-button>
+      <md-button class="md-raised small_vkb_btn"
+                 onclick="fireVirtualKey('*')"
+                 aria-label="{{'FALSE' | translate}}">*</md-button>
     </div>
     <table>
         <tr>

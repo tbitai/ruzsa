@@ -26,6 +26,7 @@
 "FrontOf"    return 'FrontOf';
 "SameRow"    return 'SameRow';
 "="          return '=';
+"≠"          return '≠';
 [A-Z]        return 'SENTENCE_VAR';
 "¬"          return '¬';
 "∧"          return '∧';
@@ -33,6 +34,8 @@
 "→"          return '→';
 "↔"          return '↔';
 "*"          return '*';
+"∀"          return '∀';
+"∃"          return '∃';
 <<EOF>>      return 'EOF';
 
 /lex
