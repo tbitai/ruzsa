@@ -69,9 +69,28 @@ angular.module('ruzsa', [
     'ngCookies'
 ])
     .config(['$mdThemingProvider', function($mdThemingProvider) {
+        $mdThemingProvider.definePalette('materialGreyWithLightAccents', {
+            // Material grey: https://material.google.com/style/color.html#color-color-palette
+            '50': 'FAFAFA',
+            '100': 'F5F5F5',
+            '200': 'EEEEEE',
+            '300': 'E0E0E0',
+            '400': 'BDBDBD',
+            '500': '9E9E9E',
+            '600': '757575',
+            '700': '616161',
+            '800': '424242',
+            '900': '212121',
+            'A100': 'F5F5F5',
+            'A200': 'EEEEEE',
+            'A400': 'E0E0E0',
+            'A700': 'BDBDBD',
+            'contrastDefaultColor': 'dark',
+            'contrastLightColors': ['600', '700', '800', '900']
+        });
         $mdThemingProvider.theme('default')
             .primaryPalette('blue')
-            .accentPalette('grey');
+            .accentPalette('materialGreyWithLightAccents');
     }])
     .config(['$translateProvider', function ($translateProvider) {
         $translateProvider.translations('en', {
