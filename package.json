@@ -8,7 +8,7 @@
   "scripts": {
     "generate-parser": "jison js/lib/tarskiPL.jison -o js/lib/tarskiPL.js && ./clean_parser_export.sh",
     "build-js": "rollup -c",
-    "build-js-watch": "rollup -cw",
+    "build-js-for-dev-watch": "rollup -cw --environment BUILD:dev",
     "build-css": "node-sass --output-style compressed --source-map dist/stylesheets stylesheets/main.sass dist/stylesheets/bundle.css",
     "collect-fonts": "./collect_fonts.sh",
     "collect-html": "./collect_html.sh",

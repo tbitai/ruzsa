@@ -81,8 +81,13 @@ sentence
     | '(' sentence[l] ')' '↔' literal[r]             {$$ = {equi: [$l, $r]};}
     | '(' sentence[l] ')' '↔' '(' sentence[r] ')'    {$$ = {equi: [$l, $r]};}
 
-    | '*'                                            {$$ = {sentenceConst: '*'};}
-    | '(' sentence[s] ')' %prec SENTENCE             {$$ = $s;}
+    | '*'                                             {$$ = {sentenceConst: '*'};}
+
+    /* ∀ */
+    | '∀' block_var[v] literal[l]                     {$$ = {forAll: [$v, $l]};}
+    | '∀' block_var[v] '(' sentence[s] ')'            {$$ = {forAll: [$v, $s]};}
+
+    | '(' sentence[s] ')' %prec SENTENCE              {$$ = $s;}
     ;
 
 literal

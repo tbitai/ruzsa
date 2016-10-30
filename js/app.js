@@ -518,6 +518,9 @@ angular.module('ruzsa', [
             if (maybeAtomic.hasOwnProperty('sentenceVar') || maybeAtomic.hasOwnProperty('sentenceConst')) {
                 return true;
             }
+            if (maybeAtomic.hasOwnProperty('forAll') || maybeAtomic.hasOwnProperty('exists')) {
+                return false;
+            }
             var v;
             for (var p in maybeAtomic) {
                 if (maybeAtomic.hasOwnProperty(p)) {
@@ -921,6 +924,11 @@ angular.module('ruzsa', [
                             formula: null,
                             children: [{formula: {ast: {sentenceConst: '*'}}}]
                         }]);
+                    }
+
+                    if (ast.hasOwnProperty('forAll')) {
+                        // TODO
+                        // For all blockVar `v` in the tree, add group `[F(v/x)]`.
                     }
 
                     var continuedWithClosing = false;

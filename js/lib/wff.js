@@ -1,5 +1,6 @@
 import {parser} from '../lib/tarskiPL';
 import compareObjects from './compareObjects.js';
+import traverseObject from './traverseObject.js';
 
 
 /** Tarski propositional well-formed formula class */
@@ -12,13 +13,17 @@ WFF.prototype.edit = function(unicode) {
 
     this.unicode = unicode;
 };
-
-
-function compareFormulas(formula, ref) {
+WFF.prototype.traverseBlockVars = function(callback) {
+    traverseObject(this.ast, function (p, v) {
+       if (p === 'blockVar') {
+           callback(v);
+       }
+    });
+};
+WFF.compare = function(formula, ref) {
     return compareObjects(formula.ast, ref.ast);
-}
+};
 
 export {
-	WFF,
-	compareFormulas
+	WFF
 };
