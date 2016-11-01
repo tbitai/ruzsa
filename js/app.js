@@ -525,7 +525,8 @@ angular.module('ruzsa', [
             for (var p in maybeAtomic) {
                 if (maybeAtomic.hasOwnProperty(p)) {
                     v = maybeAtomic[p];
-                    if (v.hasOwnProperty('blockVar') || (Array.isArray(v) && v[0].hasOwnProperty('blockVar'))) {
+                    if (v.hasOwnProperty('blockVar') || (Array.isArray(v) && v[0].hasOwnProperty('blockVar')) ||
+                        v.hasOwnProperty('blockConst') || (Array.isArray(v) && v[0].hasOwnProperty('blockConst'))) {
                         return true;
                     }
                 }
@@ -928,7 +929,7 @@ angular.module('ruzsa', [
 
                     if (ast.hasOwnProperty('forAll')) {
                         // TODO
-                        // For all blockVar `v` in the tree, add group `[F(v/x)]`.
+                        // For all blockConst `c` in the tree, add group `[F(c/x)]`.
                     }
 
                     var continuedWithClosing = false;

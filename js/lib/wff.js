@@ -13,9 +13,9 @@ WFF.prototype.edit = function(unicode) {
 
     this.unicode = unicode;
 };
-WFF.prototype.traverseBlockVars = function(callback) {
+WFF.prototype.traverseBlockConsts = function(callback) {
     traverseObject(this.ast, function (p, v) {
-       if (p === 'blockVar') {
+       if (p === 'blockConst') {
            callback(v);
        }
     });

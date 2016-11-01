@@ -3,7 +3,8 @@
 %%
 
 \s+          /* Skip whitespace */
-[a-z]        return 'BLOCK_VAR';
+[a-t]        return 'BLOCK_CONST';
+[u-z]        return 'BLOCK_VAR';
 "("          return '(';
 ")"          return ')';
 ","          return ',';
@@ -97,28 +98,37 @@ literal
     ;
 
 atomic_sentence
-    : 'Tet' '(' block_var[v] ')'                          {$$ = {tet: $v};}
-    | 'Cube' '(' block_var[v] ')'                         {$$ = {cube: $v};}
-    | 'Dodec' '(' block_var[v] ')'                        {$$ = {dodec: $v};}
-    | 'Small' '(' block_var[v] ')'                        {$$ = {small: $v};}
-    | 'Medium' '(' block_var[v] ')'                       {$$ = {medium: $v};}
-    | 'Large' '(' block_var[v] ')'                        {$$ = {large: $v};}
-    | 'Smaller' '(' block_var[u] ',' block_var[v] ')'     {$$ = {smaller: [$u, $v]};}
-    | 'SameSize' '(' block_var[u] ',' block_var[v] ')'    {$$ = {sameSize: [$u, $v]};}
-    | 'Larger' '(' block_var[u] ',' block_var[v] ')'      {$$ = {larger: [$u, $v]};}
-    | 'Adjoins' '(' block_var[u] ',' block_var[v] ')'     {$$ = {adjoins: [$u, $v]};}
-    | 'LeftOf' '(' block_var[u] ',' block_var[v] ')'      {$$ = {leftOf: [$u, $v]};}
-    | 'SameCol' '(' block_var[u] ',' block_var[v] ')'     {$$ = {sameCol: [$u, $v]};}
-    | 'BackOf' '(' block_var[u] ',' block_var[v] ')'      {$$ = {backOf: [$u, $v]};}
-    | 'Between' '(' block_var[u] ',' block_var[v] ',' block_var[w] ')'     {$$ = {between: [$u, $v, $w]};}
-    | 'FrontOf' '(' block_var[u] ',' block_var[v] ')'     {$$ = {frontOf: [$u, $v]};}
-    | 'SameShape' '(' block_var[u] ',' block_var[v] ')'   {$$ = {sameShape: [$u, $v]};}
-    | 'RightOf' '(' block_var[u] ',' block_var[v] ')'     {$$ = {rightOf: [$u, $v]};}
-    | 'SameRow' '(' block_var[u] ',' block_var[v] ')'     {$$ = {sameRow: [$u, $v]};}
-    | SENTENCE_VAR                                        {$$ = {sentenceVar: yytext};}
-    | '(' atomic_sentence[a] ')' %prec ATOMIC_SENTENCE    {$$ = $a;}
+    : 'Tet' '(' block_term[t] ')'                             {$$ = {tet: $t};}
+    | 'Cube' '(' block_term[t] ')'                            {$$ = {cube: $t};}
+    | 'Dodec' '(' block_term[t] ')'                           {$$ = {dodec: $t};}
+    | 'Small' '(' block_term[t] ')'                           {$$ = {small: $t};}
+    | 'Medium' '(' block_term[t] ')'                          {$$ = {medium: $t};}
+    | 'Large' '(' block_term[t] ')'                           {$$ = {large: $t};}
+    | 'Smaller' '(' block_term[s] ',' block_term[t] ')'       {$$ = {smaller: [$s, $t]};}
+    | 'SameSize' '(' block_term[s] ',' block_term[t] ')'      {$$ = {sameSize: [$s, $t]};}
+    | 'Larger' '(' block_term[s] ',' block_term[t] ')'        {$$ = {larger: [$s, $t]};}
+    | 'Adjoins' '(' block_term[s] ',' block_term[t] ')'       {$$ = {adjoins: [$s, $t]};}
+    | 'LeftOf' '(' block_term[s] ',' block_term[t] ')'        {$$ = {leftOf: [$s, $t]};}
+    | 'SameCol' '(' block_term[s] ',' block_term[t] ')'       {$$ = {sameCol: [$s, $t]};}
+    | 'BackOf' '(' block_term[s] ',' block_term[t] ')'        {$$ = {backOf: [$s, $t]};}
+    | 'Between' '(' block_term[r] ',' block_term[s] ',' block_term[t] ')'         {$$ = {between: [$r, $s, $t]};}
+    | 'FrontOf' '(' block_term[s] ',' block_term[t] ')'       {$$ = {frontOf: [$s, $t]};}
+    | 'SameShape' '(' block_term[s] ',' block_term[t] ')'     {$$ = {sameShape: [$s, $t]};}
+    | 'RightOf' '(' block_term[s] ',' block_term[t] ')'       {$$ = {rightOf: [$s, $t]};}
+    | 'SameRow' '(' block_term[s] ',' block_term[t] ')'       {$$ = {sameRow: [$s, $t]};}
+    | SENTENCE_VAR                                            {$$ = {sentenceVar: yytext};}
+    | '(' atomic_sentence[a] ')' %prec ATOMIC_SENTENCE        {$$ = $a;}
+    ;
+
+block_term
+    : block_const[c] {$$ = $c;}
+    | block_var[v]   {$$ = $v;}
     ;
 
 block_var
-    : BLOCK_VAR    {$$ = {blockVar: yytext};}
+    : BLOCK_VAR      {$$ = {blockVar: yytext};}
+    ;
+
+block_const
+    : BLOCK_CONST    {$$ = {blockConst: yytext};}
     ;
