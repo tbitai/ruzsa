@@ -32,6 +32,7 @@
     "angular-tree-repeat": "https://github.com/tbitai/angular-tree-repeat/tarball/npm",
     "downloadjs": "^1.4.2",
     "jquery": "^2.2.1",
+    "lodash": "^4.16.6",
     "material-design-icons": "^2.2.3",
     "mdi": "^1.7.22",
     "semver": "^5.3.0"

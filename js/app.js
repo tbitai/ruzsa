@@ -14,7 +14,8 @@ import './lib/jquery.input-autoresize.js';
 import download from 'downloadjs';
 import semver from 'semver';
 import compareObjects from './lib/compareObjects.js';
-import clone from './lib/clone.js';
+import clone from './lib/clone.js';  // FIXME: This is not deep!
+import cloneDeep from 'lodash/cloneDeep';
 import { WFF } from './lib/wff.js';
 import { traverse, traverseBF, treePath } from './lib/treeUtils.js';
 import compareFormulaTrees from './lib/compareFormulaTrees.js';
@@ -779,7 +780,8 @@ angular.module('ruzsa', [
                 if (node.underBreakingDown) {
                     var allCandidatesAreEmpty = true;
                     var stepIsCorrect = true;
-                    var ast = node.formula.ast;
+                    var formula = node.formula;
+                    var ast = formula.ast;
                     var correctContinuationGroups = [];
                     var permutationsOfTwo = [[0, 1], [1, 0]],
                         i, j, p, pOuter, pInner, group;
@@ -928,8 +930,20 @@ angular.module('ruzsa', [
                     }
 
                     if (ast.hasOwnProperty('forAll')) {
-                        // TODO
-                        // For all blockConst `c` in the tree, add group `[F(c/x)]`.
+                        var v = ast.forAll[0].blockVar;
+                        var scope = ast.forAll[1];
+                        var c, substitutedScope;
+                        for (var i = 0; i < WFF.blockConsts.length; i++) {
+                            c = WFF.blockConsts[i];
+                            substitutedScope = new WFF('A');  // We will only use the AST of this formula.
+                            substitutedScope.ast = cloneDeep(scope);
+                            substitutedScope.substituteConstInAst(c, v);
+                            correctContinuationGroups.push([{
+                                formula: null,
+                                children: [{formula: {ast: substitutedScope.ast}}]
+                            }]);
+                        }
+                        // TODO: Allow multiple usage.
                     }
 
                     var continuedWithClosing = false;
