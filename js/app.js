@@ -929,7 +929,11 @@ angular.module('ruzsa', [
                         }]);
                     }
 
+                    var continuedWithUniversalQuantifierInference = false;
+
                     if (ast.hasOwnProperty('forAll')) {
+                        continuedWithUniversalQuantifierInference = true;
+
                         var v = ast.forAll[0].blockVar;
                         var scope = ast.forAll[1];
                         var c, substitutedScope;
@@ -943,7 +947,6 @@ angular.module('ruzsa', [
                                 children: [{formula: {ast: substitutedScope.ast}}]
                             }]);
                         }
-                        // TODO: Allow multiple usage.
                     }
 
                     var continuedWithClosing = false;
@@ -1002,8 +1005,10 @@ angular.module('ruzsa', [
                     if (stepIsCorrect) {
                         $scope.BDStepInProgress = false;
                         node.underBreakingDown = false;
-                        node.breakable = false;
-                        if (!continuedWithClosing) {
+                        if (!continuedWithUniversalQuantifierInference) {
+                            node.breakable = false;
+                        }
+                        if (!continuedWithClosing && !continuedWithUniversalQuantifierInference) {
                             node.brokenDown = true;
                         }
                         node.lastBrokenDown = true;
