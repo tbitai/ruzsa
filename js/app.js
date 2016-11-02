@@ -16,6 +16,8 @@ import semver from 'semver';
 import compareObjects from './lib/compareObjects.js';
 import clone from './lib/clone.js';  // FIXME: This is not deep!
 import cloneDeep from 'lodash/cloneDeep';
+import union from 'lodash/union';
+import difference from 'lodash/difference';
 import { WFF } from './lib/wff.js';
 import { traverse, traverseBF, treePath } from './lib/treeUtils.js';
 import compareFormulaTrees from './lib/compareFormulaTrees.js';
@@ -929,16 +931,43 @@ angular.module('ruzsa', [
                         }]);
                     }
 
-                    var continuedWithUniversalQuantifierInference = false;
+                    var continuedWithQuantifierInference = false;
 
                     if (ast.hasOwnProperty('forAll')) {
-                        continuedWithUniversalQuantifierInference = true;
+                        continuedWithQuantifierInference = true;
 
                         var v = ast.forAll[0].blockVar;
                         var scope = ast.forAll[1];
                         var c, substitutedScope;
                         for (var i = 0; i < WFF.blockConsts.length; i++) {
                             c = WFF.blockConsts[i];
+                            substitutedScope = new WFF('A');  // We will only use the AST of this formula.
+                            substitutedScope.ast = cloneDeep(scope);
+                            substitutedScope.substituteConstInAst(c, v);
+                            correctContinuationGroups.push([{
+                                formula: null,
+                                children: [{formula: {ast: substitutedScope.ast}}]
+                            }]);
+                        }
+                    }
+
+                    if (ast.hasOwnProperty('exists')) {
+                        continuedWithQuantifierInference = true;
+
+                        var v = ast.exists[0].blockVar;
+                        var scope = ast.exists[1];
+                        var usedBlockConsts = [];
+                        traverse($scope.treeData, function (n) {
+                            if (!n.candidate) {
+                                n.formula.traverseBlockConsts(function (subobj, prop, val) {
+                                    usedBlockConsts = union(usedBlockConsts, [val]);
+                                });
+                            }
+                        });
+                        var unusedBlockConsts = difference(WFF.blockConsts, usedBlockConsts);
+                        var c, substitutedScope;
+                        for (var i = 0; i < unusedBlockConsts.length; i++) {
+                            c = unusedBlockConsts[i];
                             substitutedScope = new WFF('A');  // We will only use the AST of this formula.
                             substitutedScope.ast = cloneDeep(scope);
                             substitutedScope.substituteConstInAst(c, v);
@@ -1005,10 +1034,10 @@ angular.module('ruzsa', [
                     if (stepIsCorrect) {
                         $scope.BDStepInProgress = false;
                         node.underBreakingDown = false;
-                        if (!continuedWithUniversalQuantifierInference) {
+                        if (!continuedWithQuantifierInference) {
                             node.breakable = false;
                         }
-                        if (!continuedWithClosing && !continuedWithUniversalQuantifierInference) {
+                        if (!continuedWithClosing && !continuedWithQuantifierInference) {
                             node.brokenDown = true;
                         }
                         node.lastBrokenDown = true;

@@ -88,6 +88,10 @@ sentence
     | '∀' block_var[v] literal[l]                     {$$ = {forAll: [$v, $l]};}
     | '∀' block_var[v] '(' sentence[s] ')'            {$$ = {forAll: [$v, $s]};}
 
+    /* ∃ */
+    | '∃' block_var[v] literal[l]                     {$$ = {exists: [$v, $l]};}
+    | '∃' block_var[v] '(' sentence[s] ')'            {$$ = {exists: [$v, $s]};}
+
     | '(' sentence[s] ')' %prec SENTENCE              {$$ = $s;}
     ;
 
