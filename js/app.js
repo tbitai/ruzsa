@@ -18,6 +18,7 @@ import clone from './lib/clone.js';  // FIXME: This is not deep!
 import cloneDeep from 'lodash/cloneDeep';
 import union from 'lodash/union';
 import difference from 'lodash/difference';
+import forEach from 'lodash/forEach';
 import { WFF } from './lib/wff.js';
 import { traverse, traverseBF, treePath } from './lib/treeUtils.js';
 import compareFormulaTrees from './lib/compareFormulaTrees.js';
@@ -545,7 +546,7 @@ angular.module('ruzsa', [
                 var newFormula = new WFF(node.input);
                 $scope.doForConnected(node, function (n) {
                     $scope.setFormula(n, newFormula);
-                    n.breakable = $scope.isOnceBreakable(n);
+                    n.breakable = $scope.isOnceBreakable(n);  // TODO: Remove `breakable` from nodes.
                 });
                 $scope.focusNext();
             } catch (ex) {
@@ -978,7 +979,47 @@ angular.module('ruzsa', [
                         }
                     }
 
+                    var eqs = [];
+                    var path = treePath($scope.treeData,
+                        function(n) { return n.id === node.id; },
+                        function(n) { return n.formula; }
+                    );
+                    forEach(path, function(pathFormula) {
+                        if (pathFormula.ast.hasOwnProperty('equa')) {
+                            eqs.push([
+                                pathFormula.ast.equa[0].blockConst,
+                                pathFormula.ast.equa[1].blockConst
+                            ]);
+                        }
+                    });
+                    var changedFormula;
+                    forEach(eqs, function (eq) {
+                        forEach(permutationsOfTwo, function (p) {
+                            forEach(path, function (pathFormula) {
+                                if (!pathFormula.ast.hasOwnProperty('equa') && pathFormula.hasBlockConst(eq[p[0]])) {
+                                    changedFormula = new WFF('A');  // We will only use the AST of this formula.
+                                    changedFormula.ast = cloneDeep(pathFormula.ast);
+                                    changedFormula.changeConstInAst(eq[p[1]], eq[p[0]]);
+                                    correctContinuationGroups.push([{
+                                        formula: 'continuedWithEqInference',  // Hack to recognize this continuation.
+                                        children: [{formula: {ast: changedFormula.ast}}]
+                                    }]);
+                                }
+                            });
+                        });
+                    });
+
+                    if (ast.hasOwnProperty('not') && ast.not.hasOwnProperty('equa') &&
+                        ast.not.equa[0].blockVar ===
+                        ast.not.equa[1].blockVar) {
+                            correctContinuationGroups.push([{
+                                formula: null,
+                                children: [{formula: {ast: {sentenceConst: '*'}}}]
+                            }]);
+                    }
+
                     var continuedWithClosing = false;
+                    var continuedWithEqInference = false;
 
                     traverse(node, function (n) {
                         if (n.underContinuation) {
@@ -998,7 +1039,7 @@ angular.module('ruzsa', [
                                 {sentenceConst: '*'}
                             );  // If only this update was in the traverse, we could break here.
 
-                            // Update stepIsCorrect
+                            // Update stepIsCorrect and continuedWithEqInference
                             var continuationIsCorrect = false;
                             var group, cont;
                             outerCCGLoop:
@@ -1007,6 +1048,10 @@ angular.module('ruzsa', [
                                 innerCCGLoop:
                                 for (var j in group) {
                                     cont = group[j];
+                                    if (cont.formula === 'continuedWithEqInference') {  // Use hack which was done in
+                                                                                        // this continuation.
+                                        continuedWithEqInference = true;
+                                    }
                                     cont.formula = n.formula;
                                     if (compareFormulaTrees(n, cont)) {
                                         continuationIsCorrect = true;
@@ -1034,10 +1079,10 @@ angular.module('ruzsa', [
                     if (stepIsCorrect) {
                         $scope.BDStepInProgress = false;
                         node.underBreakingDown = false;
-                        if (!continuedWithQuantifierInference) {
+                        if (!continuedWithQuantifierInference && !continuedWithEqInference) {
                             node.breakable = false;
                         }
-                        if (!continuedWithClosing && !continuedWithQuantifierInference) {
+                        if (!continuedWithClosing && !continuedWithQuantifierInference && !continuedWithEqInference) {
                             node.brokenDown = true;
                         }
                         node.lastBrokenDown = true;

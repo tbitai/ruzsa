@@ -120,6 +120,8 @@ atomic_sentence
     | 'SameShape' '(' block_term[s] ',' block_term[t] ')'     {$$ = {sameShape: [$s, $t]};}
     | 'RightOf' '(' block_term[s] ',' block_term[t] ')'       {$$ = {rightOf: [$s, $t]};}
     | 'SameRow' '(' block_term[s] ',' block_term[t] ')'       {$$ = {sameRow: [$s, $t]};}
+    | block_term[s] '=' block_term[t]                         {$$ = {equa: [$s, $t]};}
+    | block_term[s] '≠' block_term[t]                         {$$ = {not: {equa: [$s, $t]}};}
     | SENTENCE_VAR                                            {$$ = {sentenceVar: yytext};}
     | '(' atomic_sentence[a] ')' %prec ATOMIC_SENTENCE        {$$ = $a;}
     ;
