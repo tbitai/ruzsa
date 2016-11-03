@@ -932,13 +932,15 @@ angular.module('ruzsa', [
                         }]);
                     }
 
-                    var continuedWithQuantifierInference = false;
-
-                    if (ast.hasOwnProperty('forAll')) {
-                        continuedWithQuantifierInference = true;
-
-                        var v = ast.forAll[0].blockVar;
-                        var scope = ast.forAll[1];
+                    if (ast.hasOwnProperty('forAll') || ast.hasOwnProperty('not') && ast.not.hasOwnProperty('exists')) {
+                        var v, scope;
+                        if (ast.hasOwnProperty('forAll')) {
+                            v = ast.forAll[0].blockVar;
+                            scope = ast.forAll[1];
+                        } else {
+                            v = ast.not.exists[0].blockVar;
+                            scope = {not: ast.not.exists[1]};
+                        }
                         var c, substitutedScope;
                         for (var i = 0; i < WFF.blockConsts.length; i++) {
                             c = WFF.blockConsts[i];
@@ -946,17 +948,21 @@ angular.module('ruzsa', [
                             substitutedScope.ast = cloneDeep(scope);
                             substitutedScope.substituteConstInAst(c, v);
                             correctContinuationGroups.push([{
-                                formula: null,
+                                formula: 'continuedWithQuantifierInference',  // Hack to recognize this continuation.
                                 children: [{formula: {ast: substitutedScope.ast}}]
                             }]);
                         }
                     }
 
-                    if (ast.hasOwnProperty('exists')) {
-                        continuedWithQuantifierInference = true;
-
-                        var v = ast.exists[0].blockVar;
-                        var scope = ast.exists[1];
+                    if (ast.hasOwnProperty('exists') || ast.hasOwnProperty('not') && ast.not.hasOwnProperty('forAll')) {
+                        var v, scope;
+                        if (ast.hasOwnProperty('exists')){
+                            v = ast.exists[0].blockVar;
+                            scope = ast.exists[1];
+                        } else {
+                            v = ast.not.forAll[0].blockVar;
+                            scope = {not: ast.not.forAll[1]};
+                        }
                         var usedBlockConsts = [];
                         traverse($scope.treeData, function (n) {
                             if (!n.candidate) {
@@ -973,7 +979,7 @@ angular.module('ruzsa', [
                             substitutedScope.ast = cloneDeep(scope);
                             substitutedScope.substituteConstInAst(c, v);
                             correctContinuationGroups.push([{
-                                formula: null,
+                                formula: 'continuedWithQuantifierInference',  // Hack to recognize this continuation.
                                 children: [{formula: {ast: substitutedScope.ast}}]
                             }]);
                         }
@@ -1019,6 +1025,7 @@ angular.module('ruzsa', [
                     }
 
                     var continuedWithClosing = false;
+                    var continuedWithQuantifierInference = false;
                     var continuedWithEqInference = false;
 
                     traverse(node, function (n) {
@@ -1039,7 +1046,7 @@ angular.module('ruzsa', [
                                 {sentenceConst: '*'}
                             );  // If only this update was in the traverse, we could break here.
 
-                            // Update stepIsCorrect and continuedWithEqInference
+                            // Update stepIsCorrect, continuedWithEqInference and continuedWithQuantifierInference
                             var continuationIsCorrect = false;
                             var group, cont;
                             outerCCGLoop:
@@ -1051,6 +1058,11 @@ angular.module('ruzsa', [
                                     if (cont.formula === 'continuedWithEqInference') {  // Use hack which was done in
                                                                                         // this continuation.
                                         continuedWithEqInference = true;
+                                    }
+                                    if (cont.formula === 'continuedWithQuantifierInference') {  // Use hack which was
+                                                                                                // done in this
+                                                                                                // continuation.
+                                        continuedWithQuantifierInference = true;
                                     }
                                     cont.formula = n.formula;
                                     if (compareFormulaTrees(n, cont)) {
