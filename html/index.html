@@ -97,7 +97,7 @@
                     </div>
                 </md-fab-trigger>
                 <div class="bd_step_btns_positioner">
-                <md-fab-actions ng-show="node.breakable && node.hovered"
+                <md-fab-actions ng-show="!node.brokenDown && node.hovered"
                                 class="bd_step_btns">
                     <md-button class="md-fab md-mini bd_step_btn"
                                ng-click="addCandidates('or', node)"

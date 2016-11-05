@@ -1,5 +1,6 @@
 import {parser} from '../lib/tarskiPL';
 import compareObjects from './compareObjects.js';
+import traverseObject from './traverseObject.js';
 
 
 /** Tarski propositional well-formed formula class */
@@ -12,13 +13,55 @@ WFF.prototype.edit = function(unicode) {
 
     this.unicode = unicode;
 };
-
-
-function compareFormulas(formula, ref) {
+WFF.prototype.traversePropsWithName = function(propName, callback) {
+    traverseObject(this.ast, function (s, p, v) {
+       if (p === propName) {
+           callback(s, p, v);
+       }
+    });
+};
+WFF.prototype.traverseBlockVars = function(callback) {
+  this.traversePropsWithName('blockVar', callback);
+};
+WFF.prototype.traverseBlockConsts = function(callback) {
+  this.traversePropsWithName('blockConst', callback);
+};
+WFF.prototype.hasBlockConst = function (constName) {
+  var ret = false;
+  this.traverseBlockConsts(function (subobj, prop, val) {
+      if (val === constName) {
+          ret = true;
+      }
+  });
+  return ret;
+};
+WFF.compare = function(formula, ref) {
     return compareObjects(formula.ast, ref.ast);
-}
+};
+WFF.blockConsts = 'abcdefghijklmnopqrst'.split('');
+WFF.blockVars = 'uvwxyz'.split('');
+WFF.prototype.substituteConstInAst = function(c, v) {  // Use this with caution, it makes `ast` inconsistent with `unicode`!
+  if (WFF.blockConsts.indexOf(c) === -1) {
+    throw new Error('Invalid block constant name ' + c);
+  }
+  this.traverseBlockVars(function(subobj, prop, val) {
+    if (val === v) {
+      delete subobj[prop];
+      subobj['blockConst'] = c;
+    }
+  })
+};
+WFF.prototype.changeConstInAst = function(cNew, cOld) {  // Use this with caution, it makes `ast` inconsistent with `unicode`!
+    if (WFF.blockConsts.indexOf(cNew) === -1) {
+        throw new Error('Invalid block constant name ' + cNew);
+    }
+    this.traverseBlockConsts(function (subobj, prop, val) {
+        if (val === cOld) {
+            subobj[prop] = cNew;
+        }
+    });
+};
 
 export {
-	WFF,
-	compareFormulas
+	WFF
 };

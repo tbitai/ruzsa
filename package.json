@@ -1,6 +1,6 @@
 {
   "name": "ruzsa",
-  "version": "0.5.0-alpha.1",
+  "version": "1.0.0-alpha",
   "private": true,
   "jshintConfig": {
     "esversion": 6
@@ -8,7 +8,7 @@
   "scripts": {
     "generate-parser": "jison js/lib/tarskiPL.jison -o js/lib/tarskiPL.js && ./clean_parser_export.sh",
     "build-js": "rollup -c",
-    "build-js-watch": "rollup -cw",
+    "build-js-for-dev-watch": "rollup -cw --environment BUILD:dev",
     "build-css": "node-sass --output-style compressed --source-map dist/stylesheets stylesheets/main.sass dist/stylesheets/bundle.css",
     "collect-fonts": "./collect_fonts.sh",
     "collect-html": "./collect_html.sh",
@@ -32,6 +32,7 @@
     "angular-tree-repeat": "https://github.com/tbitai/angular-tree-repeat/tarball/npm",
     "downloadjs": "^1.4.2",
     "jquery": "^2.2.1",
+    "lodash": "^4.16.6",
     "material-design-icons": "^2.2.3",
     "mdi": "^1.7.22",
     "semver": "^5.3.0"
