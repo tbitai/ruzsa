@@ -42,10 +42,6 @@
 /lex
 
 
-%precedence SENTENCE
-%precedence LITERAL
-%precedence ATOMIC_SENTENCE
-
 %start s
 
 %%
@@ -55,53 +51,97 @@ s
     ;
 
 sentence
-    : literal[l]                                     {$$ = $l;}
-    | '¬' '(' sentence[s] ')' %prec SENTENCE         {$$ = {not: $s};}
+    : '*'    {$$ = {sentenceConst: '*'};}
+
+
+    /* The followings are the same as `par_sentence`, except that the rule components aren't enclosed in parentheses. */
+
+    | literal
+
+    | '¬' par_sentence[s]                                {$$ = {not: $s};}
 
     /* ∧ */
-    | literal[l] '∧' literal[r]                      {$$ = {and: [$l, $r]};}
-    | literal[l] '∧' '(' sentence[r] ')'             {$$ = {and: [$l, $r]};}
-    | '(' sentence[l] ')' '∧' literal[r]             {$$ = {and: [$l, $r]};}
-    | '(' sentence[l] ')' '∧' '(' sentence[r] ')'    {$$ = {and: [$l, $r]};}
-    
+    | par_sentence[l] '∧' par_sentence[r]                {$$ = {and: [$l, $r]};}
+    | literal[l] '∧' literal[r]                          {$$ = {and: [$l, $r]};}
+    | literal[l] '∧' par_sentence[r]                     {$$ = {and: [$l, $r]};}
+    | par_sentence[l] '∧' literal[r]                     {$$ = {and: [$l, $r]};}
+
     /* ∨ */
-    | literal[l] '∨' literal[r]                      {$$ = {or: [$l, $r]};}
-    | literal[l] '∨' '(' sentence[r] ')'             {$$ = {or: [$l, $r]};}
-    | '(' sentence[l] ')' '∨' literal[r]             {$$ = {or: [$l, $r]};}
-    | '(' sentence[l] ')' '∨' '(' sentence[r] ')'    {$$ = {or: [$l, $r]};}
+    | par_sentence[l] '∨' par_sentence[r]                {$$ = {or: [$l, $r]};}
+    | literal[l] '∨' literal[r]                          {$$ = {or: [$l, $r]};}
+    | literal[l] '∨' par_sentence[r]                     {$$ = {or: [$l, $r]};}
+    | par_sentence[l] '∨' literal[r]                     {$$ = {or: [$l, $r]};}
 
     /* → */
-    | literal[l] '→' literal[r]                      {$$ = {impl: [$l, $r]};}
-    | literal[l] '→' '(' sentence[r] ')'             {$$ = {impl: [$l, $r]};}
-    | '(' sentence[l] ')' '→' literal[r]             {$$ = {impl: [$l, $r]};}
-    | '(' sentence[l] ')' '→' '(' sentence[r] ')'    {$$ = {impl: [$l, $r]};}
-    
-    /* ↔ */
-    | literal[l] '↔' literal[r]                      {$$ = {equi: [$l, $r]};}
-    | literal[l] '↔' '(' sentence[r] ')'             {$$ = {equi: [$l, $r]};}
-    | '(' sentence[l] ')' '↔' literal[r]             {$$ = {equi: [$l, $r]};}
-    | '(' sentence[l] ')' '↔' '(' sentence[r] ')'    {$$ = {equi: [$l, $r]};}
+    | par_sentence[l] '→' par_sentence[r]                {$$ = {impl: [$l, $r]};}
+    | literal[l] '→' literal[r]                          {$$ = {impl: [$l, $r]};}
+    | literal[l] '→' par_sentence[r]                     {$$ = {impl: [$l, $r]};}
+    | par_sentence[l] '→' literal[r]                     {$$ = {impl: [$l, $r]};}
 
-    | '*'                                             {$$ = {sentenceConst: '*'};}
+    /* ↔ */
+    | par_sentence[l] '↔' par_sentence[r]                {$$ = {equi: [$l, $r]};}
+    | literal[l] '↔' literal[r]                          {$$ = {equi: [$l, $r]};}
+    | literal[l] '↔' par_sentence[r]                     {$$ = {equi: [$l, $r]};}
+    | par_sentence[l] '↔' literal[r]                     {$$ = {equi: [$l, $r]};}
 
     /* ∀ */
-    | '∀' block_var[v] literal[l]                     {$$ = {forAll: [$v, $l]};}
-    | '∀' block_var[v] '(' sentence[s] ')'            {$$ = {forAll: [$v, $s]};}
+    | '∀' block_var[v] par_sentence[s]                   {$$ = {forAll: [$v, $s]};}
+    | '∀' block_var[v] literal[l]                        {$$ = {forAll: [$v, $l]};}
 
     /* ∃ */
-    | '∃' block_var[v] literal[l]                     {$$ = {exists: [$v, $l]};}
-    | '∃' block_var[v] '(' sentence[s] ')'            {$$ = {exists: [$v, $s]};}
+    | '∃' block_var[v] par_sentence[s]                   {$$ = {exists: [$v, $s]};}
+    | '∃' block_var[v] literal[l]                        {$$ = {exists: [$v, $l]};}
 
-    | '(' sentence[s] ')' %prec SENTENCE              {$$ = $s;}
+    | par_sentence
     ;
 
-literal
+par_sentence
+    : '(' literal[l] ')'                                 {$$ = $l;}
+
+    | '(' '¬' par_sentence[s] ')'                        {$$ = {not: $s};}
+
+    /* ∧ */
+    | '(' par_sentence[l] '∧' par_sentence[r] ')'        {$$ = {and: [$l, $r]};}
+    | '(' literal[l] '∧' literal[r] ')'                  {$$ = {and: [$l, $r]};}
+    | '(' literal[l] '∧' par_sentence[r] ')'             {$$ = {and: [$l, $r]};}
+    | '(' par_sentence[l] '∧' literal[r] ')'             {$$ = {and: [$l, $r]};}
+
+    /* ∨ */
+    | '(' par_sentence[l] '∨' par_sentence[r] ')'        {$$ = {or: [$l, $r]};}
+    | '(' literal[l] '∨' literal[r] ')'                  {$$ = {or: [$l, $r]};}
+    | '(' literal[l] '∨' par_sentence[r] ')'             {$$ = {or: [$l, $r]};}
+    | '(' par_sentence[l] '∨' literal[r] ')'             {$$ = {or: [$l, $r]};}
+
+    /* → */
+    | '(' par_sentence[l] '→' par_sentence[r] ')'        {$$ = {impl: [$l, $r]};}
+    | '(' literal[l] '→' literal[r] ')'                  {$$ = {impl: [$l, $r]};}
+    | '(' literal[l] '→' par_sentence[r] ')'             {$$ = {impl: [$l, $r]};}
+    | '(' par_sentence[l] '→' literal[r] ')'             {$$ = {impl: [$l, $r]};}
+
+    /* ↔ */
+    | '(' par_sentence[l] '↔' par_sentence[r] ')'        {$$ = {equi: [$l, $r]};}
+    | '(' literal[l] '↔' literal[r] ')'                  {$$ = {equi: [$l, $r]};}
+    | '(' literal[l] '↔' par_sentence[r] ')'             {$$ = {equi: [$l, $r]};}
+    | '(' par_sentence[l] '↔' literal[r] ')'             {$$ = {equi: [$l, $r]};}
+
+    /* ∀ */
+    | '(' '∀' block_var[v] par_sentence[s] ')'           {$$ = {forAll: [$v, $s]};}
+    | '(' '∀' block_var[v] literal[l] ')'                {$$ = {forAll: [$v, $l]};}
+
+    /* ∃ */
+    | '(' '∃' block_var[v] par_sentence[s] ')'           {$$ = {exists: [$v, $s]};}
+    | '(' '∃' block_var[v] literal[l] ')'                {$$ = {exists: [$v, $l]};}
+
+    | '(' par_sentence[s] ')'                            {$$ = $s;}
+    ;
+
+literal  /* Without extra parentheses */
     : atomic_sentence[a]                  {$$ = $a;}
     | '¬' atomic_sentence[a]              {$$ = {not: $a};}
-    | '(' literal[l] ')' %prec LITERAL    {$$ = $l;}
     ;
 
-atomic_sentence
+atomic_sentence  /* Without extra parentheses */
+    /* Tarski predicates */
     : 'Tet' '(' block_term[t] ')'                             {$$ = {tet: $t};}
     | 'Cube' '(' block_term[t] ')'                            {$$ = {cube: $t};}
     | 'Dodec' '(' block_term[t] ')'                           {$$ = {dodec: $t};}
@@ -120,15 +160,16 @@ atomic_sentence
     | 'SameShape' '(' block_term[s] ',' block_term[t] ')'     {$$ = {sameShape: [$s, $t]};}
     | 'RightOf' '(' block_term[s] ',' block_term[t] ')'       {$$ = {rightOf: [$s, $t]};}
     | 'SameRow' '(' block_term[s] ',' block_term[t] ')'       {$$ = {sameRow: [$s, $t]};}
+
     | block_term[s] '=' block_term[t]                         {$$ = {equa: [$s, $t]};}
     | block_term[s] '≠' block_term[t]                         {$$ = {not: {equa: [$s, $t]}};}
+
     | SENTENCE_VAR                                            {$$ = {sentenceVar: yytext};}
-    | '(' atomic_sentence[a] ')' %prec ATOMIC_SENTENCE        {$$ = $a;}
     ;
 
 block_term
-    : block_const[c] {$$ = $c;}
-    | block_var[v]   {$$ = $v;}
+    : block_const
+    | block_var
     ;
 
 block_var
