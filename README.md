@@ -6,7 +6,9 @@ Check it out at [https://ruzsa.tbitai.me](https://ruzsa.tbitai.me)!
 
 ## Usage
 
-The rules for constructing trees are the same as explained on the [Method of analytic tableaux](https://en.wikipedia.org/wiki/Method_of_analytic_tableaux) Wikipedia page, except that closure is denoted by `*` derived from the lower closing node, like this:
+The rules for constructing tableaux are the same as explained on the [Method of analytic tableaux](https://en.wikipedia.org/wiki/Method_of_analytic_tableaux) Wikipedia page, the first-order rules are those contained in the [First-order tableau without unification](https://en.wikipedia.org/wiki/Method_of_analytic_tableaux#First-order_tableau_without_unification) subsection.
+
+Closure is denoted by `*` derived from the lower closing node, like this:
 
 ![Closure](README-closure.png)
 
@@ -38,13 +40,13 @@ Make a build for deployment:
 npm run build-for-deploy
 ```
 
-Deploy to production:
+Deploy to production...
 
 ```
 npm run deploy
 ```
 
-Or deploy to staging:
+... or to staging:
 
 ```
 npm run deploy-staging
