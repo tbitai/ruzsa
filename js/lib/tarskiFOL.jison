@@ -51,29 +51,24 @@ s
     ;
 
 sentence
-    : '*'                                                                                  {$$ = {sentenceConst: '*'};}
-    | par_sentence_or_literal_or_neg_or_q[l] '∧' par_sentence_or_literal_or_neg_or_q[r]    {$$ = {and: [$l, $r]};}
-    | par_sentence_or_literal_or_neg_or_q[l] '∨' par_sentence_or_literal_or_neg_or_q[r]    {$$ = {or: [$l, $r]};}
-    | par_sentence_or_literal_or_neg_or_q[l] '→' par_sentence_or_literal_or_neg_or_q[r]    {$$ = {impl: [$l, $r]};}
-    | par_sentence_or_literal_or_neg_or_q[l] '↔' par_sentence_or_literal_or_neg_or_q[r]    {$$ = {equi: [$l, $r]};}
-    | par_sentence_or_literal_or_neg_or_q
+    : '*'                                                                                {$$ = {sentenceConst: '*'};}
+    | par_sentence_or_atomic_or_neg_or_q[l] '∧' par_sentence_or_atomic_or_neg_or_q[r]    {$$ = {and: [$l, $r]};}
+    | par_sentence_or_atomic_or_neg_or_q[l] '∨' par_sentence_or_atomic_or_neg_or_q[r]    {$$ = {or: [$l, $r]};}
+    | par_sentence_or_atomic_or_neg_or_q[l] '→' par_sentence_or_atomic_or_neg_or_q[r]    {$$ = {impl: [$l, $r]};}
+    | par_sentence_or_atomic_or_neg_or_q[l] '↔' par_sentence_or_atomic_or_neg_or_q[r]    {$$ = {equi: [$l, $r]};}
+    | par_sentence_or_atomic_or_neg_or_q
     ;
 
-par_sentence_or_literal_or_neg_or_q
-    : literal[l]                                                                                   {$$ = $l;}
-    | '¬' par_sentence_or_literal_or_neg_or_q[s]                                                   {$$ = {not: $s};}
-    | '(' par_sentence_or_literal_or_neg_or_q[l] '∧' par_sentence_or_literal_or_neg_or_q[r] ')'    {$$ = {and: [$l, $r]};}
-    | '(' par_sentence_or_literal_or_neg_or_q[l] '∨' par_sentence_or_literal_or_neg_or_q[r] ')'    {$$ = {or: [$l, $r]};}
-    | '(' par_sentence_or_literal_or_neg_or_q[l] '→' par_sentence_or_literal_or_neg_or_q[r] ')'    {$$ = {impl: [$l, $r]};}
-    | '(' par_sentence_or_literal_or_neg_or_q[l] '↔' par_sentence_or_literal_or_neg_or_q[r] ')'    {$$ = {equi: [$l, $r]};}
-    | '∀' block_var[v] par_sentence_or_literal_or_neg_or_q[s]                                      {$$ = {forAll: [$v, $s]};}
-    | '∃' block_var[v] par_sentence_or_literal_or_neg_or_q[s]                                      {$$ = {exists: [$v, $s]};}
-    | '(' par_sentence_or_literal_or_neg_or_q[s] ')'                                               {$$ = $s;}
-    ;
-
-literal  /* Without extra parentheses */
-    : atomic_sentence[a]        {$$ = $a;}
-    | '¬' atomic_sentence[a]    {$$ = {not: $a};}
+par_sentence_or_atomic_or_neg_or_q
+    : atomic_sentence
+    | '¬' par_sentence_or_atomic_or_neg_or_q[s]                                                  {$$ = {not: $s};}
+    | '(' par_sentence_or_atomic_or_neg_or_q[l] '∧' par_sentence_or_atomic_or_neg_or_q[r] ')'    {$$ = {and: [$l, $r]};}
+    | '(' par_sentence_or_atomic_or_neg_or_q[l] '∨' par_sentence_or_atomic_or_neg_or_q[r] ')'    {$$ = {or: [$l, $r]};}
+    | '(' par_sentence_or_atomic_or_neg_or_q[l] '→' par_sentence_or_atomic_or_neg_or_q[r] ')'    {$$ = {impl: [$l, $r]};}
+    | '(' par_sentence_or_atomic_or_neg_or_q[l] '↔' par_sentence_or_atomic_or_neg_or_q[r] ')'    {$$ = {equi: [$l, $r]};}
+    | '∀' block_var[v] par_sentence_or_atomic_or_neg_or_q[s]                                     {$$ = {forAll: [$v, $s]};}
+    | '∃' block_var[v] par_sentence_or_atomic_or_neg_or_q[s]                                      {$$ = {exists: [$v, $s]};}
+    | '(' par_sentence_or_atomic_or_neg_or_q[s] ')'                                               {$$ = $s;}
     ;
 
 atomic_sentence  /* Without extra parentheses */

@@ -1,9 +1,9 @@
-import {parser} from '../lib/tarskiPL';
+import {parser} from '../lib/tarskiFOL';
 import compareObjects from './compareObjects.js';
 import traverseObject from './traverseObject.js';
 
 
-/** Tarski propositional well-formed formula class */
+/** Tarski first-order well-formed formula pseudo-class */
 function WFF(unicode){
     this.edit(unicode);
 }

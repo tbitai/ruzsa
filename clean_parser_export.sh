@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-FILE="js/lib/tarskiPL.js"
+FILE="js/lib/tarskiFOL.js"
 REGEXP="typeof exports"
 
 # Check if export part is in the expected format
@@ -13,4 +13,4 @@ fi
 sed -i -e "/$REGEXP/,\$d" $FILE
 
 # Add new export part
-printf "exports.parser = tarskiPL;\n" >> $FILE
+printf "exports.parser = tarskiFOL;\n" >> $FILE

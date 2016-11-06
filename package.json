@@ -6,7 +6,7 @@
     "esversion": 6
   },
   "scripts": {
-    "generate-parser": "jison js/lib/tarskiPL.jison -o js/lib/tarskiPL.js && ./clean_parser_export.sh",
+    "generate-parser": "jison js/lib/tarskiFOL.jison -o js/lib/tarskiFOL.js && ./clean_parser_export.sh",
     "build-js": "rollup -c",
     "build-js-for-dev-watch": "rollup -cw --environment BUILD:dev",
     "build-css": "node-sass --output-style compressed --source-map dist/stylesheets stylesheets/main.sass dist/stylesheets/bundle.css",

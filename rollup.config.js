@@ -45,7 +45,7 @@ var config = {
         preferBuiltins: false  // Default: true
     }),
     commonjs({
-      include: ['node_modules/**', 'js/lib/tarskiPL.js']
+      include: ['node_modules/**', 'js/lib/tarskiFOL.js']
     }),
     json({
       include: 'package.json'

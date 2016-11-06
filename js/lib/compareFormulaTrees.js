@@ -1,4 +1,4 @@
-import { WFF } from './wff.js';
+import { WFF } from './tarskiFirstOrderWFF.js';
 import equi from './equi.js';
 
 function compareFormulaTrees(tree, ref) {

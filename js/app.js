@@ -18,7 +18,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import union from 'lodash/union';
 import difference from 'lodash/difference';
 import forEach from 'lodash/forEach';
-import { WFF } from './lib/wff.js';
+import { WFF } from './lib/tarskiFirstOrderWFF.js';
 import { traverse, traverseBF, treePath } from './lib/treeUtils.js';
 import compareFormulaTrees from './lib/compareFormulaTrees.js';
 
