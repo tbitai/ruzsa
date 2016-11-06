@@ -14,7 +14,6 @@ import './lib/jquery.input-autoresize.js';
 import download from 'downloadjs';
 import semver from 'semver';
 import compareObjects from './lib/compareObjects.js';
-import clone from './lib/clone.js';  // FIXME: This is not deep!
 import cloneDeep from 'lodash/cloneDeep';
 import union from 'lodash/union';
 import difference from 'lodash/difference';
@@ -625,7 +624,7 @@ angular.module('ruzsa', [
                         node.formula &&  // Exclude newly added leaves
                         !compareObjects(node.formula.ast, {sentenceConst: '*'})  // Exclude closed branches
                     ) {
-                        var emptyNodeClone = clone(emptyNode);
+                        var emptyNodeClone = cloneDeep(emptyNode);
                         $scope.setId(emptyNodeClone);
                         if (!focusOrderSet) {
                             emptyNodeClone.focusOrder = 0;
@@ -657,11 +656,11 @@ angular.module('ruzsa', [
                              candidate: true,
                              inFocusQ: true};
             function makeCandidateClone(o) {
-                return $scope.setId(setFocusOrder(clone(candidate), o));
+                return $scope.setId(setFocusOrder(cloneDeep(candidate), o));
             }
             function makeDoubleCandidateClone(oTop, oBtm) {
-                var doubleCandidateClone = $scope.setId(setFocusOrder(clone(candidate), oTop));
-                doubleCandidateClone.children = [$scope.setId(setFocusOrder(clone(candidate), oBtm))];
+                var doubleCandidateClone = $scope.setId(setFocusOrder(cloneDeep(candidate), oTop));
+                doubleCandidateClone.children = [$scope.setId(setFocusOrder(cloneDeep(candidate), oBtm))];
                 return doubleCandidateClone;
             }
             var o = 0;
