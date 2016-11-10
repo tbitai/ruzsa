@@ -3,7 +3,7 @@ import nodeResolve from 'rollup-plugin-node-resolve';
 import uglify from 'rollup-plugin-uglify';
 import json from 'rollup-plugin-json';
 
-export default {
+var config = {
   entry: 'js/app.js',
   dest: 'dist/js/bundle.js', // equivalent to --output
   format: 'iife',
@@ -45,11 +45,15 @@ export default {
         preferBuiltins: false  // Default: true
     }),
     commonjs({
-      include: 'node_modules/**'
+      include: ['node_modules/**', 'js/lib/tarskiFOL.js']
     }),
     json({
       include: 'package.json'
-    }),
+    })
+  ]
+};
+if (process.env.BUILD !== 'dev') {
+  config.plugins.push(
     uglify({
       output: {
         // Preserve license comments.
@@ -63,5 +67,6 @@ export default {
         }
       }
     })
-  ]
-};
+  );
+}
+export default config;

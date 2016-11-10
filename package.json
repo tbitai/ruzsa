@@ -1,18 +1,19 @@
 {
   "name": "ruzsa",
-  "version": "0.4.0",
+  "version": "1.0.0",
   "private": true,
   "jshintConfig": {
     "esversion": 6
   },
   "scripts": {
+    "generate-parser": "jison js/lib/tarskiFOL.jison -o js/lib/tarskiFOL.js && ./clean_parser_export.sh",
     "build-js": "rollup -c",
-    "build-js-watch": "rollup -cw",
+    "build-js-for-dev-watch": "rollup -cw --environment BUILD:dev",
     "build-css": "node-sass --output-style compressed --source-map dist/stylesheets stylesheets/main.sass dist/stylesheets/bundle.css",
     "collect-fonts": "./collect_fonts.sh",
     "collect-html": "./collect_html.sh",
     "collect-img": "./collect_img.sh",
-    "build": "npm run build-js && npm run build-css && npm run collect-fonts && npm run collect-html && npm run collect-img",
+    "build": "npm run generate-parser && npm run build-js && npm run build-css && npm run collect-fonts && npm run collect-html && npm run collect-img",
     "clean-sourcemaps": "./clean_sourcemaps.sh",
     "build-for-deploy": "npm run build && npm run clean-sourcemaps",
     "deploy": "netlify deploy -e production",
@@ -30,20 +31,21 @@
     "angular-translate-storage-cookie": "^2.11.0",
     "angular-tree-repeat": "https://github.com/tbitai/angular-tree-repeat/tarball/npm",
     "downloadjs": "^1.4.2",
-    "formula-parser": "https://github.com/tbitai/formula-parser/tarball/npm",
     "jquery": "^2.2.1",
+    "lodash": "^4.16.6",
     "material-design-icons": "^2.2.3",
     "mdi": "^1.7.22",
+    "semver": "^5.3.0"
+  },
+  "devDependencies": {
+    "jison": "^0.4.17",
+    "netlify-cli": "^1.0.2",
     "node-sass": "^3.8.0",
     "rollup": "^0.34.10",
     "rollup-plugin-commonjs": "^3.3.1",
     "rollup-plugin-json": "^2.0.2",
     "rollup-plugin-node-resolve": "^2.0.0",
     "rollup-plugin-uglify": "^1.0.1",
-    "semver": "^5.3.0"
-  },
-  "devDependencies": {
-    "netlify-cli": "^1.0.2",
     "rollup-watch": "^2.5.0"
   }
 }

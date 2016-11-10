@@ -1,8 +1,8 @@
-import { compareFormulas } from './wff.js';
+import { WFF } from './tarskiFirstOrderWFF.js';
 import equi from './equi.js';
 
 function compareFormulaTrees(tree, ref) {
-    if (!compareFormulas(tree.formula, ref.formula)) {
+    if (!WFF.compare(tree.formula, ref.formula)) {
         return false;
     }
     if (!equi('children' in tree, 'children' in ref)) {

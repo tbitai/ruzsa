@@ -15,7 +15,7 @@
 <md-toolbar md-whiteframe="4" class="toolbar">
     <div class="md-toolbar-tools">
         <md-button ng-click="setInitialStateWithConfirm()" aria-label="RUZSA" id="logo_btn">
-            <img src="img/ruzsa-logo.png" class="logo"></img><sup ng-show="isRunningVersionTesting"><i class="mdi mdi-test-tube"></i></sup>
+            <img src="img/ruzsa-logo.png" class="logo"><sup ng-show="isRunningVersionTesting"><i class="mdi mdi-test-tube"></i></sup>
         </md-button>
         <div id="action_bar">
             <!-- Has to be an anchor element with the script in its href,
@@ -28,7 +28,7 @@
 
             <input type="file" id="file_input" style="display:none"
                    onchange="angular.element(this).scope().loadFile(this.files)">  <!-- ng-change doesn't support file inputs -->
-            <md-button ng-disabled="!unsavedDataPresent"
+            <md-button ng-disabled="!unsavedDataPresent || readonly"
                        ng-click="save()">
                 <i class="material-icons">&#xE161;</i> <span class="tool_title">{{'SAVE' | translate}}</span>
             </md-button>
@@ -40,7 +40,8 @@
                        ng-click="undoStep()">
                 <i class="material-icons">&#xE166;</i> <span class="tool_title">{{'UNDO' | translate}}</span>
             </md-button>
-            <md-button class="plus_btn_tool"
+            <md-button ng-disabled="readonly"
+                       class="plus_btn_tool"
                        ng-click="addLeaves()">
                 <i class="material-icons">&#xE145;</i> <span class="tool_title">{{'ADD' | translate}}</span>
             </md-button>
@@ -97,7 +98,7 @@
                     </div>
                 </md-fab-trigger>
                 <div class="bd_step_btns_positioner">
-                <md-fab-actions ng-show="node.breakable && node.hovered"
+                <md-fab-actions ng-show="!readonly && !node.brokenDown && node.hovered"
                                 class="bd_step_btns">
                     <md-button class="md-fab md-mini bd_step_btn"
                                ng-click="addCandidates('or', node)"
@@ -130,22 +131,39 @@
 </ul>
 </div>
 <div id="virtual_keyboard" md-whiteframe="4">
-    <div id="connective_btns">
-        <md-button class="md-raised connective_btn"
+    <div class="small_vkb_btns">
+        <md-button class="md-raised small_vkb_btn"
                    onclick="fireVirtualKey(' ∨ ')"
                    aria-label="{{'OR' | translate}}">∨</md-button>
-        <md-button class="md-raised connective_btn"
+        <md-button class="md-raised small_vkb_btn"
                    onclick="fireVirtualKey(' ∧ ')"
                    aria-label="{{'AND' | translate}}">∧</md-button>
-        <md-button class="md-raised connective_btn"
+        <md-button class="md-raised small_vkb_btn"
                    onclick="fireVirtualKey('¬')"
                    aria-label="{{'NOT' | translate}}">¬</md-button>
-        <md-button class="md-raised connective_btn"
+        <md-button class="md-raised small_vkb_btn"
                    onclick="fireVirtualKey(' → ')"
                    aria-label="{{'IMPLIES' | translate}}">→</md-button>
-        <md-button class="md-raised connective_btn"
+        <md-button class="md-raised small_vkb_btn"
                    onclick="fireVirtualKey(' ↔ ')"
                    aria-label="{{'EQUIVALENT' | translate}}">↔</md-button>
+    </div>
+    <div class="small_vkb_btns">
+      <md-button class="md-raised small_vkb_btn"
+                 onclick="fireVirtualKey('∀')"
+                 aria-label="{{'FOR_ALL' | translate}}">∀</md-button>
+      <md-button class="md-raised small_vkb_btn"
+                 onclick="fireVirtualKey('∃')"
+                 aria-label="{{'EXISTS' | translate}}">∃</md-button>
+      <md-button class="md-raised small_vkb_btn"
+                 onclick="fireVirtualKey(' = ')"
+                 aria-label="{{'EQUALS' | translate}}">=</md-button>
+      <md-button class="md-raised small_vkb_btn"
+                 onclick="fireVirtualKey(' ≠ ')"
+                 aria-label="{{'NOT_EQUALS' | translate}}">≠</md-button>
+      <md-button class="md-raised small_vkb_btn"
+                 onclick="fireVirtualKey('*')"
+                 aria-label="{{'FALSE' | translate}}">*</md-button>  <!-- FIXME: This will result in invalid input. -->
     </div>
     <table>
         <tr>
@@ -216,7 +234,8 @@
         </tr>
     </table>
 </div>
-<md-button class="md-fab plus_btn"
+<md-button ng-disabled="readonly"
+           class="md-fab plus_btn"
            ng-click="addLeaves()"
            aria-label="{{'ADD' | translate}}">
     <md-icon md-svg-src="img/icons/ic_add_black_24px.svg"></md-icon>
