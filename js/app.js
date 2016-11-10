@@ -142,7 +142,10 @@ angular.module('ruzsa', [
             'CONFIRM_CONTINUE': 'Continue',
             'WINDOW_UNLOAD_CONFIRM_UNSAVED': 'There are unsaved changes in your Ruzsa tree. These will be lost.',
             'TEST_VERSION_ALERT_TITLE': 'This is a test version of Ruzsa',
-            'TEST_VERSION_ALERT_TEXT': 'Files saved here won\'t work in stable versions.'
+            'TEST_VERSION_ALERT_TEXT': 'Files saved here won\'t work in stable versions.',
+            "LOAD_FILE_DEPR_READONLY_ALERT_TITLE": 'Read-only file',
+            "LOAD_FILE_DEPR_READONLY_ALERT_TEXT": 'This file was created with a deprecated version of Ruzsa. We can load it, ' +
+                'but you won\'t be able to edit it.'
         });
         $translateProvider.translations('hu', {
             'OTHER_LANGUAGE': 'English',
@@ -190,7 +193,10 @@ angular.module('ruzsa', [
             'CONFIRM_CONTINUE': 'Folytatás',
             'WINDOW_UNLOAD_CONFIRM_UNSAVED': 'Mentetlen változtatások vannak a Ruzsa-fádban. Ezek el fognak veszni.',
             'TEST_VERSION_ALERT_TITLE': 'Ez a Ruzsa teszt verziója',
-            'TEST_VERSION_ALERT_TEXT': 'Az itt mentett fájlok nem fognak működni a stabil verziókban.'
+            'TEST_VERSION_ALERT_TEXT': 'Az itt mentett fájlok nem fognak működni a stabil verziókban.',
+            "LOAD_FILE_DEPR_READONLY_ALERT_TITLE": 'Csak olvasható fájl',
+            "LOAD_FILE_DEPR_READONLY_ALERT_TEXT": 'Ez a fájl a Ruzsa egy már nem támogatott verziójával készült. Be tudjuk tölteni, ' +
+                'de szerkeszteni nem lehet.'
         });
         $translateProvider.preferredLanguage('en');
         $translateProvider.useCookieStorage();
@@ -214,7 +220,9 @@ angular.module('ruzsa', [
                 'LOAD_FILE_CONFIRM_UNSAVED_TEXT',
                 'CONFIRM_CANCEL',
                 'CONFIRM_CONTINUE',
-                'WINDOW_UNLOAD_CONFIRM_UNSAVED'
+                'WINDOW_UNLOAD_CONFIRM_UNSAVED',
+                'LOAD_FILE_DEPR_READONLY_ALERT_TITLE',
+                'LOAD_FILE_DEPR_READONLY_ALERT_TEXT'
             ]).then(function(tr) {
                 // Alerts and confirms
                 $scope.loadFileErrorAlertTitle = tr.LOAD_FILE_ERROR_ALERT_TITLE;
@@ -228,6 +236,8 @@ angular.module('ruzsa', [
                 $scope.confirmCancel = tr.CONFIRM_CANCEL;
                 $scope.confirmContinue = tr.CONFIRM_CONTINUE;
                 $scope.windowUnloadConfirmUnsaved = tr.WINDOW_UNLOAD_CONFIRM_UNSAVED;
+                $scope.loadFileDeprReadonlyAlertTitle = tr.LOAD_FILE_DEPR_READONLY_ALERT_TITLE;
+                $scope.loadFileDeprReadonlyAlertText = tr.LOAD_FILE_DEPR_READONLY_ALERT_TEXT;
             });
         };
         $scope.generateTranslationsForScope();
@@ -252,7 +262,8 @@ angular.module('ruzsa', [
                 cancelNewNodesPossible: $scope.cancelNewNodesPossible,
                 BDStepInProgress:       $scope.BDStepInProgress,
                 unsavedDataPresent:     $scope.unsavedDataPresent,
-                filename:               $scope.filename
+                filename:               $scope.filename,
+                readonly:               $scope.readonly
             };
         };
         $scope.setState = function(state, withDigest) {
@@ -267,6 +278,7 @@ angular.module('ruzsa', [
             if (withDigest) {
                 $scope.$digest();
             }
+            $scope.readonly =               state.readonly;
         };
 
         // Initial state
@@ -287,7 +299,8 @@ angular.module('ruzsa', [
             cancelNewNodesPossible: false,
             BDStepInProgress: false,
             unsavedDataPresent: false,
-            filename: 'Untitled.tree'
+            filename: 'Untitled.tree',
+            readonly: false
         });};
         $scope.setInitialState();
 
@@ -376,6 +389,18 @@ angular.module('ruzsa', [
                         }
                         var state = dataJSON.state;
                         state.filename = file.name;
+                        var readonly = semver.lt(loadedVersion, '1.0.0');
+                        state.readonly = readonly;
+                        if (readonly) {
+                            $mdDialog.show(
+                                $mdDialog.alert({
+                                    title: $scope.loadFileDeprReadonlyAlertTitle,
+                                    textContent: $scope.loadFileDeprReadonlyAlertText,
+                                    ok: 'OK',
+                                    focusOnOpen: $scope.dialogFocusOnOpen
+                                })
+                            );
+                        }
                         $scope.setState(state, true);
                         if (semver.lt(loadedVersion, '0.2.0')) {
                             // Add missing `brokenDown`s
