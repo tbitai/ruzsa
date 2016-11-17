@@ -5,7 +5,9 @@ import traverseObject from './traverseObject.js';
 
 /** Tarski first-order well-formed formula pseudo-class */
 function WFF(unicode){
-    this.edit(unicode);
+    if (unicode !== undefined) {
+        this.edit(unicode);
+    }
 }
 WFF.prototype.edit = function(unicode) {
     // First parse the Unicode, and raise error if it isn't valid.

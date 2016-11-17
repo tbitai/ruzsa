@@ -968,11 +968,11 @@ angular.module('ruzsa', [
                         var c, substitutedScope;
                         for (var i = 0; i < WFF.blockConsts.length; i++) {
                             c = WFF.blockConsts[i];
-                            substitutedScope = new WFF('A');  // We will only use the AST of this formula.
+                            substitutedScope = new WFF();
                             substitutedScope.ast = cloneDeep(scope);
                             substitutedScope.substituteConstInAst(c, v);
                             correctContinuationGroups.push([{
-                                formula: 'continuedWithQuantifierInference',  // Hack to recognize this continuation.
+                                formula: 'continuedWithUniversalLikeQInference',  // Hack to recognize this continuation.
                                 children: [{formula: {ast: substitutedScope.ast}}]
                             }]);
                         }
@@ -999,11 +999,11 @@ angular.module('ruzsa', [
                         var c, substitutedScope;
                         for (var i = 0; i < unusedBlockConsts.length; i++) {
                             c = unusedBlockConsts[i];
-                            substitutedScope = new WFF('A');  // We will only use the AST of this formula.
+                            substitutedScope = new WFF();
                             substitutedScope.ast = cloneDeep(scope);
                             substitutedScope.substituteConstInAst(c, v);
                             correctContinuationGroups.push([{
-                                formula: 'continuedWithQuantifierInference',  // Hack to recognize this continuation.
+                                formula: null,
                                 children: [{formula: {ast: substitutedScope.ast}}]
                             }]);
                         }
@@ -1027,7 +1027,7 @@ angular.module('ruzsa', [
                         forEach(permutationsOfTwo, function (p) {
                             forEach(path, function (pathFormula) {
                                 if (pathFormula.hasBlockConst(eq[p[0]])) {
-                                    changedFormula = new WFF('A');  // We will only use the AST of this formula.
+                                    changedFormula = new WFF();
                                     changedFormula.ast = cloneDeep(pathFormula.ast);
                                     changedFormula.changeConstInAst(eq[p[1]], eq[p[0]]);
                                     correctContinuationGroups.push([{
@@ -1049,7 +1049,7 @@ angular.module('ruzsa', [
                     }
 
                     var continuedWithClosing = false;
-                    var continuedWithQuantifierInference = false;
+                    var continuedWithUniversalLikeQInference = false;
                     var continuedWithEqInference = false;
 
                     traverse(node, function (n) {
@@ -1070,7 +1070,7 @@ angular.module('ruzsa', [
                                 {sentenceConst: '*'}
                             );  // If only this update was in the traverse, we could break here.
 
-                            // Update stepIsCorrect, continuedWithEqInference and continuedWithQuantifierInference
+                            // Update stepIsCorrect, continuedWithEqInference and continuedWithUniversalLikeQInference
                             var continuationIsCorrect = false;
                             var group, cont;
                             outerCCGLoop:
@@ -1083,10 +1083,10 @@ angular.module('ruzsa', [
                                                                                         // this continuation.
                                         continuedWithEqInference = true;
                                     }
-                                    if (cont.formula === 'continuedWithQuantifierInference') {  // Use hack which was
-                                                                                                // done in this
-                                                                                                // continuation.
-                                        continuedWithQuantifierInference = true;
+                                    if (cont.formula === 'continuedWithUniversalLikeQInference') {  // Use hack which
+                                                                                                    // was done in this
+                                                                                                    // continuation.
+                                        continuedWithUniversalLikeQInference = true;
                                     }
                                     cont.formula = n.formula;
                                     if (compareFormulaTrees(n, cont)) {
@@ -1115,10 +1115,10 @@ angular.module('ruzsa', [
                     if (stepIsCorrect) {
                         $scope.BDStepInProgress = false;
                         node.underBreakingDown = false;
-                        if (!continuedWithQuantifierInference && !continuedWithEqInference) {
+                        if (!continuedWithUniversalLikeQInference && !continuedWithEqInference) {
                             node.breakable = false;
                         }
-                        if (!continuedWithClosing && !continuedWithQuantifierInference && !continuedWithEqInference) {
+                        if (!continuedWithClosing && !continuedWithUniversalLikeQInference && !continuedWithEqInference) {
                             node.brokenDown = true;
                         }
                         node.lastBrokenDown = true;
