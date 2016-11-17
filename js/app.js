@@ -1026,7 +1026,7 @@ angular.module('ruzsa', [
                     forEach(eqs, function (eq) {
                         forEach(permutationsOfTwo, function (p) {
                             forEach(path, function (pathFormula) {
-                                if (!pathFormula.ast.hasOwnProperty('equa') && pathFormula.hasBlockConst(eq[p[0]])) {
+                                if (pathFormula.hasBlockConst(eq[p[0]])) {
                                     changedFormula = new WFF('A');  // We will only use the AST of this formula.
                                     changedFormula.ast = cloneDeep(pathFormula.ast);
                                     changedFormula.changeConstInAst(eq[p[1]], eq[p[0]]);
