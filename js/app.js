@@ -266,8 +266,22 @@ angular.module('ruzsa', [
                 readonly:               $scope.readonly
             };
         };
+
+        /**
+         * Set `$scope`'s state.
+         * @param state - Object representing the new state. `WFF` prototype will be added to the formulas.
+         * @param withDigest - If `true`, `$scope.$digest()` will be called as a last step.
+         */
         $scope.setState = function(state, withDigest) {
             $scope.treeData =               state.treeData;
+
+            // Add `WFF` prototype to the tree's formulas
+            traverse($scope.treeData, function (node) {
+                var wff = new WFF();
+                Object.assign(wff, node.formula);
+                node.formula = wff;
+            });
+
             $scope.greatestId =             state.greatestId;
             $scope.greatestConnectId =      state.greatestConnectId;
             $scope.undoStepPossible =       state.undoStepPossible;
@@ -275,10 +289,11 @@ angular.module('ruzsa', [
             $scope.BDStepInProgress =       state.BDStepInProgress;
             $scope.unsavedDataPresent =     state.unsavedDataPresent;
             $scope.filename =               state.filename;
+            $scope.readonly =               state.readonly;
+
             if (withDigest) {
                 $scope.$digest();
             }
-            $scope.readonly =               state.readonly;
         };
 
         // Initial state
@@ -353,11 +368,11 @@ angular.module('ruzsa', [
         $scope.save = function() {
             $scope.unsavedDataPresent = false;
             var state = $scope.getState();
-            var dataJSON = {
+            var data = {
                 version: version,
                 state: state
             };
-            var dataStr = angular.toJson(dataJSON);  // Properties with leading $$ characters will be stripped
+            var dataStr = angular.toJson(data);  // Properties with leading $$ characters will be stripped
             var dataStrEncoded = $scope.encode(dataStr);
             var downloadStr = 'Ruzsa v' + version + ' ' + dataStrEncoded;
             download(downloadStr, $scope.filename, 'application/octet-stream');
