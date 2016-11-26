@@ -13,7 +13,7 @@ import 'angular-translate-storage-cookie';
 import './lib/jquery.input-autoresize.js';
 import download from 'downloadjs';
 import semver from 'semver';
-import compareObjects from './lib/compareObjects.js';
+import isEqual from 'lodash/isEqual';
 import cloneDeep from 'lodash/cloneDeep';
 import union from 'lodash/union';
 import difference from 'lodash/difference';
@@ -476,8 +476,9 @@ angular.module('ruzsa', [
         $scope.$watch('treeData', function (newTreeData, oldTreeData) {
             $timeout(function () {
                 // Fix superfluous lines from leaves -- JS part
-                $('ul').removeClass('empty_ul');
-                $('ul').filter(function () {
+                var uls = $('ul');
+                uls.removeClass('empty_ul');
+                uls.filter(function () {
                     return $(this).children().length === 0;
                 }).addClass('empty_ul');
 
@@ -551,8 +552,8 @@ angular.module('ruzsa', [
                 function(n) { return n.formula.ast; }
             );
             return path.find(function(pathAst) {
-                return 'not' in pathAst && compareObjects(pathAst.not, ast) ||
-                       'not' in ast && compareObjects(pathAst, ast.not);
+                return 'not' in pathAst && isEqual(pathAst.not, ast) ||
+                       'not' in ast && isEqual(pathAst, ast.not);
             });
         };
         $scope.isLiteral = function(formula) {
@@ -662,7 +663,7 @@ angular.module('ruzsa', [
                 traverse($scope.treeData, function (node) {
                     if (!('children' in node) &&
                         node.formula &&  // Exclude newly added leaves
-                        !compareObjects(node.formula.ast, {sentenceConst: '*'})  // Exclude closed branches
+                        !isEqual(node.formula.ast, {sentenceConst: '*'})  // Exclude closed branches
                     ) {
                         var emptyNodeClone = cloneDeep(emptyNode);
                         $scope.setId(emptyNodeClone);
@@ -707,7 +708,7 @@ angular.module('ruzsa', [
             traverse(node, function (n) {
                 if (!('children' in n) &&
                     n.formula &&  // Exclude newly added nodes
-                    !compareObjects(n.formula.ast, {sentenceConst: '*'})  // Exclude closed branches
+                    !isEqual(n.formula.ast, {sentenceConst: '*'})  // Exclude closed branches
                 ) {
                     if (type == 'or') {
                         n.children = [
@@ -752,7 +753,7 @@ angular.module('ruzsa', [
                         for (var i = node.children.length - 1; i > -1; i--) {
                             var child = node.children[i];
                             if (!(child.children) &&
-                                (!(child.formula) || !compareObjects(child.formula.ast, {sentenceConst: '*'}))) {
+                                (!(child.formula) || !isEqual(child.formula.ast, {sentenceConst: '*'}))) {
                                     node.children.splice(i, 1);
                             }
                         }
@@ -971,8 +972,9 @@ angular.module('ruzsa', [
                         }]);
                     }
 
+                    var v, scope, substitutedScope;
+
                     if (ast.hasOwnProperty('forAll') || ast.hasOwnProperty('not') && ast.not.hasOwnProperty('exists')) {
-                        var v, scope;
                         if (ast.hasOwnProperty('forAll')) {
                             v = ast.forAll[0].blockVar;
                             scope = ast.forAll[1];
@@ -980,9 +982,7 @@ angular.module('ruzsa', [
                             v = ast.not.exists[0].blockVar;
                             scope = {not: ast.not.exists[1]};
                         }
-                        var c, substitutedScope;
-                        for (var i = 0; i < WFF.blockConsts.length; i++) {
-                            c = WFF.blockConsts[i];
+                        forEach(WFF.blockConsts, function (c) {
                             substitutedScope = new WFF();
                             substitutedScope.ast = cloneDeep(scope);
                             substitutedScope.substituteConstInAst(c, v);
@@ -990,11 +990,10 @@ angular.module('ruzsa', [
                                 formula: 'continuedWithUniversalLikeQInference',  // Hack to recognize this continuation.
                                 children: [{formula: {ast: substitutedScope.ast}}]
                             }]);
-                        }
+                        });
                     }
 
                     if (ast.hasOwnProperty('exists') || ast.hasOwnProperty('not') && ast.not.hasOwnProperty('forAll')) {
-                        var v, scope;
                         if (ast.hasOwnProperty('exists')){
                             v = ast.exists[0].blockVar;
                             scope = ast.exists[1];
@@ -1011,9 +1010,7 @@ angular.module('ruzsa', [
                             }
                         });
                         var unusedBlockConsts = difference(WFF.blockConsts, usedBlockConsts);
-                        var c, substitutedScope;
-                        for (var i = 0; i < unusedBlockConsts.length; i++) {
-                            c = unusedBlockConsts[i];
+                        forEach(unusedBlockConsts, function (c) {
                             substitutedScope = new WFF();
                             substitutedScope.ast = cloneDeep(scope);
                             substitutedScope.substituteConstInAst(c, v);
@@ -1021,7 +1018,7 @@ angular.module('ruzsa', [
                                 formula: null,
                                 children: [{formula: {ast: substitutedScope.ast}}]
                             }]);
-                        }
+                        });
                     }
 
                     var eqs = [];
@@ -1080,7 +1077,7 @@ angular.module('ruzsa', [
                             }
 
                             // Update continuedWithClosing
-                            continuedWithClosing = compareObjects(
+                            continuedWithClosing = isEqual(
                                 n.children[0].formula.ast,
                                 {sentenceConst: '*'}
                             );  // If only this update was in the traverse, we could break here.
@@ -1089,10 +1086,9 @@ angular.module('ruzsa', [
                             var continuationIsCorrect = false;
                             var group, cont;
                             outerCCGLoop:
-                            for (var i in correctContinuationGroups) {
+                            for (var i = 0; i < correctContinuationGroups.length; i++) {
                                 group = correctContinuationGroups[i];
-                                innerCCGLoop:
-                                for (var j in group) {
+                                for (var j = 0; j < group.length; j++) {
                                     cont = group[j];
                                     if (cont.formula === 'continuedWithEqInference') {  // Use hack which was done in
                                                                                         // this continuation.

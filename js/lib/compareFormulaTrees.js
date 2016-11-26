@@ -1,20 +1,19 @@
 import { WFF } from './tarskiFirstOrderWFF.js';
-import equi from './equi.js';
 
 function compareFormulaTrees(tree, ref) {
     if (!WFF.compare(tree.formula, ref.formula)) {
         return false;
     }
-    if (!equi('children' in tree, 'children' in ref)) {
+    if ('children' in tree !== 'children' in ref) {
         return false;
     }
     if (!('children' in tree)) {
         return true;
     } else {
-        if (tree.children.length != ref.children.length) {
+        if (tree.children.length !== ref.children.length) {
             return false;
         }
-        for (var i in tree.children) {
+        for (var i = 0; i < tree.children.length; i++) {
             if (!compareFormulaTrees(tree.children[i], ref.children[i])) {
                 return false;
             }

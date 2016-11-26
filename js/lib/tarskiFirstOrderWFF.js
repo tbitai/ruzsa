@@ -1,5 +1,5 @@
 import {parser} from '../lib/tarskiFOL';
-import compareObjects from './compareObjects.js';
+import isEqual from 'lodash/isEqual';
 import traverseObject from './traverseObject.js';
 
 
@@ -38,7 +38,7 @@ WFF.prototype.hasBlockConst = function (constName) {
   return ret;
 };
 WFF.compare = function(formula, ref) {
-    return compareObjects(formula.ast, ref.ast);
+    return isEqual(formula.ast, ref.ast);
 };
 WFF.blockConsts = 'abcdefghijklmnopqrst'.split('');
 WFF.blockVars = 'uvwxyz'.split('');
