@@ -2,6 +2,7 @@ import commonjs from 'rollup-plugin-commonjs';
 import nodeResolve from 'rollup-plugin-node-resolve';
 import uglify from 'rollup-plugin-uglify';
 import json from 'rollup-plugin-json';
+import babel from 'rollup-plugin-babel';
 
 var config = {
   entry: 'js/app.js',
@@ -12,6 +13,14 @@ var config = {
       angular: 'angular'
   },
   plugins: [
+    json({
+      include: 'package.json'
+    }),
+    babel({
+      babelrc: false,
+      exclude: ['node_modules/**'],
+      presets: [['es2015', {modules: false}]]
+    }),
     nodeResolve({
         // use "module" field for ES6 module if possible
         module: true, // Default: true
@@ -46,9 +55,6 @@ var config = {
     }),
     commonjs({
       include: ['node_modules/**', 'js/lib/tarskiFOL.js']
-    }),
-    json({
-      include: 'package.json'
     })
   ]
 };

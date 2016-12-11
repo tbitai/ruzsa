@@ -61,17 +61,12 @@ sentence
 
 conjunctions
     : parenthesized_or_unary_sentence[l] '∧' parenthesized_or_unary_sentence[r]    {$$ = {and: [$l, $r]};}
-    | conjunctions[l] '∧' parenthesized_or_unary_sentence[r]                       {$$ = {and: [$l, $r]};}
+    | conjunctions[l] '∧' parenthesized_or_unary_sentence[r]                       {$$ = {and: $l.and.concat([$r])};}
     ;
     
 disjunctions
     : parenthesized_or_unary_sentence[l] '∨' parenthesized_or_unary_sentence[r]    {$$ = {or: [$l, $r]};}
-    | disjunctions[l] '∨' parenthesized_or_unary_sentence[r]                       {$$ = {or: [$l, $r]};}
-    ;
-
-equivalences
-    : parenthesized_or_unary_sentence[l] '↔' parenthesized_or_unary_sentence[r]    {$$ = {equi: [$l, $r]};}
-    | equivalences[l] '↔' parenthesized_or_unary_sentence[r]                       {$$ = {equi: [$l, $r]};}
+    | disjunctions[l] '∨' parenthesized_or_unary_sentence[r]                       {$$ = {or: $l.or.concat([$r])};}
     ;
 
 parenthesized_or_unary_sentence
@@ -80,7 +75,7 @@ parenthesized_or_unary_sentence
     | '(' conjunctions[c] ')'                                                              {$$ = $c;}
     | '(' disjunctions[d] ')'                                                              {$$ = $d;}
     | '(' parenthesized_or_unary_sentence[l] '→' parenthesized_or_unary_sentence[r] ')'    {$$ = {impl: [$l, $r]};}
-    | '(' equivalences[e] ')'                                                              {$$ = $e;}
+    | '(' parenthesized_or_unary_sentence[l] '↔' parenthesized_or_unary_sentence[r] ')'    {$$ = {equi: [$l, $r]};}
     | '∀' block_var[v] parenthesized_or_unary_sentence[s]                                  {$$ = {forAll: [$v, $s]};}
     | '∃' block_var[v] parenthesized_or_unary_sentence[s]                                  {$$ = {exists: [$v, $s]};}
     | '(' parenthesized_or_unary_sentence[s] ')'                                           {$$ = $s;}
