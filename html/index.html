@@ -66,23 +66,33 @@
     <li sf-treepeat="node in children of treeData">
         <div ng-switch="node.underEdit"
              class="node">
-            <form ng-switch-when="true"
-                  ng-submit="submit(node)">
-                <md-input-container>
-                    <input type="text"
-                           aria-label="{{'INPUT' | translate}}"
-                           ng-class="{formula_input: true,
-                                      in_focus_q: node.inFocusQ}"
-                           ng-model="node.input"
-                           onfocus="makeActive(this)"
-                           oninput="checkCommaAndParenthesis(this)"
-                           data-ruzsa-focus-order="{{node.focusOrder}}">
-                    <div ng-messages="node.error" role="alert" md-auto-hide="false">
-                        <div ng-message="unmatchedParenthesis">Unmatched parenthesis!</div>
-                        <div ng-message="other">Not a sentence!</div>
-                    </div>
-                </md-input-container>
-            </form>
+            <div ng-switch-when="true">
+                <form ng-submit="submit(node)"
+                      ng-class="{last_or_candidate: node.lastOrCandidate}">
+                    <md-input-container>
+                        <input type="text"
+                               aria-label="{{'INPUT' | translate}}"
+                               ng-class="{formula_input: true,
+                                          in_focus_q: node.inFocusQ}"
+                               ng-model="node.input"
+                               onfocus="makeActive(this)"
+                               oninput="checkCommaAndParenthesis(this)"
+                               data-ruzsa-focus-order="{{node.focusOrder}}">
+                        <div ng-messages="node.error" role="alert" md-auto-hide="false">
+                            <div ng-message="unmatchedParenthesis">Unmatched parenthesis!</div>
+                            <div ng-message="other">Not a sentence!</div>
+                        </div>
+                    </md-input-container>
+                </form>
+                <md-button ng-if="node.lastOrCandidate || node.lastAndCandidate"
+                           ng-class="{
+                             add_candidate: true,
+                             add_or_candidate: node.lastOrCandidate,
+                             add_and_candidate: node.lastAndCandidate
+                           }">
+                    <i class="material-icons">&#xE145;</i>
+                </md-button>
+            </div>
             <md-fab-speed-dial ng-switch-default
                                class="bd_step_speed_dial"
                                md-direction="right"
