@@ -89,7 +89,8 @@
                              add_candidate: true,
                              add_or_candidate: node.lastOrCandidate,
                              add_and_candidate: node.lastAndCandidate
-                           }">
+                           }"
+                           ng-click="node.lastOrCandidate ? addOrCandidate(node) : addAndCandidate(node)">
                     <i class="material-icons">&#xE145;</i>
                 </md-button>
             </div>

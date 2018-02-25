@@ -17,7 +17,6 @@ import isEqual from 'lodash/isEqual';
 import cloneDeep from 'lodash/cloneDeep';
 import union from 'lodash/union';
 import difference from 'lodash/difference';
-import forEach from 'lodash/forEach';
 import { WFF } from './lib/tarskiFirstOrderWFF.js';
 import { traverse, traverseBF, treePath } from './lib/treeUtils.js';
 import compareFormulaTrees from './lib/compareFormulaTrees.js';
@@ -463,17 +462,19 @@ angular.module('ruzsa', [
                 core();
             }
         };
-        $scope.focusNext = function () {
+        $scope.focusNext = function (removeFromQ = true) {
             let focusQ = $('.in_focus_q').sort(function (el1, el2) {
                 function o(el) {
                     //noinspection JSUnresolvedVariable
-                    return parseInt(el.dataset.ruzsaFocusOrder);
+                    return parseFloat(el.dataset.ruzsaFocusOrder);
                 }
                 return o(el1) - o(el2);
             });
             let elToFocus = $(focusQ[0]);
             elToFocus.focus();
-            elToFocus.removeClass('in_focus_q');
+            if (removeFromQ) {
+                elToFocus.removeClass('in_focus_q');
+            }
         };
 
         $scope.$watch('treeData', function (newTreeData, oldTreeData) {
@@ -489,10 +490,8 @@ angular.module('ruzsa', [
                     padding: 20,
                     minWidth: 160  // .formula_input width
                 });
-
-                let elToFocusFirst = $('.in_focus_q[data-ruzsa-focus-order=0]');
-                elToFocusFirst.focus();
-                elToFocusFirst.removeClass('in_focus_q');
+                
+                $scope.focusNext(false);
 
                 if (newTreeData !== oldTreeData &&  // Exclude initialization
                     !$scope.savedDataJustLoaded) {
@@ -508,10 +507,10 @@ angular.module('ruzsa', [
             unsavedDataPresent = unsavedDataPresent === undefined ? $scope.unsavedDataPresent : unsavedDataPresent;
             $('title').text(filename + (unsavedDataPresent ? '*' : '') + ' – Ruzsa');
         };
-        $scope.$watch('filename', function(newFilename, oldFilename) {
+        $scope.$watch('filename', function(newFilename, _oldFilename) {
             $scope.updateTitle(newFilename);
         });
-        $scope.$watch('unsavedDataPresent', function(newUnsavedDataPresent, oldUnsavedDataPresent) {
+        $scope.$watch('unsavedDataPresent', function(newUnsavedDataPresent, _oldUnsavedDataPresent) {
             $scope.updateTitle(undefined, newUnsavedDataPresent);
         });
 
@@ -680,6 +679,32 @@ angular.module('ruzsa', [
             $scope.undoStepPossible = true;
             $scope.cancelNewNodesPossible = true;
         };
+        $scope.setFocusOrder = function(node, o) {
+            node.focusOrder = o;
+            return node;
+        };
+        $scope.candidate = {
+            formula: null,
+            editable: true,
+            breakable: true,
+            underEdit: true,
+            input: '',
+            candidate: true,
+            inFocusQ: true
+        };
+        $scope.makeCandidateClone = function(o, lastOfType) {
+            let lastOfTypeObject = {};
+            let capitalize = s => s[0].toUpperCase() + s.slice(1);
+            if (lastOfType) {
+                lastOfTypeObject[`last${capitalize(lastOfType)}Candidate`] = true;
+            }
+            return $scope.setId($scope.setFocusOrder(Object.assign(cloneDeep($scope.candidate), lastOfTypeObject), o));
+        };
+        $scope.makeDoubleCandidateClone = function(oTop, oBtm, lastOfTypeTop, lastOfTypeBtm) {
+            let doubleCandidateClone = $scope.makeCandidateClone(oTop, lastOfTypeTop);
+            doubleCandidateClone.children = [$scope.makeCandidateClone(oBtm, lastOfTypeBtm)];
+            return doubleCandidateClone;
+        };
         $scope.addCandidates = function (type, node) {
             if ($scope.BDStepInProgress || $scope.checkForEmptyNodes()) {
                 $scope.showStepInProgressAlert();
@@ -687,25 +712,6 @@ angular.module('ruzsa', [
             }
 
             $scope.removeBDStepMemory();
-            function setFocusOrder(node, o) {
-                node.focusOrder = o;
-                return node;
-            }
-            let candidate = {formula: null,
-                             editable: true,
-                             breakable: true,
-                             underEdit: true,
-                             input: '',
-                             candidate: true,
-                             inFocusQ: true};
-            function makeCandidateClone(o) {
-                return $scope.setId(setFocusOrder(cloneDeep(candidate), o));
-            }
-            function makeDoubleCandidateClone(oTop, oBtm) {
-                let doubleCandidateClone = $scope.setId(setFocusOrder(cloneDeep(candidate), oTop));
-                doubleCandidateClone.children = [$scope.setId(setFocusOrder(cloneDeep(candidate), oBtm))];
-                return doubleCandidateClone;
-            }
             let o = 0;
             traverse(node, function (n) {
                 if (!('children' in n) &&
@@ -714,23 +720,23 @@ angular.module('ruzsa', [
                 ) {
                     if (type == 'or') {
                         n.children = [
-                            makeCandidateClone(o++),
-                            makeCandidateClone(o++)
+                            $scope.makeCandidateClone(o++),
+                            $scope.makeCandidateClone(o++, 'or')
                         ];
                     } else if (type == 'and') {
                         n.children = [
-                            makeDoubleCandidateClone(o, o + 1)
+                           $scope.makeDoubleCandidateClone(o, o + 1, undefined, 'and')
                         ];
                         o += 2;
                     } else if (type == 'equi') {
                         n.children = [
-                            makeDoubleCandidateClone(o, o + 1),
-                            makeDoubleCandidateClone(o + 2, o + 3)
+                            $scope.makeDoubleCandidateClone(o, o + 1),
+                            $scope.makeDoubleCandidateClone(o + 2, o + 3)
                         ];
                         o += 4;
                     } else if (type == 'double_not') {
                         n.children = [
-                            makeCandidateClone(o++)
+                            $scope.makeCandidateClone(o++)
                         ];
                     } else {
                         throw new Error("Invalid type! " +
@@ -746,6 +752,29 @@ angular.module('ruzsa', [
             $scope.undoStepPossible = true;
             $scope.BDStepInProgress = true;
             $scope.cancelNewNodesPossible = false;
+        };
+        
+        /** Return last integer order + .5^n. */
+        $scope.calculateNextFractionalFocusOrder = function(o) {
+            if (Math.ceil(o) === o) {
+                return o + .5;
+            }
+            return o + (Math.ceil(o) - o) / 2;
+        };
+        
+        $scope.addOrCandidate = function(node) {
+            let path = treePath($scope.treeData, n => n.id === node.id, n => n);
+            let parent = path[path.length - 2];
+            let o = $scope.calculateNextFractionalFocusOrder(node.focusOrder);
+            delete node.lastOrCandidate;
+            parent.children.push($scope.makeCandidateClone(o, 'or'));
+        };
+        $scope.addAndCandidate = function(node) {
+            let o = $scope.calculateNextFractionalFocusOrder(node.focusOrder);
+            delete node.lastAndCandidate;
+            node.children = [
+                $scope.makeCandidateClone(o, 'and')
+            ];
         };
         $scope.undoStep = function () {
             if ($scope.cancelNewNodesPossible) {
