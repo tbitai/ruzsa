@@ -470,10 +470,12 @@ angular.module('ruzsa', [
                 }
                 return o(el1) - o(el2);
             });
-            let elToFocus = $(focusQ[0]);
-            elToFocus.focus();
-            if (removeFromQ) {
-                elToFocus.removeClass('in_focus_q');
+            if (focusQ.length > 0) {
+                let elToFocus = focusQ[0];
+                elToFocus.focus();
+                if (removeFromQ) {
+                    $(elToFocus).removeClass('in_focus_q');
+                }
             }
         };
 

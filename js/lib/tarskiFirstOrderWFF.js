@@ -51,7 +51,7 @@ WFF.prototype.substituteConstInAst = function(c, v) {  // Use this with caution,
       delete subobj[prop];
       subobj['blockConst'] = c;
     }
-  })
+  });
 };
 WFF.prototype.changeConstInAst = function(cNew, cOld) {  // Use this with caution, it makes `ast` inconsistent with `unicode`!
     if (WFF.blockConsts.indexOf(cNew) === -1) {
