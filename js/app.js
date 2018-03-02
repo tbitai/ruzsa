@@ -862,11 +862,18 @@ angular.module('ruzsa', [
                     let permutationsOfTwo = [[0, 1], [1, 0]];
                     if ('or' in ast) {
                         let group = [];
-                        for (let p of permutationsOfTwo) {
+                        if (ast.or.length < 3) {
+                            for (let p of permutationsOfTwo) {
+                                group.push({
+                                    formula: null,
+                                    children: [{formula: {ast: ast.or[p[0]]}},
+                                               {formula: {ast: ast.or[p[1]]}}]
+                                });
+                            }
+                        } else {
                             group.push({
                                 formula: null,
-                                children: [{formula: {ast: ast.or[p[0]]}},
-                                           {formula: {ast: ast.or[p[1]]}}]
+                                children: ast.or.map(a => {formula: {ast: a}})
                             });
                         }
                         correctContinuationGroups.push(group);
@@ -885,12 +892,24 @@ angular.module('ruzsa', [
                         ]);
                     } else if ('and' in ast) {
                         let group = [];
-                        for (let p of permutationsOfTwo) {
-                            group.push({
-                                formula: null,
-                                children: [{formula: {ast: ast.and[p[0]]},
-                                            children: [{formula: {ast: ast.and[p[1]]}}]}]
-                            });
+                        if (ast.and.length < 3) {
+                            for (let p of permutationsOfTwo) {
+                                group.push({
+                                    formula: null,
+                                    children: [{formula: {ast: ast.and[p[0]]},
+                                                children: [{formula: {ast: ast.and[p[1]]}}]}]
+                                });
+                            }
+                        } else {
+                            let cont = {formula: null};
+                            let contDeepestPart = cont;
+                            for (let a of ast.and) {
+                                contDeepestPart.children = [{
+                                    formula: {ast: a}
+                                }];
+                                contDeepestPart = contDeepestPart.children[0];
+                            }
+                            group.push(cont);
                         }
                         correctContinuationGroups.push(group);
                     } else if ('equi' in ast) {
