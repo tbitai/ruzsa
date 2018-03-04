@@ -1,6 +1,12 @@
 @import '../node_modules/angular-material/angular-material.scss'
 @import '../node_modules/mdi/scss/materialdesignicons.scss'
-@import './lib/tree.sass'
+@import 'lib/width'
+@import 'lib/border-radius'
+
+$height-shrink-limit: 600px
+
+$tree-line-height-shrink-limit: $height-shrink-limit
+@import 'lib/tree.sass'
 
 
 @font-face
@@ -35,18 +41,6 @@
 
   /* Support for IE. */
   font-feature-settings: 'liga'
-
-
-=width($kw)
-  @if $kw == max-content
-    width: intrinsic
-    width: -moz-max-content
-    width: -webkit-max-content
-
-=border-radius($r)
-  border-radius: $r
-  -webkit-border-radius: $r
-  -moz-border-radius: $r
 
 $vkb_width: 341px
 $candidate_color: #cccccc
@@ -219,7 +213,7 @@ md-dialog
 .md-button sup
   text-transform: none !important
 
-$vkb_height_shrink_limit: 600px
+$vkb_height_shrink_limit: $height-shrink-limit
 $toolbar_width_shrink_limit: 1400px
 
 .tool_title_abbr
@@ -275,20 +269,6 @@ $toolbar_width_shrink_limit: 1400px
   .plus_btn
     bottom: 15px
 
-  // Shrink tree lines
-  $line_height: 20px
-  .tree
-    ul
-      padding-top: $line_height
-    li
-      padding-top: $line_height
-      &::before
-        height: $line_height
-      &::after
-        height: $line_height
-    ul ul::before
-      height: $line_height
-
 .plus_btn_tool
   display: none
 @media (max-height: 500px)
@@ -300,11 +280,14 @@ $toolbar_width_shrink_limit: 1400px
 .broken_down
   text-decoration: line-through
 
-.last_or_candidate
-  display: inline-block
-
 .add_or_candidate
-  display: inline-block
+  position: absolute
+  top: $tree-line-height + 2px
+  right: -30px
+
+@media (max-height: $tree-line-height-shrink-limit)
+  .add_or_candidate
+    top: $tree-line-height-shrinked + 2px
 
 .add_and_candidate
   display: block

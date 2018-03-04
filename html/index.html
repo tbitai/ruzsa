@@ -67,8 +67,7 @@
         <div ng-switch="node.underEdit"
              class="node">
             <div ng-switch-when="true">
-                <form ng-submit="submit(node)"
-                      ng-class="{last_or_candidate: node.lastOrCandidate}">
+                <form ng-submit="submit(node)">
                     <md-input-container>
                         <input type="text"
                                aria-label="{{'INPUT' | translate}}"
@@ -84,15 +83,6 @@
                         </div>
                     </md-input-container>
                 </form>
-                <md-button ng-if="node.lastOrCandidate || node.lastAndCandidate"
-                           ng-class="{
-                             add_candidate: true,
-                             add_or_candidate: node.lastOrCandidate,
-                             add_and_candidate: node.lastAndCandidate
-                           }"
-                           ng-click="node.lastOrCandidate ? addOrCandidate(node) : addAndCandidate(node)">
-                    <i class="material-icons">&#xE145;</i>
-                </md-button>
             </div>
             <md-fab-speed-dial ng-switch-default
                                class="bd_step_speed_dial"
@@ -135,6 +125,15 @@
                 </div>
             </md-fab-speed-dial>
         </div>
+        <md-button ng-if="node.lastOrCandidate || node.lastAndCandidate"
+                   ng-class="{
+                     add_candidate: true,
+                     add_or_candidate: node.lastOrCandidate,
+                     add_and_candidate: node.lastAndCandidate
+                   }"
+                   ng-click="node.lastOrCandidate ? addOrCandidate(node) : addAndCandidate(node)">
+            <i class="material-icons">&#xE145;</i>
+        </md-button>
         <ul ng-class="{continuation_candidate: node.underContinuation}">
             <li sf-treecurse></li>
         </ul>

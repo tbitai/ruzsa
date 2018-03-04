@@ -873,7 +873,7 @@ angular.module('ruzsa', [
                         } else {
                             group.push({
                                 formula: null,
-                                children: ast.or.map(a => {formula: {ast: a}})
+                                children: ast.or.map(a => ({formula: {ast: a}}))
                             });
                         }
                         correctContinuationGroups.push(group);
@@ -940,12 +940,24 @@ angular.module('ruzsa', [
                         }]);
                     } else if ('not' in ast && 'or' in ast.not) {
                         let group = [];
-                        for (let p of permutationsOfTwo) {
-                            group.push({
-                                formula: null,
-                                children: [{formula: {ast: {not: ast.not.or[p[0]]}},
-                                            children: [{formula: {ast: {not: ast.not.or[p[1]]}}}]}]
-                            });
+                        if (ast.not.or.length < 3) {
+                            for (let p of permutationsOfTwo) {
+                                group.push({
+                                    formula: null,
+                                    children: [{formula: {ast: {not: ast.not.or[p[0]]}},
+                                                children: [{formula: {ast: {not: ast.not.or[p[1]]}}}]}]
+                                });
+                            }
+                        } else {
+                            let cont = {formula: null};
+                            let contDeepestPart = cont;
+                            for (let a of ast.not.or) {
+                                contDeepestPart.children = [{
+                                    formula: {ast: {not: a}}
+                                }];
+                                contDeepestPart = contDeepestPart.children[0];
+                            }
+                            group.push(cont);
                         }
                         correctContinuationGroups.push(group);
                     } else if ('not' in ast && 'impl' in ast.not) {
@@ -963,11 +975,18 @@ angular.module('ruzsa', [
                         correctContinuationGroups.push(group);
                     } else if ('not' in ast && 'and' in ast.not) {
                         let group = [];
-                        for (let p of permutationsOfTwo) {
+                        if (ast.not.and.length < 3) {
+                            for (let p of permutationsOfTwo) {
+                                group.push({
+                                    formula: null,
+                                    children: [{formula: {ast: {not: ast.not.and[p[0]]}}},
+                                               {formula: {ast: {not: ast.not.and[p[1]]}}}]
+                                });
+                            }
+                        } else {
                             group.push({
                                 formula: null,
-                                children: [{formula: {ast: {not: ast.not.and[p[0]]}}},
-                                           {formula: {ast: {not: ast.not.and[p[1]]}}}]
+                                children: ast.not.and.map(a => ({formula: {ast: {not: a}}}))
                             });
                         }
                         correctContinuationGroups.push(group);
@@ -1182,6 +1201,8 @@ angular.module('ruzsa', [
                                         c.breakable = $scope.isOnceBreakable(c);
                                     }
                                     c.candidate = false;
+                                    delete c.lastOrCandidate;
+                                    delete c.lastAndCandidate;
                                 });
                             }
                         });

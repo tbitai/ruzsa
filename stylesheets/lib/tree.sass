@@ -1,18 +1,12 @@
 // Based on http://thecodeplayer.com/walkthrough/css3-family-tree
 
-=width($kw)
-  @if $kw == max-content
-    width: intrinsic
-    width: -moz-max-content
-    width: -webkit-max-content
+@import 'width'
+@import 'border-radius'
 
-=border-radius($r)
-  border-radius: $r
-  -webkit-border-radius: $r
-  -moz-border-radius: $r
-
-$border: 1px solid black
-$line_height: 25px
+$tree-border: 1px solid black !default
+$tree-line-height: 25px !default
+$tree-line-height-shrink-limit: 600px !default
+$tree-line-height-shrinked: 20px !default
 
 .tree
   *
@@ -20,14 +14,14 @@ $line_height: 25px
     padding: 0
 
   ul
-    padding-top: $line_height
+    padding-top: $tree-line-height
     position: relative
 
   li
     float: left
     list-style-type: none
     position: relative
-    padding: $line_height 5px 0 5px
+    padding: $tree-line-height 5px 0 5px
 
     .node
       margin-left:  auto
@@ -39,21 +33,21 @@ $line_height: 25px
       position: absolute
       top: 0
       right: 50%
-      border-top: $border
+      border-top: $tree-border
       width: 50%
-      height: $line_height
+      height: $tree-line-height
 
     &::after
       content: ''
       position: absolute
       top: 0
       right: 50%
-      border-top: $border
+      border-top: $tree-border
       width: 50%
-      height: $line_height
+      height: $tree-line-height
       right: auto
       left: 50%
-      border-left: $border
+      border-left: $tree-border
 
     &:only-child
       // Partially fix the problem that if we have a subforest (i.e. a collection
@@ -84,7 +78,7 @@ $line_height: 25px
         border: 0 none !important
 
       &::before
-        border-right: $border
+        border-right: $tree-border
         +border-radius(0 5px 0 0)
 
     &:first-child::after
@@ -95,6 +89,19 @@ $line_height: 25px
     position: absolute
     top: 0
     left: 50%
-    border-left: $border
+    border-left: $tree-border
     width: 0
-    height: $line_height
+    height: $tree-line-height
+    
+@media (max-height: $tree-line-height-shrink-limit)
+  .tree
+    ul
+      padding-top: $tree-line-height-shrinked
+    li
+      padding-top: $tree-line-height-shrinked
+      &::before
+        height: $tree-line-height-shrinked
+      &::after
+        height: $tree-line-height-shrinked
+    ul ul::before
+      height: $tree-line-height-shrinked
