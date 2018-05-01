@@ -55,7 +55,7 @@ sentence
     | conjunctions
     | disjunctions
     | parenthesized_or_unary_sentence[l] '→' parenthesized_or_unary_sentence[r]    {$$ = {impl: [$l, $r]};}
-    | equivalences
+    | parenthesized_or_unary_sentence[l] '↔' parenthesized_or_unary_sentence[r]    {$$ = {equi: [$l, $r]};}
     | parenthesized_or_unary_sentence
     ;
 
