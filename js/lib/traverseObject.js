@@ -4,7 +4,7 @@
  * @param callback - Callback, that will be called like this: `callback(subobject, property, value)`.
  */
 function traverseObject(o, callback) {
-    for (var p in o) {
+    for (let p in o) {
         if (o.hasOwnProperty(p)) {
             callback(o, p, o[p]);
             if (o[p] !== null && typeof(o[p]) === 'object') {

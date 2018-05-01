@@ -13,7 +13,7 @@ function compareFormulaTrees(tree, ref) {
         if (tree.children.length !== ref.children.length) {
             return false;
         }
-        for (var i = 0; i < tree.children.length; i++) {
+        for (let i = 0; i < tree.children.length; i++) {
             if (!compareFormulaTrees(tree.children[i], ref.children[i])) {
                 return false;
             }

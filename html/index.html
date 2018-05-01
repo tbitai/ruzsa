@@ -66,23 +66,24 @@
     <li sf-treepeat="node in children of treeData">
         <div ng-switch="node.underEdit"
              class="node">
-            <form ng-switch-when="true"
-                  ng-submit="submit(node)">
-                <md-input-container>
-                    <input type="text"
-                           aria-label="{{'INPUT' | translate}}"
-                           ng-class="{formula_input: true,
-                                      in_focus_q: node.inFocusQ}"
-                           ng-model="node.input"
-                           onfocus="makeActive(this)"
-                           oninput="checkCommaAndParenthesis(this)"
-                           data-ruzsa-focus-order="{{node.focusOrder}}">
-                    <div ng-messages="node.error" role="alert" md-auto-hide="false">
-                        <div ng-message="unmatchedParenthesis">Unmatched parenthesis!</div>
-                        <div ng-message="other">Not a sentence!</div>
-                    </div>
-                </md-input-container>
-            </form>
+            <div ng-switch-when="true">
+                <form ng-submit="submit(node)">
+                    <md-input-container>
+                        <input type="text"
+                               aria-label="{{'INPUT' | translate}}"
+                               ng-class="{formula_input: true,
+                                          in_focus_q: node.inFocusQ}"
+                               ng-model="node.input"
+                               onfocus="makeActive(this)"
+                               oninput="checkCommaAndParenthesis(this)"
+                               data-ruzsa-focus-order="{{node.focusOrder}}">
+                        <div ng-messages="node.error" role="alert" md-auto-hide="false">
+                            <div ng-message="unmatchedParenthesis">Unmatched parenthesis!</div>
+                            <div ng-message="other">Not a sentence!</div>
+                        </div>
+                    </md-input-container>
+                </form>
+            </div>
             <md-fab-speed-dial ng-switch-default
                                class="bd_step_speed_dial"
                                md-direction="right"
@@ -124,6 +125,15 @@
                 </div>
             </md-fab-speed-dial>
         </div>
+        <md-button ng-if="node.lastOrCandidate || node.lastAndCandidate"
+                   ng-class="{
+                     add_candidate: true,
+                     add_or_candidate: node.lastOrCandidate,
+                     add_and_candidate: node.lastAndCandidate
+                   }"
+                   ng-click="node.lastOrCandidate ? addOrCandidate(node) : addAndCandidate(node)">
+            <i class="material-icons">&#xE145;</i>
+        </md-button>
         <ul ng-class="{continuation_candidate: node.underContinuation}">
             <li sf-treecurse></li>
         </ul>
@@ -252,25 +262,6 @@
     };
 </script>
 
-<!-- Piwik -->
-<script type="text/javascript">
-  if (location.hostname !== 'localhost') {
-      var _paq = _paq || [];
-      _paq.push(['trackPageView']);
-      _paq.push(['enableLinkTracking']);
-      (function() {
-        var u="//piwik.tbitai.me/";
-        _paq.push(['setTrackerUrl', u+'piwik.php']);
-        _paq.push(['setSiteId', 2]);
-        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-        g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
-      })();
-  }
-</script>
-<!-- Don't track non-JS visits.
-    <noscript><p><img src="//piwik.tbitai.me/piwik.php?idsite=2" style="border:0;" alt="" /></p></noscript>
--->
-<!-- End Piwik Code -->
 </body>
 
 </html>

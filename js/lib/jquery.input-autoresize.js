@@ -3,7 +3,7 @@
 import $ from 'jquery';
 
 $.fn.textWidth = function(_text, _font){//get width of text with font.  usage: $("div").textWidth();
-        var fakeEl = $('<span>').hide().appendTo(document.body).text(_text || this.val() || this.text()).css('font', _font || this.css('font')),
+        let fakeEl = $('<span>').hide().appendTo(document.body).text(_text || this.val() || this.text()).css('font', _font || this.css('font')),
             width = fakeEl.width();
         fakeEl.remove();
         return width;

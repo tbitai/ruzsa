@@ -1,22 +1,20 @@
-import forEach from 'lodash/forEach';
-
 function traverseBF(root, func){
-    var q = [root];
+    let q = [root];
     while (q.length > 0) {
-        var node = q.shift();
-        var breakCondition = func(node);
+        let node = q.shift();
+        let breakCondition = func(node);
         if (breakCondition){
             break;
         }
         if ('children' in node){
-            forEach(node.children, function (child) {
+            for (let child of node.children) {
                 q.push(child);
-            });
+            }
         }
     }
 }
 
-var traverse = traverseBF;
+const traverse = traverseBF;
 
 function treePath(root, isDest, repr) {
     if (isDest(root)) {
@@ -25,9 +23,8 @@ function treePath(root, isDest, repr) {
     if (!('children' in root)) {
         return false;
     }
-    for (var i = 0; i < root.children.length; i++) {
-        var child = root.children[i];
-        var pathFromChild = treePath(child, isDest, repr);
+    for (let child of root.children) {
+        let pathFromChild = treePath(child, isDest, repr);
         if (pathFromChild) {
             return [repr(root)].concat(pathFromChild);
         }

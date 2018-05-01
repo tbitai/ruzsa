@@ -51,24 +51,34 @@ s
     ;
 
 sentence
-    : '*'                                                                                {$$ = {sentenceConst: '*'};}
-    | par_sentence_or_atomic_or_neg_or_q[l] '∧' par_sentence_or_atomic_or_neg_or_q[r]    {$$ = {and: [$l, $r]};}
-    | par_sentence_or_atomic_or_neg_or_q[l] '∨' par_sentence_or_atomic_or_neg_or_q[r]    {$$ = {or: [$l, $r]};}
-    | par_sentence_or_atomic_or_neg_or_q[l] '→' par_sentence_or_atomic_or_neg_or_q[r]    {$$ = {impl: [$l, $r]};}
-    | par_sentence_or_atomic_or_neg_or_q[l] '↔' par_sentence_or_atomic_or_neg_or_q[r]    {$$ = {equi: [$l, $r]};}
-    | par_sentence_or_atomic_or_neg_or_q
+    : '*'                                                                          {$$ = {sentenceConst: '*'};}
+    | conjunctions
+    | disjunctions
+    | parenthesized_or_unary_sentence[l] '→' parenthesized_or_unary_sentence[r]    {$$ = {impl: [$l, $r]};}
+    | parenthesized_or_unary_sentence[l] '↔' parenthesized_or_unary_sentence[r]    {$$ = {equi: [$l, $r]};}
+    | parenthesized_or_unary_sentence
     ;
 
-par_sentence_or_atomic_or_neg_or_q
+conjunctions
+    : parenthesized_or_unary_sentence[l] '∧' parenthesized_or_unary_sentence[r]    {$$ = {and: [$l, $r]};}
+    | conjunctions[l] '∧' parenthesized_or_unary_sentence[r]                       {$$ = {and: $l.and.concat([$r])};}
+    ;
+    
+disjunctions
+    : parenthesized_or_unary_sentence[l] '∨' parenthesized_or_unary_sentence[r]    {$$ = {or: [$l, $r]};}
+    | disjunctions[l] '∨' parenthesized_or_unary_sentence[r]                       {$$ = {or: $l.or.concat([$r])};}
+    ;
+
+parenthesized_or_unary_sentence
     : atomic_sentence
-    | '¬' par_sentence_or_atomic_or_neg_or_q[s]                                                  {$$ = {not: $s};}
-    | '(' par_sentence_or_atomic_or_neg_or_q[l] '∧' par_sentence_or_atomic_or_neg_or_q[r] ')'    {$$ = {and: [$l, $r]};}
-    | '(' par_sentence_or_atomic_or_neg_or_q[l] '∨' par_sentence_or_atomic_or_neg_or_q[r] ')'    {$$ = {or: [$l, $r]};}
-    | '(' par_sentence_or_atomic_or_neg_or_q[l] '→' par_sentence_or_atomic_or_neg_or_q[r] ')'    {$$ = {impl: [$l, $r]};}
-    | '(' par_sentence_or_atomic_or_neg_or_q[l] '↔' par_sentence_or_atomic_or_neg_or_q[r] ')'    {$$ = {equi: [$l, $r]};}
-    | '∀' block_var[v] par_sentence_or_atomic_or_neg_or_q[s]                                     {$$ = {forAll: [$v, $s]};}
-    | '∃' block_var[v] par_sentence_or_atomic_or_neg_or_q[s]                                      {$$ = {exists: [$v, $s]};}
-    | '(' par_sentence_or_atomic_or_neg_or_q[s] ')'                                               {$$ = $s;}
+    | '¬' parenthesized_or_unary_sentence[s]                                               {$$ = {not: $s};}
+    | '(' conjunctions[c] ')'                                                              {$$ = $c;}
+    | '(' disjunctions[d] ')'                                                              {$$ = $d;}
+    | '(' parenthesized_or_unary_sentence[l] '→' parenthesized_or_unary_sentence[r] ')'    {$$ = {impl: [$l, $r]};}
+    | '(' parenthesized_or_unary_sentence[l] '↔' parenthesized_or_unary_sentence[r] ')'    {$$ = {equi: [$l, $r]};}
+    | '∀' block_var[v] parenthesized_or_unary_sentence[s]                                  {$$ = {forAll: [$v, $s]};}
+    | '∃' block_var[v] parenthesized_or_unary_sentence[s]                                  {$$ = {exists: [$v, $s]};}
+    | '(' parenthesized_or_unary_sentence[s] ')'                                           {$$ = $s;}
     ;
 
 atomic_sentence  /* Without extra parentheses */
