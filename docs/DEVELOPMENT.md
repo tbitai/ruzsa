@@ -1,18 +1,4 @@
-# Ruzsa
-
-[Analytic tableau](https://en.wikipedia.org/wiki/Method_of_analytic_tableaux) editor for [Tarski's World](https://ggweb.gradegrinder.net/support/manual/tarski) \(similar to [Fitch](https://ggweb.gradegrinder.net/support/manual/fitch), but uses the analytic tableau proof method instead of natural deduction\).
-
-Check it out at [https://ruzsa.tbitai.me](https://ruzsa.tbitai.me)!
-
-## Usage
-
-The rules for constructing tableaux are the same as explained on the [Method of analytic tableaux](https://en.wikipedia.org/wiki/Method_of_analytic_tableaux) Wikipedia page, the first-order rules are those contained in the [First-order tableau without unification](https://en.wikipedia.org/wiki/Method_of_analytic_tableaux#First-order_tableau_without_unification) subsection.
-
-Closure is denoted by `*` derived from the lower closing node, like this:
-
-![Closure](README-closure.png)
-
-## Development
+# Development
 
 After cloning the repo, install the dependencies:
 
@@ -32,7 +18,7 @@ Serving the project root directory is necessary in order to use the source map f
 
 Besides the `build` NPM script, scripts for the individual build steps are available for using during development. Have a look at the `package.json`'s `"scripts"` field to examine them!
 
-### Deploying
+## Deploying
 
 Make a build for deployment:
 
