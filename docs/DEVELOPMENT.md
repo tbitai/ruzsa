@@ -2,13 +2,13 @@
 
 After cloning the repo, install the dependencies:
 
-```
+```shell
 npm install
 ```
 
 Build:
 
-```
+```shell
 npm run build
 ```
 
@@ -22,18 +22,18 @@ Besides the `build` NPM script, scripts for the individual build steps are avail
 
 Make a build for deployment:
 
-```
+```shell
 npm run build-for-deploy
 ```
 
 Deploy to production...
 
-```
+```shell
 npm run deploy
 ```
 
 ... or to staging:
 
-```
+```shell
 npm run deploy-staging
 ```
