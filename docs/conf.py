@@ -6,6 +6,9 @@
 # full list see the documentation:
 # http://www.sphinx-doc.org/en/master/config
 
+import recommonmark
+from recommonmark.transform import AutoStructify
+
 # -- Path setup --------------------------------------------------------------
 
 # If extensions (or modules to document with autodoc) are in another directory,
@@ -175,3 +178,10 @@ epub_title = project
 
 # A list of files that should not be packed into the epub file.
 epub_exclude_files = ['search.html']
+
+
+def setup(app):
+    app.add_config_value('recommonmark_config', {
+            'auto_toc_tree_section': 'Contents',
+            }, True)
+    app.add_transform(AutoStructify)

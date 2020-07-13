@@ -4,6 +4,11 @@
 
 Check it out at [https://ruzsa.tbitai.me](https://ruzsa.tbitai.me)!
 
+## Contents
+
+* [Changelog](CHANGELOG.md)
+* [Development](DEVELOPMENT.md)
+
 ## Usage
 
 The rules for constructing tableaux are the same as explained on the [Method of analytic tableaux](https://en.wikipedia.org/wiki/Method_of_analytic_tableaux) Wikipedia page, the first-order rules are those contained in the [First-order tableau without unification](https://en.wikipedia.org/wiki/Method_of_analytic_tableaux#First-order_tableau_without_unification) subsection.
