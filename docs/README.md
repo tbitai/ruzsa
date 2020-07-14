@@ -15,4 +15,4 @@ The rules for constructing tableaux are the same as explained on the [Method of 
 
 Closure is denoted by `*` derived from the lower closing node, like this:
 
-![Closure](closure.png)
+![](closure.png)
