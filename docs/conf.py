@@ -101,6 +101,7 @@ html_static_path = ['_static']
 #
 # html_sidebars = {}
 
+html_favicon = '../img/favicon.png'
 html_use_index = False
 html_copy_source = False
 html_show_copyright = False
@@ -182,6 +183,6 @@ epub_exclude_files = ['search.html']
 
 def setup(app):
     app.add_config_value('recommonmark_config', {
-            'auto_toc_tree_section': 'Contents',
+            'auto_toc_tree_section': 'Topics',
             }, True)
     app.add_transform(AutoStructify)

@@ -1,0 +1,9 @@
+1. Open this page:
+
+   https://fonts.google.com/specimen/Viga?preview.text=RUZSA&preview.text_type=custom#standard-styles
+
+2. Set the font size to 64px.
+
+3. In the browser dev tools, set the font color to #2196f3.
+
+4. Take a screenshot, crop, make white transparent.

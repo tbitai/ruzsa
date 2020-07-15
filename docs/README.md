@@ -4,7 +4,7 @@
 
 Check it out at [https://ruzsa.tbitai.me](https://ruzsa.tbitai.me)!
 
-## Contents
+## Topics
 
 * [Changelog](CHANGELOG.md)
 * [Development](DEVELOPMENT.md)
