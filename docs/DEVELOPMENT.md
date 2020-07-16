@@ -1,39 +1,71 @@
 # Development
 
-After cloning the repo, install the dependencies:
+Clone the repo:
 
-```shell
+```sh
+git clone git@github.com:tbitai/ruzsa.git
+```
+
+Install dependencies:
+
+```sh
 npm install
 ```
 
 Build:
 
-```shell
+```sh
 npm run build
 ```
 
-Serve the project root directory (not the `dist` directory!) with a static server, for example if you have Python 3, you can run the included `dev_server.py` script, and the app will be available at `http://localhost:8000/dist`. (You can customize the host and the port, run `python dev_server.py --help` to see all the available options of the script.)
+Start:
 
-Serving the project root directory is necessary in order to use the source map files, which point outside of the `dist` directory.
+```sh
+npm start
+```
 
-Besides the `build` NPM script, scripts for the individual build steps are available for using during development. Have a look at the `package.json`'s `"scripts"` field to examine them!
+Besides the `build` NPM script, scripts for the individual build steps are available for using during development. Have 
+a look at the `package.json`'s `"scripts"` field to examine them!
 
 ## Deploying
 
 Make a build for deployment:
 
-```shell
+```sh
 npm run build-for-deploy
 ```
 
 Deploy to production...
 
-```shell
+```sh
 npm run deploy
 ```
 
 ... or to staging:
 
-```shell
+```sh
 npm run deploy-staging
 ```
+
+## Documentation
+
+The documentation is under the `docs` directory. In the following commands we assume that's the current directory.
+
+Install requirements ([Sphinx](https://www.sphinx-doc.org) etc.):
+
+```sh
+pip install -r requirements.txt
+```
+
+Build:
+
+```sh
+./build_html.sh
+```
+
+Continuous deployment is set up to [Read the Docs](https://ruzsa.readthedocs.io). On every push to 
+[GitHub](https://github.com/tbitai/ruzsa), deployment is triggered. Two versions are deployed:
+* [`/en/stable`](https://ruzsa.readthedocs.io/en/stable): the commit with the highest stable (i.e., non pre-release) 
+  version tag.
+* [`/en/latest`](https://ruzsa.readthedocs.io/en/latest): the latest commit on `master`. This version is hidden, but it 
+  can be accessed via the URL (well, or from here 🤓).

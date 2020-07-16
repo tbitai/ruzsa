@@ -7,11 +7,6 @@ but uses the analytic tableau proof method instead of natural deduction\).
 
 Check it out at [https://ruzsa.tbitai.me](https://ruzsa.tbitai.me)!
 
-## Topics
-
-* [Changelog](CHANGELOG.md)
-* [Development](DEVELOPMENT.md)
-
 ## Usage
 
 The rules for constructing tableaux are the same as explained on the 
@@ -23,3 +18,8 @@ subsection.
 Closure is denoted by `*` derived from the lower closing node, like this:
 
 ![](closure.png)
+
+## Topics
+
+* [Changelog](CHANGELOG.md)
+* [Development](DEVELOPMENT.md)
