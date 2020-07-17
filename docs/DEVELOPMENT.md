@@ -1,5 +1,7 @@
 # Development
 
+## Getting started
+
 Clone the repo:
 
 ```sh
@@ -65,7 +67,7 @@ Build:
 
 Continuous deployment is set up to [Read the Docs](https://ruzsa.readthedocs.io). On every push to 
 [GitHub](https://github.com/tbitai/ruzsa), deployment is triggered. Two versions are deployed:
-* [`/en/stable`](https://ruzsa.readthedocs.io/en/stable): the commit with the highest stable (i.e., non pre-release) 
+* [`/en/stable`](https://ruzsa.readthedocs.io/en/stable) — the commit with the highest stable (i.e., non pre-release) 
   version tag.
-* [`/en/latest`](https://ruzsa.readthedocs.io/en/latest): the latest commit on `master`. This version is hidden, but it 
+* [`/en/latest`](https://ruzsa.readthedocs.io/en/latest) — the latest commit on `master`. This version is hidden, but it 
   can be accessed via the URL (well, or from here 🤓).
