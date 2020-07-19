@@ -71,29 +71,20 @@ angular.module('ruzsa', [
     'ngCookies'
 ])
     .config(['$mdThemingProvider', function($mdThemingProvider) {
-        $mdThemingProvider.definePalette('materialGreyWithLightAccents', {
-            // Material grey: https://material.google.com/style/color.html#color-color-palette
-            '50': 'FAFAFA',
-            '100': 'F5F5F5',
-            '200': 'EEEEEE',
-            '300': 'E0E0E0',
-            '400': 'BDBDBD',
-            '500': '9E9E9E',
-            '600': '757575',
-            '700': '616161',
-            '800': '424242',
-            '900': '212121',
-            'A100': 'F5F5F5',
-            'A200': 'EEEEEE',
-            'A400': 'E0E0E0',
-            'A700': 'BDBDBD',
-            'contrastDefaultColor': 'dark',
-            'contrastLightColors': ['600', '700', '800', '900']
-        });
         //noinspection JSUnresolvedFunction
-        $mdThemingProvider.theme('default')
+        $mdThemingProvider.theme('default')  // Base for all themes.
             .primaryPalette('blue')
-            .accentPalette('materialGreyWithLightAccents');
+            .accentPalette('grey', {
+                'default': '400'
+            });
+        $mdThemingProvider.theme('light');
+        $mdThemingProvider.theme('dark')
+            .accentPalette('grey', {
+                'hue-1': 'A400'
+            })
+            .dark();
+        $mdThemingProvider.setDefaultTheme('light');
+        $mdThemingProvider.alwaysWatchTheme(true);
     }])
     .config(['$translateProvider', function ($translateProvider) {
         $translateProvider.translations('en', {
@@ -107,6 +98,7 @@ angular.module('ruzsa', [
             'UNDO': 'Undo',
             'ISSUES': 'Issues',
             'CODE': 'Code',
+            'THEME': 'Theme',
 
             // Action buttons
             'ADD': 'Add',
@@ -158,6 +150,7 @@ angular.module('ruzsa', [
             'UNDO': 'Visszavonás',
             'ISSUES': 'Észrevételek',
             'CODE': 'Kód',
+            'THEME': 'Téma',
 
             // Action buttons
             'ADD': 'Hozzáadás',
@@ -202,11 +195,27 @@ angular.module('ruzsa', [
         $translateProvider.useCookieStorage();
         $translateProvider.useSanitizeValueStrategy('escape');
     }])
+    .config(['$cookiesProvider', function($cookiesProvider) {
+        $cookiesProvider.defaults.samesite = 'strict';
+    }])
     .controller('treeController', [
-           '$scope', '$rootScope', '$mdDialog', '$timeout', '$translate',
+           '$scope', '$rootScope', '$mdDialog', '$timeout', '$translate', '$cookies',
         function(
-            $scope,   $rootScope,   $mdDialog,   $timeout,   $translate
+            $scope,   $rootScope,   $mdDialog,   $timeout,   $translate,   $cookies
         ){
+        $scope.themes = {
+            list: ['light', 'dark'],
+            defaultIndex: 0,
+            cookieKey: 'theme'
+        };
+        $scope.theme = $cookies.get($scope.themes.cookieKey) || $scope.themes.list[$scope.themes.defaultIndex];
+        $scope.toggleTheme = function() {
+            const currentIndex = $scope.themes.list.indexOf($scope.theme);
+            const otherIndex = 1 - currentIndex;
+            const other = $scope.themes.list[otherIndex];
+            $scope.theme = other;
+            $cookies.put($scope.themes.cookieKey, other);
+        };
         $scope.generateTranslationsForScope = function() {
             $translate([
                 // Alerts and confirms
@@ -244,14 +253,18 @@ angular.module('ruzsa', [
         $rootScope.$on('$translateChangeSuccess', function() {
             $scope.generateTranslationsForScope();
         });
-        $scope.swapLanguage = function() {
+        $scope.translationLangs = ['en', 'hu'];
+        $scope.toggleLanguage = function() {
             $translate.use(
-                $translate.use() === 'en' ? 'hu' : 'en'
+                $scope.translationLangs[1 - $scope.translationLangs.indexOf($translate.use())]
             );
         };
 
-        // Settings
-        $scope.dialogFocusOnOpen = false;
+        $scope.getCommonDialogOptions = function () { return {
+            ok: 'OK',
+            focusOnOpen: false,
+            theme: $scope.theme  // Workaround https://github.com/angular/material/issues/11229
+        }};
 
         $scope.getState = function() {
             return {
@@ -330,24 +343,21 @@ angular.module('ruzsa', [
                 'TEST_VERSION_ALERT_TEXT'
             ]).then(function(tr) {
                 $timeout(function() {
-                    $mdDialog.show($mdDialog.alert({
+                    $mdDialog.show($mdDialog.alert(Object.assign($scope.getCommonDialogOptions(), {
                         title: tr.TEST_VERSION_ALERT_TITLE,
                         textContent: tr.TEST_VERSION_ALERT_TEXT,
-                        ok: 'OK',
-                        focusOnOpen: $scope.dialogFocusOnOpen
-                    }));
+                    })));
                 }, 0, false);
             });
         }
 
         $scope.getLoadFileConfirmUnsaved = function() {
-            return $mdDialog.confirm({
+            return $mdDialog.confirm(Object.assign($scope.getCommonDialogOptions(), {
                 title: $scope.loadFileConfirmUnsavedTitle,
                 htmlContent: $scope.loadFileConfirmUnsavedText,
                 ok: $scope.confirmContinue,
                 cancel: $scope.confirmCancel,
-                focusOnOpen: $scope.dialogFocusOnOpen
-            });
+            }));
         };
         $scope.setInitialStateWithConfirm = function() {
             if ($scope.unsavedDataPresent) {
@@ -409,12 +419,10 @@ angular.module('ruzsa', [
                         state.readonly = readonly;
                         if (readonly) {
                             $mdDialog.show(
-                                $mdDialog.alert({
+                                $mdDialog.alert(Object.assign($scope.getCommonDialogOptions(), {
                                     title: $scope.loadFileDeprReadonlyAlertTitle,
                                     textContent: $scope.loadFileDeprReadonlyAlertText,
-                                    ok: 'OK',
-                                    focusOnOpen: $scope.dialogFocusOnOpen
-                                })
+                                }))
                             );
                         }
                         $scope.setState(state, true);
@@ -439,12 +447,10 @@ angular.module('ruzsa', [
                             });
                         }
                     } catch (ex) {
-                        let alert = $mdDialog.alert({
+                        let alert = $mdDialog.alert(Object.assign($scope.getCommonDialogOptions(), {
                             title: $scope.loadFileErrorAlertTitle,
                             textContent: $scope.loadFileErrorAlertText,
-                            ok: 'OK',
-                            focusOnOpen: $scope.dialogFocusOnOpen
-                        });
+                        }));
                         $mdDialog.show(alert);
                         throw ex;  // For debugging.
                     }
@@ -492,7 +498,7 @@ angular.module('ruzsa', [
                     padding: 20,
                     minWidth: 160  // .formula_input width
                 });
-                
+
                 $scope.focusNext(false);
 
                 if (newTreeData !== oldTreeData &&  // Exclude initialization
@@ -617,12 +623,10 @@ angular.module('ruzsa', [
             return emptyNodesPresent;
         };
         $scope.showStepInProgressAlert = function () {
-            let alert = $mdDialog.alert({
+            let alert = $mdDialog.alert(Object.assign($scope.getCommonDialogOptions(), {
                 title: $scope.stepInProgressAlertTitle,
                 textContent: $scope.stepInProgressAlertText,
-                ok: 'OK',
-                focusOnOpen: $scope.dialogFocusOnOpen
-            });
+            }));
             $mdDialog.show(alert);
         };
         $scope.removeBDStepMemory = function() {
@@ -755,7 +759,7 @@ angular.module('ruzsa', [
             $scope.BDStepInProgress = true;
             $scope.cancelNewNodesPossible = false;
         };
-        
+
         /** Return last integer order + .5^n. */
         $scope.calculateNextFractionalFocusOrder = function(o) {
             if (Math.ceil(o) === o) {
@@ -763,7 +767,7 @@ angular.module('ruzsa', [
             }
             return o + (Math.ceil(o) - o) / 2;
         };
-        
+
         $scope.addOrCandidate = function(node) {
             let path = treePath($scope.treeData, n => n.id === node.id, n => n);
             let parent = path[path.length - 2];
@@ -838,12 +842,10 @@ angular.module('ruzsa', [
             $scope.undoStepPossible = false;
         };
         $scope.showIncorrectStepAlert = function () {
-            let alert = $mdDialog.alert({
+            let alert = $mdDialog.alert(Object.assign($scope.getCommonDialogOptions(), {
                 title: $scope.incorrectStepAlertTitle,
                 htmlContent: $scope.incorrectStepAlertText,
-                ok: 'OK',
-                focusOnOpen: $scope.dialogFocusOnOpen
-            });
+            }));
             $mdDialog.show(alert);
         };
         $scope.checkStep = function () {

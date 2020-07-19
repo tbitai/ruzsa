@@ -11,7 +11,10 @@
                                            the unprocessed Angular double-curly binding. -->
 </head>
 
-<body ng-cloak>
+<body ng-cloak
+      md-theme="{{ theme }}"
+      ng-class="{'dark-theme': theme === 'dark',
+                 'md-dark-theme': theme === 'dark'}">  <!-- Workaround AngularJS Material bug. -->
 <md-toolbar md-whiteframe="4" class="toolbar">
     <div class="md-toolbar-tools">
         <md-button ng-click="setInitialStateWithConfirm()" aria-label="RUZSA" id="logo_btn">
@@ -50,10 +53,13 @@
         <md-button href="https://github.com/tbitai/ruzsa/issues">
             <i class="material-icons">&#xE868;</i> <span class="tool_title">{{'ISSUES' | translate}}</span>
         </md-button>
-        <md-button href="https://github.com/tbitai/ruzsa">
-            <img src="img/icons/GitHub-Mark-Light-32px.png" height="26" id="github-logo"></img> <span class="tool_title">{{'CODE' | translate}}</span>
+        <md-button ng-click="toggleTheme()">
+            <i class=material-icons>&#xE1AE;</i> <span class="tool_title">{{'THEME' | translate}}</span>
         </md-button>
-        <md-button ng-click="swapLanguage()" id="lang_swapper">
+        <md-button href="https://github.com/tbitai/ruzsa" target="_blank" rel="noreferrer noopener">
+            <img src="img/icons/GitHub-Mark-Light-32px.png" height="26" id="github-logo"> <span class="tool_title">{{'CODE' | translate}}</span>
+        </md-button>
+        <md-button ng-click="toggleLanguage()" id="lang_swapper">
             <i class=material-icons>&#xE894;</i> <span class="tool_title">{{'OTHER_LANGUAGE' | translate}}</span><span class="tool_title_abbr">{{'OTHER_LANGUAGE_ABBR' | translate}}</span>
         </md-button>
     </div>
@@ -142,104 +148,104 @@
 </div>
 <div id="virtual_keyboard" md-whiteframe="4">
     <div class="small_vkb_btns">
-        <md-button class="md-raised small_vkb_btn"
+        <md-button class="md-raised md-accent md-hue-1 small_vkb_btn"
                    onclick="fireVirtualKey(' ∨ ')"
                    aria-label="{{'OR' | translate}}">∨</md-button>
-        <md-button class="md-raised small_vkb_btn"
+        <md-button class="md-raised md-accent md-hue-1 small_vkb_btn"
                    onclick="fireVirtualKey(' ∧ ')"
                    aria-label="{{'AND' | translate}}">∧</md-button>
-        <md-button class="md-raised small_vkb_btn"
+        <md-button class="md-raised md-accent md-hue-1 small_vkb_btn"
                    onclick="fireVirtualKey('¬')"
                    aria-label="{{'NOT' | translate}}">¬</md-button>
-        <md-button class="md-raised small_vkb_btn"
+        <md-button class="md-raised md-accent md-hue-1 small_vkb_btn"
                    onclick="fireVirtualKey(' → ')"
                    aria-label="{{'IMPLIES' | translate}}">→</md-button>
-        <md-button class="md-raised small_vkb_btn"
+        <md-button class="md-raised md-accent md-hue-1 small_vkb_btn"
                    onclick="fireVirtualKey(' ↔ ')"
                    aria-label="{{'EQUIVALENT' | translate}}">↔</md-button>
     </div>
     <div class="small_vkb_btns">
-      <md-button class="md-raised small_vkb_btn"
+      <md-button class="md-raised md-accent md-hue-1 small_vkb_btn"
                  onclick="fireVirtualKey('∀')"
                  aria-label="{{'FOR_ALL' | translate}}">∀</md-button>
-      <md-button class="md-raised small_vkb_btn"
+      <md-button class="md-raised md-accent md-hue-1 small_vkb_btn"
                  onclick="fireVirtualKey('∃')"
                  aria-label="{{'EXISTS' | translate}}">∃</md-button>
-      <md-button class="md-raised small_vkb_btn"
+      <md-button class="md-raised md-accent md-hue-1 small_vkb_btn"
                  onclick="fireVirtualKey(' = ')"
                  aria-label="{{'EQUALS' | translate}}">=</md-button>
-      <md-button class="md-raised small_vkb_btn"
+      <md-button class="md-raised md-accent md-hue-1 small_vkb_btn"
                  onclick="fireVirtualKey(' ≠ ')"
                  aria-label="{{'NOT_EQUALS' | translate}}">≠</md-button>
-      <md-button class="md-raised small_vkb_btn"
+      <md-button class="md-raised md-accent md-hue-1 small_vkb_btn"
                  onclick="fireVirtualKey('*')"
                  aria-label="{{'FALSE' | translate}}">*</md-button>  <!-- FIXME: This will result in invalid input. -->
     </div>
     <table>
         <tr>
             <td>
-                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('Tet()', -1)">Tet</md-button>
+                <md-button class="md-raised md-accent md-hue-1 tarski_symbol_btn" onclick="fireVirtualKey('Tet()', -1)">Tet</md-button>
             </td>
             <td>
-                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('Small()', -1)">Small</md-button>
+                <md-button class="md-raised md-accent md-hue-1 tarski_symbol_btn" onclick="fireVirtualKey('Small()', -1)">Small</md-button>
             </td>
             <td>
-                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('Smaller(, )', -3)">Smaller</md-button>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('Cube()', -1)">Cube</md-button>
-            </td>
-            <td>
-                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('Medium()', -1)">Medium</md-button>
-            </td>
-            <td>
-                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('SameSize(, )', -3)">SameSize</md-button>
+                <md-button class="md-raised md-accent md-hue-1 tarski_symbol_btn" onclick="fireVirtualKey('Smaller(, )', -3)">Smaller</md-button>
             </td>
         </tr>
         <tr>
             <td>
-                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('Dodec()', -1)">Dodec</md-button>
+                <md-button class="md-raised md-accent md-hue-1 tarski_symbol_btn" onclick="fireVirtualKey('Cube()', -1)">Cube</md-button>
             </td>
             <td>
-                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('Large()', -1)">Large</md-button>
+                <md-button class="md-raised md-accent md-hue-1 tarski_symbol_btn" onclick="fireVirtualKey('Medium()', -1)">Medium</md-button>
             </td>
             <td>
-                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('Larger(, )', -3)">Larger</md-button>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('Adjoins(, )', -3)">Adjoins</md-button>
-            </td>
-            <td>
-                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('BackOf(, )', -3)">BackOf</md-button>
-            </td>
-            <td>
-                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('SameShape(, )', -3)">SameShape</md-button>
+                <md-button class="md-raised md-accent md-hue-1 tarski_symbol_btn" onclick="fireVirtualKey('SameSize(, )', -3)">SameSize</md-button>
             </td>
         </tr>
         <tr>
             <td>
-                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('LeftOf(, )', -3)">LeftOf</md-button>
+                <md-button class="md-raised md-accent md-hue-1 tarski_symbol_btn" onclick="fireVirtualKey('Dodec()', -1)">Dodec</md-button>
             </td>
             <td>
-                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('Between(, , )', -5)">Between</md-button>
+                <md-button class="md-raised md-accent md-hue-1 tarski_symbol_btn" onclick="fireVirtualKey('Large()', -1)">Large</md-button>
             </td>
             <td>
-                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('RightOf(, )', -3)">RightOf</md-button>
+                <md-button class="md-raised md-accent md-hue-1 tarski_symbol_btn" onclick="fireVirtualKey('Larger(, )', -3)">Larger</md-button>
             </td>
         </tr>
         <tr>
             <td>
-                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('SameCol(, )', -3)">SameCol</md-button>
+                <md-button class="md-raised md-accent md-hue-1 tarski_symbol_btn" onclick="fireVirtualKey('Adjoins(, )', -3)">Adjoins</md-button>
             </td>
             <td>
-                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('FrontOf(, )', -3)">FrontOf</md-button>
+                <md-button class="md-raised md-accent md-hue-1 tarski_symbol_btn" onclick="fireVirtualKey('BackOf(, )', -3)">BackOf</md-button>
             </td>
             <td>
-                <md-button class="md-raised tarski_symbol_btn" onclick="fireVirtualKey('SameRow(, )', -3)">SameRow</md-button>
+                <md-button class="md-raised md-accent md-hue-1 tarski_symbol_btn" onclick="fireVirtualKey('SameShape(, )', -3)">SameShape</md-button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <md-button class="md-raised md-accent md-hue-1 tarski_symbol_btn" onclick="fireVirtualKey('LeftOf(, )', -3)">LeftOf</md-button>
+            </td>
+            <td>
+                <md-button class="md-raised md-accent md-hue-1 tarski_symbol_btn" onclick="fireVirtualKey('Between(, , )', -5)">Between</md-button>
+            </td>
+            <td>
+                <md-button class="md-raised md-accent md-hue-1 tarski_symbol_btn" onclick="fireVirtualKey('RightOf(, )', -3)">RightOf</md-button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <md-button class="md-raised md-accent md-hue-1 tarski_symbol_btn" onclick="fireVirtualKey('SameCol(, )', -3)">SameCol</md-button>
+            </td>
+            <td>
+                <md-button class="md-raised md-accent md-hue-1 tarski_symbol_btn" onclick="fireVirtualKey('FrontOf(, )', -3)">FrontOf</md-button>
+            </td>
+            <td>
+                <md-button class="md-raised md-accent md-hue-1 tarski_symbol_btn" onclick="fireVirtualKey('SameRow(, )', -3)">SameRow</md-button>
             </td>
         </tr>
     </table>

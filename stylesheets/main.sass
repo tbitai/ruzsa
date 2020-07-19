@@ -41,7 +41,7 @@ $tree-line-height-shrink-limit: $height-shrink-limit
   font-feature-settings: 'liga'
 
 $vkb_width: 341px
-$candidate_color: #cccccc
+$candidate_color: rgb(189,189,189)  // FAB color.
 
 // Fix superfluous lines from leaves -- CSS part
 .tree .empty_ul::before
@@ -124,7 +124,7 @@ $formula_margin-top-bottom: 9px
   padding-left:  $padding-left-right
   padding-right: $padding-left-right
 
-  background-color: white  // Fixes tree sliding between keyboard element and btns
+  background-color: inherit  // Fixes tree sliding between keyboard element and btns
 
 .small_vkb_btn
   min-width: 43px
@@ -178,8 +178,7 @@ $bd_step_btn_margin-left-right: 7px
   min-width: 60px
 
 .highlighted
-  // Copy of MD focused btn style
-  background-color: #ebebeb
+  background-color: $candidate_color
   +border-radius(3px)
 
   padding: 8px
@@ -302,3 +301,18 @@ $toolbar_width_shrink_limit: 1400px
   height:     $size
   min-height: $size
   max-height: $size
+
+.dark-theme
+  $candidate_color: rgb(97,97,97)  // Hovered accent hue-1 button color.
+  .tree *
+      &::before, &::after
+        border-color: rgba(255,255,255,1.0) !important  // Text color of AngularJS Material dark theme.
+      .continuation_candidate, .continuation_candidate *
+        &::before, &::after
+          border-color: $candidate_color !important
+
+  .candidate
+    color: $candidate_color !important
+
+  .highlighted
+    background-color: $candidate_color !important
