@@ -183,6 +183,8 @@ epub_exclude_files = ['search.html']
 
 def setup(app):
     app.add_config_value('recommonmark_config', {
-            'auto_toc_tree_section': 'Topics',
-            }, True)
+        'auto_toc_tree_section': 'Topics',
+        'enable_math': True,
+        'enable_inline_math': True,
+    }, True)
     app.add_transform(AutoStructify)

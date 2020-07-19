@@ -29,6 +29,20 @@ npm start
 Besides the `build` NPM script, scripts for the individual build steps are available for using during development. Have 
 a look at the `package.json`'s `"scripts"` field to examine them!
 
+## Testing
+
+A good general test case is to prove the first exercise from Fitch's first-order [video tutorial](https://youtu.be/uw44RB2A4uQ) 
+(available on the Openproof Courseware website's [video tutorials page](https://www.gradegrinder.net/Support/videoTutorial.html)):
+
+```math
+\newcommand{\Tet}{\mathrm{Tet}}
+\newcommand{\Small}{\mathrm{Small}}
+
+& ∃x\ \Tet(x) \\
+& ∀x\ (\Tet(x) → \Small(x)) \\
+& ∴\ ∃x\ \Small(x) \\
+```
+
 ## Deploying
 
 Make a build for deployment:
