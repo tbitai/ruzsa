@@ -18,7 +18,21 @@
 <md-toolbar md-whiteframe="4" class="toolbar">
     <div class="md-toolbar-tools">
         <md-button ng-click="setInitialStateWithConfirm()" aria-label="RUZSA" id="logo_btn">
-            <img src="img/ruzsa-logo.png" class="logo"><sup ng-show="isRunningVersionTesting"><i class="mdi mdi-test-tube"></i></sup>
+            <img src="img/ruzsa-logo.png" class="logo"><sup ng-show="isRunningVersionTesting">
+            <!-- No codepoint for this icon, and the ligature didn't work either, so copied the SVG from
+                 https://material.io/resources/icons/?icon=science&style=baseline
+                 and set fill="currentColor". -->
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 enable-background="new 0 0 24 24"
+                 viewBox="0 0 24 24"
+                 fill="currentColor"
+                 width="18px"
+                 height="18px">
+                <g><rect fill="none" height="24" width="24"/></g>
+                <g><path d="M19.8,18.4L14,10.67V6.5l1.35-1.69C15.61,4.48,15.38,4,14.96,4H9.04C8.62,4,8.39,4.48,8.65,
+                            4.81L10,6.5v4.17L4.2,18.4 C3.71,19.06,4.18,20,5,20h14C19.82,20,20.29,19.06,19.8,18.4z"/></g>
+            </svg>
+        </sup>
         </md-button>
         <div id="action_bar">
             <!-- Has to be an anchor element with the script in its href,
