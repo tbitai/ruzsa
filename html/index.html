@@ -13,8 +13,7 @@
 
 <body ng-cloak
       md-theme="{{ theme }}"
-      ng-class="{'dark-theme': theme === 'dark',
-                 'md-dark-theme': theme === 'dark'}">  <!-- Workaround AngularJS Material bug. -->
+      ng-class="{'dark-theme': theme === 'dark'}">
 <md-toolbar md-whiteframe="4" class="toolbar">
     <div class="md-toolbar-tools">
         <md-button ng-click="setInitialStateWithConfirm()" aria-label="RUZSA" id="logo_btn">

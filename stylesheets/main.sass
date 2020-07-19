@@ -40,6 +40,9 @@ $tree-line-height-shrink-limit: $height-shrink-limit
   /* Support for IE. */
   font-feature-settings: 'liga'
 
+body
+  background-color: rgb(250,250,250)  // md-content background-color.
+
 $vkb_width: 341px
 $candidate_color: rgb(189,189,189)  // FAB color.
 
@@ -303,7 +306,10 @@ $toolbar_width_shrink_limit: 1400px
   max-height: $size
 
 .dark-theme
+  background-color: rgb(48,48,48)  // md-content background-color.
+
   $candidate_color: rgb(97,97,97)  // Hovered accent hue-1 button color.
+
   .tree *
       &::before, &::after
         border-color: rgba(255,255,255,1.0) !important  // Text color of AngularJS Material dark theme.
