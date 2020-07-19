@@ -5,7 +5,7 @@
 \(similar to [Fitch](https://www.gradegrinder.net/Support/documentation.html?software=fitch), 
 but uses the analytic tableau proof method instead of natural deduction\).
 
-Check it out at [https://ruzsa.tbitai.me](https://ruzsa.tbitai.me)!
+Check it out at <https://ruzsa.tbitai.me>!
 
 ## Usage
 
@@ -21,5 +21,6 @@ Closure is denoted by `*` derived from the lower closing node, like this:
 
 ## Topics
 
-* [Changelog](CHANGELOG.md)
-* [Development](DEVELOPMENT.md)
+* [Release notes](CHANGELOG.md)
+* [Bug reports and feature requests](ISSUES.md)
+* [Developer documentation](DEVELOPMENT.md)
