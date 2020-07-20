@@ -96,9 +96,9 @@ angular.module('ruzsa', [
             'SAVE': 'Save',
             'CHECK_STEP': 'Check step',
             'UNDO': 'Undo',
-            'ISSUES': 'Issues',
-            'CODE': 'Code',
+            'HELP': 'Help',
             'THEME': 'Theme',
+            'CODE': 'Code',
 
             // Action buttons
             'ADD': 'Add',
@@ -148,9 +148,9 @@ angular.module('ruzsa', [
             'SAVE': 'Mentés',
             'CHECK_STEP': 'Lépés ellenőrzése',
             'UNDO': 'Visszavonás',
-            'ISSUES': 'Észrevételek',
-            'CODE': 'Kód',
+            'HELP': 'Segítség',
             'THEME': 'Téma',
+            'CODE': 'Kód',
 
             // Action buttons
             'ADD': 'Hozzáadás',
