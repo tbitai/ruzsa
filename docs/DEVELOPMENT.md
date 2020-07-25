@@ -1,5 +1,8 @@
 # Developer documentation
 
+[![](https://david-dm.org/tbitai/ruzsa/status.svg?style=flat-square)](https://david-dm.org/tbitai/ruzsa)
+[![](https://david-dm.org/tbitai/ruzsa/dev-status.svg?style=flat-square)](https://david-dm.org/tbitai/ruzsa?type=dev)
+
 ## Getting started
 
 Clone the repo:
@@ -54,7 +57,7 @@ npm run build-for-deploy
 Deploy to production...
 
 ```sh
-npm run deploy
+npm run deploy-production
 ```
 
 ... or to staging:
