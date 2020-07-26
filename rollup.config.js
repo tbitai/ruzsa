@@ -3,6 +3,8 @@ import resolve from '@rollup/plugin-node-resolve';
 import { terser } from 'rollup-plugin-terser';
 import json from '@rollup/plugin-json';
 import babel from '@rollup/plugin-babel';
+import serve from 'rollup-plugin-serve';
+import livereload from 'rollup-plugin-livereload';
 
 export default {
   input: 'js/app.js',
@@ -38,6 +40,11 @@ export default {
             }
           }
         }
-      }) : undefined
+      }) : undefined,
+    serve({
+      contentBase: 'dist',
+      port: 8080,
+    }),
+    livereload('dist'),
   ]
 };
