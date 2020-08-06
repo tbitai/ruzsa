@@ -20,8 +20,6 @@ dist/stylesheets/*
 dist/js/*
 !dist/js/.gitkeep
 
-js/lib/tarskiFOL.js
-
 
 ### IDE
 

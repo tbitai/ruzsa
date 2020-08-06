@@ -1,4 +1,4 @@
-import {parser} from '../lib/tarskiFOL';
+import {parse} from '../lib/tarskiFOL.jison';
 import isEqual from 'lodash/isEqual';
 import traverseObject from './traverseObject.js';
 
@@ -11,7 +11,7 @@ function WFF(unicode){
 }
 WFF.prototype.edit = function(unicode) {
     // First parse the Unicode, and raise error if it isn't valid.
-    this.ast = parser.parse(unicode);
+    this.ast = parse(unicode);
 
     this.unicode = unicode;
 };

@@ -5,6 +5,7 @@ import json from '@rollup/plugin-json';
 import babel from '@rollup/plugin-babel';
 import serve from 'rollup-plugin-serve';
 import livereload from 'rollup-plugin-livereload';
+import jison from 'rollup-plugin-jison';
 
 export default {
   input: 'js/app.js',
@@ -17,6 +18,7 @@ export default {
     },
   },
   plugins: [
+    jison(),
     json({
       include: 'package.json'
     }),
@@ -29,7 +31,7 @@ export default {
       preferBuiltins: false
     }),
     commonjs({
-      include: ['node_modules/**', 'js/lib/tarskiFOL.js']
+      include: ['node_modules/**']
     }),
     process.env.BUILD !== 'dev' ?
       terser({
