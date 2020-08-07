@@ -1,4 +1,4 @@
-import { version } from '../package.json';
+import { version } from '../../package.json';
 import 'angular';
 import 'angular-tree-repeat';
 import 'angular-animate';

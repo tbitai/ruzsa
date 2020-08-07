@@ -17,20 +17,11 @@ Install dependencies:
 npm install
 ```
 
-Build:
+Build in development mode and start LiveReload development server:
 
 ```sh
-npm run build
+npm run dev
 ```
-
-Start:
-
-```sh
-npm start
-```
-
-Besides the `build` NPM script, scripts for the individual build steps are available for using during development. Have 
-a look at the `package.json`'s `"scripts"` field to examine them!
 
 ## Testing
 
@@ -48,10 +39,10 @@ A good general test case is to prove the first exercise from Fitch's first-order
 
 ## Deploying
 
-Make a build for deployment:
+Build in production mode:
 
 ```sh
-npm run build-for-deploy
+npm run build
 ```
 
 Deploy to production...

@@ -1,26 +1,10 @@
 ### NPM
-
 node_modules
 npm-debug.log
 
-
 ### Build
-
 .sass-cache
-
-# Ignore `dist`, except a part of its subdirectory structure.
-dist/*
-!dist/fonts
-dist/fonts/*
-!dist/fonts/.gitkeep
-!dist/stylesheets
-dist/stylesheets/*
-!dist/stylesheets/.gitkeep
-!dist/js
-dist/js/*
-!dist/js/.gitkeep
-
+dist/
 
 ### IDE
-
 .idea/

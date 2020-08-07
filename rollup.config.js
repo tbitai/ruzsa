@@ -6,18 +6,34 @@ import babel from '@rollup/plugin-babel';
 import serve from 'rollup-plugin-serve';
 import livereload from 'rollup-plugin-livereload';
 import jison from 'rollup-plugin-jison';
+import copy from 'rollup-plugin-copy';
+import clear from 'rollup-plugin-clear';
 
+const isDev = process.env.BUILD === 'dev';
 export default {
-  input: 'js/app.js',
+  input: 'src/js/app.js',
   output: {
-    file: 'dist/js/bundle.js',
+    file: 'dist/bundle.js',
     format: 'iife',
-    sourcemap: true,
+    sourcemap: isDev,
     globals: {
       angular: 'angular'
     },
   },
+  watch: {
+    exclude: 'docs/**',
+  },
   plugins: [
+    !isDev ? clear({
+      targets: ['dist'],
+    }) : undefined,
+    copy({
+      targets: [
+        {src: 'src/app.html', dest: 'dist', rename: 'index.html'},
+        {src: 'src/img', dest: 'dist'},
+        {src: 'node_modules/material-design-icons/iconfont/MaterialIcons-Regular.*', dest: 'dist/fonts'},
+      ],
+    }),
     jison(),
     json({
       include: 'package.json'
@@ -28,12 +44,12 @@ export default {
     }),
     resolve({
       browser: true,
-      preferBuiltins: false
+      preferBuiltins: false,
     }),
     commonjs({
       include: ['node_modules/**']
     }),
-    process.env.BUILD !== 'dev' ?
+    !isDev ?
       terser({
         output: {
           comments: function(node, comment) {
@@ -43,10 +59,7 @@ export default {
           }
         }
       }) : undefined,
-    serve({
-      contentBase: 'dist',
-      port: 8080,
-    }),
-    livereload('dist'),
+    isDev ? serve('dist') : undefined,
+    isDev ? livereload('dist') : undefined,
   ]
 };

@@ -1,4 +1,4 @@
-import {parse} from '../lib/tarskiFOL.jison';
+import {parse} from './tarskiFOL.jison';
 import isEqual from 'lodash/isEqual';
 import traverseObject from './traverseObject.js';
 
