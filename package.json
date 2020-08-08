@@ -3,8 +3,8 @@
   "version": "1.2.0-alpha",
   "private": true,
   "scripts": {
-    "dev": "node-sass --source-map true src/stylesheets/main.sass dist/bundle.css && rollup -cw --environment BUILD:dev",
-    "build": "rollup -c && node-sass --output-style compressed src/stylesheets/main.sass dist/bundle.css",
+    "dev": "rollup -cw --environment BUILD:dev",
+    "build": "rollup -c",
     "start": "http-server ./dist -a localhost -p 10001",
     "deploy-staging": "netlify deploy --prod --site bedb1584-4055-4045-802a-c4f187ba7c7a",
     "deploy-production": "netlify deploy --prod --site ea5f46df-0fa4-4673-bca9-a5b378b76dd1"
@@ -24,6 +24,7 @@
     "jquery": "3.5.1",
     "lodash": "4.17.19",
     "material-design-icons": "3.0.1",
+    "roboto-fontface": "0.10.0",
     "semver": "7.3.0"
   },
   "devDependencies": {
@@ -39,6 +40,7 @@
     "rollup": "2.23.0",
     "rollup-plugin-clear": "2.0.7",
     "rollup-plugin-copy": "3.3.0",
+    "rollup-plugin-execute": "1.1.1",
     "rollup-plugin-jison": "0.1.0",
     "rollup-plugin-livereload": "1.3.0",
     "rollup-plugin-serve": "1.0.3",

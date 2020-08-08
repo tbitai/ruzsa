@@ -8,6 +8,7 @@ import livereload from 'rollup-plugin-livereload';
 import jison from 'rollup-plugin-jison';
 import copy from 'rollup-plugin-copy';
 import clear from 'rollup-plugin-clear';
+import execute from 'rollup-plugin-execute';
 
 const isDev = process.env.BUILD === 'dev';
 export default {
@@ -31,9 +32,13 @@ export default {
       targets: [
         {src: 'src/app.html', dest: 'dist', rename: 'index.html'},
         {src: 'src/img', dest: 'dist'},
-        {src: 'node_modules/material-design-icons/iconfont/MaterialIcons-Regular.*', dest: 'dist/fonts'},
+        {src: 'node_modules/roboto-fontface/fonts/roboto', dest: 'dist/fonts'},
+        {src: 'node_modules/material-design-icons/iconfont/MaterialIcons-Regular.*', dest: 'dist/fonts/material-icons'},
       ],
     }),
+    execute(
+      `node-sass ${isDev ? '--source-map true' : '--output-style compressed'} src/stylesheets/main.sass dist/bundle.css`
+    ),
     jison(),
     json({
       include: 'package.json'
