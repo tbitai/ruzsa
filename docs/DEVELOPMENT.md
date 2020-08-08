@@ -37,6 +37,10 @@ A good general test case is to prove the first exercise from Fitch's first-order
 & ∴\ ∃x\ \Small(x) \\
 ```
 
+## Version bumping
+
+Just increase `"version"` in `package.json`. Everything else is taken care of automatically.
+
 ## Deploying
 
 Build in production mode:
