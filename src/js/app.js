@@ -608,6 +608,16 @@ angular.module('ruzsa', [
                 }
             }
         };
+        $scope.submitTree = function (root) {
+            let isTreeValid = true;
+            traverse(root, function (node) {
+                if (node.underEdit) {
+                    $scope.submit(node);
+                    isTreeValid = isTreeValid && isEqual(node.error, {});
+                }
+            });
+            return isTreeValid;
+        };
         $scope.checkForEmptyNodes = function () {
             let emptyNodesPresent = false;
             if ($scope.treeData) {
@@ -849,13 +859,12 @@ angular.module('ruzsa', [
             $mdDialog.show(alert);
         };
         $scope.checkStep = function () {
-            let emptyNodesPresent = $scope.checkForEmptyNodes();
-            if (emptyNodesPresent) {
-                $scope.showIncorrectStepAlert();
-                return;
-            }
             traverse($scope.treeData, function (node) {
                 if (node.underBreakingDown) {
+                    if (!$scope.submitTree(node)) {
+                        $scope.showIncorrectStepAlert();
+                        return;
+                    }
                     let allCandidatesAreEmpty = true;
                     let stepIsCorrect = true;
                     let formula = node.formula;
