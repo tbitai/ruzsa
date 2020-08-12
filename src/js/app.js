@@ -468,7 +468,7 @@ angular.module('ruzsa', [
                 core();
             }
         };
-        $scope.focusNext = function (removeFromQ = true) {
+        $scope.focusNext = function () {
             let focusQ = $('.in_focus_q').sort(function (el1, el2) {
                 function o(el) {
                     //noinspection JSUnresolvedVariable
@@ -479,9 +479,7 @@ angular.module('ruzsa', [
             if (focusQ.length > 0) {
                 let elToFocus = focusQ[0];
                 elToFocus.focus();
-                if (removeFromQ) {
-                    $(elToFocus).removeClass('in_focus_q');
-                }
+                $(elToFocus).removeClass('in_focus_q');
             }
         };
 
@@ -499,8 +497,6 @@ angular.module('ruzsa', [
                     minWidth: 160  // .formula_input width
                 });
 
-                $scope.focusNext(false);
-
                 if (newTreeData !== oldTreeData &&  // Exclude initialization
                     !$scope.savedDataJustLoaded) {
                         $scope.unsavedDataPresent = true;
@@ -508,6 +504,17 @@ angular.module('ruzsa', [
                 $scope.savedDataJustLoaded = false;
             }, 0, false);
         }, true);
+        $scope.$watch(function (scope) {
+            let treeNodesLength = 0;
+            traverse(scope.treeData, function (_node) {
+                treeNodesLength++;
+            });
+            return treeNodesLength;
+        }, function (_newVal, _oldVal) {
+            $timeout(function () {
+                $scope.focusNext();
+            }, 0, false);
+        });
 
         // Have to update title in a watch, see comment in the HTML.
         $scope.updateTitle = function(filename, unsavedDataPresent) {
