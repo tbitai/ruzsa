@@ -53,11 +53,12 @@ window.fireVirtualKey = function (keyStr, cursorPos) {
     }
 };
 window.checkCommaAndParenthesis = function (el) {
-    let p = el.selectionStart;
-    let c = el.value[p];
+    const p = el.selectionStart;
+    const c = el.value[p];
+    const cPrev = p > 0 ? el.value[p - 1] : '';
     if (c == ',') {
         setCursorPosition(el, p + 2);
-    } else if (c == ')') {
+    } else if (cPrev.match(/[a-z]/) && c == ')') {
         setCursorPosition(el, p + 1);
     }
 };
