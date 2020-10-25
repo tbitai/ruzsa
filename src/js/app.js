@@ -72,9 +72,12 @@ angular.module('ruzsa', [
     'ngCookies'
 ])
     .config(['$mdThemingProvider', function($mdThemingProvider) {
-        //noinspection JSUnresolvedFunction
+        const blueWithLegacyContrastMap = $mdThemingProvider.extendPalette('blue', {
+            'contrastDarkColors': '50 100 200 300 400 A100',
+        });
+        $mdThemingProvider.definePalette('blueWithLegacyContrast', blueWithLegacyContrastMap);
         $mdThemingProvider.theme('default')  // Base for all themes.
-            .primaryPalette('blue')
+            .primaryPalette('blueWithLegacyContrast')
             .accentPalette('grey', {
                 'default': '400'
             });
