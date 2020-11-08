@@ -52,12 +52,6 @@ $candidate_color: rgb(189,189,189)  // FAB color.
   .md-button#lang_swapper
     min-width: 100px !important  // Persist width after swap
 
-
-  // Adjust right padding with content and left padding with right padding
-  $padding-left-right: 5px
-  padding-left:  $padding-left-right
-  padding-right: $padding-left-right
-
 $toolbar_height: 60px
 $toolbar_shadow_height: 4px
 
@@ -88,10 +82,11 @@ $formula_margin-top-bottom: 9px
 .content
   padding-top: 20px - $formula_margin-top-bottom
 
+$vkb_right: 18px
 #virtual_keyboard
   position: fixed
   top: $toolbar_height + $toolbar_shadow_height + 30px
-  right: 18px
+  right: $vkb_right
 
   $padding-top-bottom: 8px
   padding-top:    $padding-top-bottom
@@ -160,7 +155,7 @@ $bd_step_btn_margin-left-right: 7px
 
   padding: 8px
 
-#github-logo
+.github-logo
   height: 22px
   position: relative
   top: 5px
@@ -294,3 +289,43 @@ $toolbar_width_shrink_limit: 1400px
 
   .highlighted
     background-color: $candidate_color !important
+
+md-menu-item > .md-button
+  i.material-icons, svg
+    margin-right: 16px  // Copy from AngularJS Material's md-icon
+
+#mobile_tools
+  display: none
+
+@media (max-width: 700px), (max-height: 450px)
+  #action_bar, #settings_bar, #virtual_keyboard > *:not(.small_vkb_btns), .plus_btn
+    display: none
+
+  #mobile_tools
+    display: block
+
+  .md-toolbar-tools
+    padding-right: 0
+
+  .tree
+    padding-right: 0
+
+  .content
+    padding-bottom: 160px  // Account for virtual keyboard and BD step buttons
+
+  md-fab-speed-dial.bd_step_speed_dial md-fab-actions.bd_step_btns
+    flex-direction: column
+
+    .bd_step_btn
+      margin-bottom: 2 * $bd_step_btn_margin-left-right
+
+  #virtual_keyboard
+    top: inherit
+    right: inherit
+    bottom: $vkb_right
+    left: $vkb_right
+
+@media (max-width: 370px)
+  #mobile_frequent_undo_tool
+    display: none
+

@@ -103,6 +103,7 @@ angular.module('ruzsa', [
             'HELP': 'Help',
             'THEME': 'Theme',
             'CODE': 'Code',
+            'MORE': 'More',
 
             // Action buttons
             'ADD': 'Add',
@@ -155,6 +156,7 @@ angular.module('ruzsa', [
             'HELP': 'Segítség',
             'THEME': 'Téma',
             'CODE': 'Kód',
+            'MORE': 'Több',
 
             // Action buttons
             'ADD': 'Hozzáadás',
