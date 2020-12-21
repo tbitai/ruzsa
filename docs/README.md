@@ -21,7 +21,7 @@ Closure is denoted by `*` derived from the lower closing node, like this:
 
 ## Topics
 
-* [Release notes](CHANGELOG.md)
+* [Release notes](RELEASES.md)
 * [Bug reports and feature requests](ISSUES.md)
 * [Cookie policy](COOKIES.md)
 * [Developer documentation](DEVELOPMENT.md)

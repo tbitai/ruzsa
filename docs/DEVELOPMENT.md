@@ -39,7 +39,10 @@ A good general test case is to prove the first exercise from Fitch's first-order
 
 ## Version bumping
 
-Just increase `"version"` in `package.json`. Everything else is taken care of automatically.
+1. Increase `"version"` in `package.json`.
+2. `git tag` new version.
+3. Add new section to [`RELEASES.md`](RELEASES.md), following [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
+   and the conventions of earlier releases' notes.
 
 ## Deploying
 
