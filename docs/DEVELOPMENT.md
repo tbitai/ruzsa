@@ -1,7 +1,10 @@
 # Developer documentation
 
-[![](https://david-dm.org/tbitai/ruzsa/status.svg?style=flat-square)](https://david-dm.org/tbitai/ruzsa)
-[![](https://david-dm.org/tbitai/ruzsa/dev-status.svg?style=flat-square)](https://david-dm.org/tbitai/ruzsa?type=dev)
+[![Deploy status](https://img.shields.io/netlify/ea5f46df-0fa4-4673-bca9-a5b378b76dd1?label=deploy&logo=netlify&style=flat-square)](https://app.netlify.com/sites/ruzsa/deploys)
+[![Documentation status](https://img.shields.io/readthedocs/ruzsa/stable?logo=read-the-docs&style=flat-square)](https://readthedocs.org/projects/ruzsa/builds)
+[![Dependencies status](https://img.shields.io/david/tbitai/ruzsa?logo=npm&style=flat-square)](https://david-dm.org/tbitai/ruzsa)
+[![Development dependencies status](https://img.shields.io/david/dev/tbitai/ruzsa?logo=npm&style=flat-square)](https://david-dm.org/tbitai/ruzsa?type=dev)
+[![Requirements status](https://img.shields.io/requires/github/tbitai/ruzsa?logo=pypi&style=flat-square)](https://requires.io/github/tbitai/ruzsa/requirements/?branch=master)
 
 ## Getting started
 
