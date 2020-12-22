@@ -68,10 +68,10 @@ npm run deploy-staging
 
 The documentation is under the `docs` directory. In the following commands we assume that's the current directory.
 
-Install requirements ([Sphinx](https://www.sphinx-doc.org) etc.):
+Set up environment according to `.readthedocs.yml`, installing requirements ([Sphinx](https://www.sphinx-doc.org) etc.):
 
 ```sh
-pip install -r requirements.txt
+mkvirtualenv ruzsa-docs -p python3.8 -r requirements.txt 
 ```
 
 Build:
