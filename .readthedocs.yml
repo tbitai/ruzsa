@@ -6,3 +6,8 @@ version: 2
 
 # No downloadable formats are necessary, as the docs heavily rely on external links anyway
 formats: []
+
+python:
+  version: 3.8
+  install:
+    - requirements: docs/requirements.txt
