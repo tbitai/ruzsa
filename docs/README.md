@@ -1,26 +1,24 @@
 # Ruzsa
 
-[Analytic tableau](https://en.wikipedia.org/wiki/Method_of_analytic_tableaux) editor for 
-[Tarski's World](https://www.gradegrinder.net/Support/documentation.html?software=tarski) 
-\(similar to [Fitch](https://www.gradegrinder.net/Support/documentation.html?software=fitch), 
-but uses the analytic tableau proof method instead of natural deduction\).
+Ruzsa (/ˈruʒɒ/) is an educational software for introductory logic courses. It's an 
+[analytic tableau](https://en.wikipedia.org/wiki/Method_of_analytic_tableaux) proof editor for 
+[Tarski's World](https://www.gradegrinder.net/Support/documentation.html?software=tarski). Thus, Ruzsa is an alternative 
+to [Fitch](https://www.gradegrinder.net/Support/documentation.html?software=fitch), but instead of Fitch's natural 
+deduction proof method, Ruzsa uses the more beginner-friendly method of analytic tableaux.
 
-Check it out at <https://ruzsa.tbitai.me>!
+[![Ruzsa with first-order analytic tableau in progress](img/10_3_WIP.png)](https://ruzsa.tbitai.me)
 
-## Usage
+Available at <https://ruzsa.tbitai.me>, Ruzsa is free an open-source software.
 
-The rules for constructing tableaux are the same as explained on the 
-[Method of analytic tableaux](https://en.wikipedia.org/wiki/Method_of_analytic_tableaux) 
-Wikipedia page, the first-order rules are those contained in the 
-[First-order tableau without unification](https://en.wikipedia.org/wiki/Method_of_analytic_tableaux#First-order_tableau_without_unification) 
-subsection.
+Ruzsa is used in the introductory logic courses at the 
+[Department of Logic at Eötvös Loránd University](http://phil.elte.hu/logic).
 
-Closure is denoted by `*` derived from the lower closing node, like this:
-
-![](closure.png)
+Ruzsa was named after [Imre Ruzsa](http://phil.elte.hu/logic/ruzsa.html), the founder of the Department of Logic at 
+Eötvös Loránd University.
 
 ## Topics
 
+* [How to use Ruzsa](USAGE.md)
 * [Release notes](RELEASES.md)
 * [Bug reports and feature requests](ISSUES.md)
 * [Cookie policy](COOKIES.md)
