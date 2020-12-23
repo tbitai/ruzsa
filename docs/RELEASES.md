@@ -85,7 +85,7 @@ too.
 `brokenDown` is added to nodes, denoted by strike-through. This won't work for previously broken-down formulas in 
 older-version files.
 
-## 0.1.0: Track undo step possibility (2016-05-02)
+## 0.1.0: Track Undo possibility (2016-05-02)
 
 `undoStepPossible` is added to the `state`. For older-version files, users won't be able to undo the step that was made 
 just before saving.
