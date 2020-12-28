@@ -8,13 +8,10 @@ deduction proof method, Ruzsa uses the more beginner-friendly method of analytic
 
 [![Ruzsa with first-order analytic tableau in progress](img/10_3_WIP.png)](https://ruzsa.tbitai.me)
 
-Available at <https://ruzsa.tbitai.me>, Ruzsa is free an open-source software.
+Available at <https://ruzsa.tbitai.me>, Ruzsa is free and open-source software.
 
-Ruzsa is used in the introductory logic courses at the 
-[Department of Logic at Eötvös Loránd University](http://phil.elte.hu/logic).
-
-Ruzsa was named after [Imre Ruzsa](http://phil.elte.hu/logic/ruzsa.html), the founder of the Department of Logic at 
-Eötvös Loránd University.
+Ruzsa is used at the [Department of Logic at Eötvös Loránd University](http://phil.elte.hu/logic). It was named after 
+[Imre Ruzsa](http://phil.elte.hu/logic/ruzsa.html), the founder of the department.
 
 ## Topics
 
