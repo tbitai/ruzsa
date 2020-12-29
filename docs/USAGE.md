@@ -40,6 +40,9 @@ When you're ready, click on the Check Step button, and Ruzsa will check if your 
 
 ![Check Step button](img/check_step_button.png)
 
+If the step is correct, the breakdown's color will change from grey to black, and the broken-down sentence will be 
+marked with strikethrough:
+
 ![A or B broken down](img/A_or_B_broken_down.png)
 
 The complete set of breakdown rules is described in detail on the 
@@ -50,3 +53,9 @@ subsection. [Closure](https://en.wikipedia.org/wiki/Method_of_analytic_tableaux#
 the lower closing node:
 
 ![Closure](img/closure.png)
+
+## Starting a new tableau
+
+You can clear the current tableau and start a new one by clicking on the Ruzsa logo:
+
+![Ruzsa logo](img/Ruzsa_logo.png)
