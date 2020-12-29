@@ -96,6 +96,7 @@ angular.module('ruzsa', [
             'OTHER_LANGUAGE_ABBR': 'HU',
 
             // Toolbar buttons
+            'NEW_TABLEAU': 'New tableau',
             'OPEN': 'Open',
             'SAVE': 'Save',
             'CHECK_STEP': 'Check step',
@@ -149,6 +150,7 @@ angular.module('ruzsa', [
             'OTHER_LANGUAGE_ABBR': 'EN',
 
             // Toolbar buttons
+            'NEW_TABLEAU': 'Új fa',
             'OPEN': 'Megnyitás',
             'SAVE': 'Mentés',
             'CHECK_STEP': 'Lépés ellenőrzése',

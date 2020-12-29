@@ -18,6 +18,7 @@
 <md-toolbar md-whiteframe="4" class="toolbar">
     <div class="md-toolbar-tools">
         <md-button ng-click="setInitialStateWithConfirm()" id="logo_btn">
+            <md-tooltip>{{ 'NEW_TABLEAU' | translate }}</md-tooltip>
             <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
                  viewBox="0 0 67.756 16.346" height="20px"
                  aria-label="Ruzsa"
@@ -69,6 +70,7 @@
                  otherwise click won't be triggered. -->
             <a href="javascript:document.getElementById('file_input').click();">
                 <md-button>
+                    <md-tooltip>{{ 'OPEN' | translate }}</md-tooltip>
                     <i class="material-icons">&#xE2C8;</i> <span class="tool_title">{{'OPEN' | translate}}</span>
                 </md-button>
             </a>
@@ -77,31 +79,39 @@
                    onchange="angular.element(this).scope().loadFile(this.files)">  <!-- ng-change doesn't support file inputs -->
             <md-button ng-disabled="!unsavedDataPresent || readonly"
                        ng-click="save()">
+                <md-tooltip>{{ 'SAVE' | translate }}</md-tooltip>
                 <i class="material-icons">&#xE161;</i> <span class="tool_title">{{'SAVE' | translate}}</span>
             </md-button>
             <md-button ng-disabled="!BDStepInProgress"
                        ng-click="checkStep()">
+                <md-tooltip>{{ 'CHECK_STEP' | translate }}</md-tooltip>
                 <i class="material-icons">&#xE5CA;</i> <span class="tool_title">{{'CHECK_STEP' | translate}}</span>
             </md-button>
             <md-button ng-disabled="!undoStepPossible"
                        ng-click="undoStep()">
+                <md-tooltip>{{ 'UNDO' | translate }}</md-tooltip>
                 <i class="material-icons">&#xE166;</i> <span class="tool_title">{{'UNDO' | translate}}</span>
             </md-button>
             <md-button ng-disabled="readonly"
                        class="plus_btn_tool"
                        ng-click="addLeaves()">
+                <md-tooltip>{{ 'ADD' | translate }}</md-tooltip>
                 <i class="material-icons">&#xE145;</i> <span class="tool_title">{{'ADD' | translate}}</span>
             </md-button>
         </div>
         <span flex></span>
         <div id="settings_bar">
             <md-button href="https://ruzsa.readthedocs.io{{ isRunningVersionTesting ? '/en/latest' : '' }}" target="_blank" rel="noreferrer noopener">
+                <md-tooltip>{{ 'HELP' | translate }}</md-tooltip>
                 <i class="material-icons">&#xE887;</i> <span class="tool_title">{{'HELP' | translate}}</span>
             </md-button>
             <md-button ng-click="toggleTheme()">
+                <md-tooltip>{{ 'THEME' | translate }}</md-tooltip>
                 <i class=material-icons>&#xE1AE;</i> <span class="tool_title">{{'THEME' | translate}}</span>
             </md-button>
             <md-button href="https://github.com/tbitai/ruzsa" target="_blank" rel="noreferrer noopener">
+                <md-tooltip>{{ 'CODE' | translate }}</md-tooltip>
+
                 <!-- Adapted from https://simpleicons.org/icons/github.svg -->
                 <svg xmlns="http://www.w3.org/2000/svg"
                      viewBox="0 0 24 24"
@@ -121,6 +131,7 @@
                 <span class="tool_title">{{'CODE' | translate}}</span>
             </md-button>
             <md-button ng-click="toggleLanguage()" id="lang_swapper">
+                <md-tooltip>{{ 'OTHER_LANGUAGE' | translate }}</md-tooltip>
                 <i class=material-icons>&#xE894;</i> <span class="tool_title">{{'OTHER_LANGUAGE' | translate}}</span><span class="tool_title_abbr">{{'OTHER_LANGUAGE_ABBR' | translate}}</span>
             </md-button>
         </div>
@@ -130,21 +141,25 @@
                        ng-click="undoStep()"
                        aria-label="{{'UNDO' | translate}}"
                        id="mobile_frequent_undo_tool">
+                <md-tooltip>{{ 'UNDO' | translate }}</md-tooltip>
                 <i class="material-icons">&#xE166;</i>
             </md-button>
             <md-button ng-disabled="!BDStepInProgress"
                        ng-click="checkStep()"
                        aria-label="{{'CHECK_STEP' | translate}}">
+                <md-tooltip>{{ 'CHECK_STEP' | translate }}</md-tooltip>
                 <i class="material-icons">&#xE5CA;</i>
             </md-button>
             <md-button ng-disabled="readonly"
                        ng-click="addLeaves()"
                        aria-label="{{'ADD' | translate}}">
+                <md-tooltip>{{ 'ADD' | translate }}</md-tooltip>
                 <i class="material-icons">&#xE145;</i>
             </md-button>
 
             <md-menu>
                 <md-button ng-click="$mdMenu.open()" aria-label="{{'MORE' | translate}}">
+                    <md-tooltip>{{ 'MORE' | translate }}</md-tooltip>
                     <i class="material-icons">&#xe5d4;</i>
                 </md-button>
                 <!-- Copy of the tools above, but without .tool_title -->
