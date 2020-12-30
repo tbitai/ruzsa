@@ -2,17 +2,18 @@
 
 Ruzsa adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## 1.2.0-alpha: Dark theme, mobile version, Read the Docs, fix cursor jumpings (Unreleased)
+## 1.2.0-alpha: Dark theme, mobile version, Read the Docs, convenience fixes (Unreleased)
 
 New features:
 
 * Dark theme.
 * Mobile version.
 * [Documentation](https://ruzsa.readthedocs.io) on Read the Docs.
-* Automatic syntax checking in Check Step. 
+* Automatic syntax checking in Check Step (it's not required anymore to <kbd>Enter</kbd> every sentence).
 
 Bugfixes:
 
+* Fix virtual keyboard input being ignored (most noticeable for `*`).
 * Fix focusing next node on node change.
 * Fix cursor jumping out of parentheses.
 

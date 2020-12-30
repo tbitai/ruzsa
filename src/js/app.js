@@ -43,6 +43,9 @@ window.fireVirtualKey = function (keyStr, cursorPos) {
         // Trigger input event for inputAutoresize
         $(i).trigger('input');
 
+        // Propagate value change to Angular
+        angular.element(i).controller('ngModel').$setViewValue(i.value);
+
         let l = i.value.length;
         let defaultPos = l - after.length;
         setCursorPosition(i, defaultPos);
