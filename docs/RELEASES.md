@@ -2,7 +2,7 @@
 
 Ruzsa adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## 1.2.0-alpha: Dark theme, mobile version, Read the Docs, convenience fixes (Unreleased)
+## 1.2.0-alpha: Dark theme, mobile version, Read the Docs, fixes (Unreleased)
 
 New features:
 
