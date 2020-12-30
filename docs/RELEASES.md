@@ -16,6 +16,7 @@ Bugfixes:
 * Fix virtual keyboard input being ignored (most noticeable for `*`).
 * Fix focusing next node on node change.
 * Fix cursor jumping out of parentheses.
+* Fix subsequent breakdown editability after Undo.
 
 ## 1.1.0: Associativity (2018-05-01)
 

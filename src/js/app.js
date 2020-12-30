@@ -837,9 +837,6 @@ angular.module('ruzsa', [
                                 delete n.underContinuation;
                             }
                         });
-                        $scope.doForConnected(node, function (n) {
-                            n.editable = true;
-                        });
                         node.underBreakingDown = false;
                         $scope.BDStepInProgress = false;
 
@@ -853,10 +850,6 @@ angular.module('ruzsa', [
                         delete node.brokenDown;
                         delete node.lastBrokenDown;
                         node.breakable = true;
-                        // Maybe the node was also editable before breaking down,
-                        // but it would be complicated to track this,
-                        // and probably no one wants to edit a formula after
-                        // undoing its breaking-down.
                         traverse(node, function(n) {
                             if (n.lastContinued) {
                                 delete n.lastContinued;
