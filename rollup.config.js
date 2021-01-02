@@ -33,6 +33,7 @@ export default {
         {src: 'src/app.html', dest: 'dist', rename: 'index.html'},
         {src: 'src/img', dest: 'dist'},
         {src: 'node_modules/roboto-fontface/fonts/roboto', dest: 'dist/fonts'},
+        {src: 'node_modules/dejavu-fonts-ttf/ttf/DejaVuSans.ttf', dest: 'dist/fonts/dejavu-sans'},
         {src: 'node_modules/material-design-icons/iconfont/MaterialIcons-Regular.*', dest: 'dist/fonts/material-icons'},
       ],
     }),
