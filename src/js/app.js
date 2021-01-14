@@ -17,6 +17,7 @@ import isEqual from 'lodash/isEqual';
 import cloneDeep from 'lodash/cloneDeep';
 import union from 'lodash/union';
 import difference from 'lodash/difference';
+import isEmpty from 'lodash/isEmpty';
 import { WFF } from './lib/tarskiFirstOrderWFF.js';
 import { traverse, traverseBF, treePath } from './lib/treeUtils.js';
 import compareFormulaTrees from './lib/compareFormulaTrees.js';
@@ -640,7 +641,7 @@ angular.module('ruzsa', [
             let emptyNodesPresent = false;
             if ($scope.treeData) {
                 traverse($scope.treeData, function (node) {
-                    if (!(node.formula)) {
+                    if (isEmpty(node.formula)) {
                         emptyNodesPresent = true;
 
                         // Break traverse
