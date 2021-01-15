@@ -128,6 +128,8 @@ angular.module('ruzsa', [
             'EQUALS': 'equals',
             'NOT_EQUALS': 'not equals',
             'FALSE': 'false',
+            'EXPAND': 'expand',
+            'COLLAPSE': 'collapse',
 
             'INPUT': 'input',
 
@@ -182,6 +184,8 @@ angular.module('ruzsa', [
             'EQUALS': 'egyenlő',
             'NOT_EQUALS': 'nem egyenlő',
             'FALSE': 'hamis',
+            'EXPAND': 'kinyit',
+            'COLLAPSE': 'összecsuk',
 
             'INPUT': 'beviteli mező',
 

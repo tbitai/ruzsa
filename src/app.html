@@ -357,7 +357,7 @@
                  onclick="fireVirtualKey('*')"
                  aria-label="{{'FALSE' | translate}}">*</md-button>
     </div>
-    <table>
+    <table ng-if="!vkbCollapsed">
         <tr>
             <td>
                 <md-button class="md-raised md-accent md-hue-1 tarski_symbol_btn" onclick="fireVirtualKey('Tet()', -1)">Tet</md-button>
@@ -425,6 +425,10 @@
             </td>
         </tr>
     </table>
+    <md-button class="md-accent vkb_expand" ng-click="vkbCollapsed = !vkbCollapsed" ng-switch="vkbCollapsed">
+        <i class="material-icons" ng-switch-when="true" aria-label="{{ 'EXPAND' | translate }}">&#xe5cf;</i>
+        <i class="material-icons" ng-switch-default aria-label="{{ 'COLLAPSE' | translate }}">&#xe5ce;</i>
+    </md-button>
 </div>
 <md-button ng-disabled="readonly"
            class="md-fab plus_btn"

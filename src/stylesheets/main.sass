@@ -10,7 +10,7 @@ $roboto-font-path: 'fonts'
 @import 'lib/width'
 @import 'lib/border-radius'
 
-$height-shrink-limit: 600px
+$height-shrink-limit: 645px
 
 $tree-line-height-shrink-limit: $height-shrink-limit
 @import 'lib/tree'
@@ -109,6 +109,17 @@ $vkb_right: 18px
 .small_vkb_btns
   // Adjust left margin w/ table content
   margin-left: 3px
+
+#virtual_keyboard .md-button.vkb_expand
+  line-height: normal
+  min-height: 0
+  min-width: 0
+  $vkb-expand-width: 14%
+  width: $vkb-expand-width
+  .material-icons
+    top: 2px
+  $vkb-horizontal-margin: (100% - $vkb-expand-width) / 2
+  margin: 0 $vkb-horizontal-margin -4px $vkb-horizontal-margin
 
 .formula
   margin-bottom: $formula_margin-top-bottom
@@ -240,7 +251,7 @@ $toolbar_width_shrink_limit: 1400px
 
 .plus_btn_tool
   display: none
-@media (max-height: 500px)
+@media (max-height: 570px)
   .plus_btn
     display: none
   .plus_btn_tool
@@ -299,7 +310,7 @@ md-menu-item > .md-button
 #mobile_tools
   display: none
 
-@media (max-width: 700px), (max-height: 450px)
+@media (max-width: 700px), (max-height: 495px)
   #action_bar, #settings_bar, #virtual_keyboard > *:not(.small_vkb_btns), .plus_btn
     display: none
 
