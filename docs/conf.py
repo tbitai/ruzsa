@@ -101,7 +101,7 @@ html_static_path = ['_static']
 #
 # html_sidebars = {}
 
-html_favicon = '../src/img/favicon.png'
+html_favicon = '../src/img/R_16x16.png'
 html_use_index = False
 html_copy_source = False
 html_show_copyright = False
