@@ -43,9 +43,9 @@ A good general test case is to prove the first exercise from Fitch's first-order
 ## Version bumping
 
 1. Increase `"version"` in `package.json`.
-2. `git tag` new version.
-3. Add new section to [`RELEASES.md`](RELEASES.md), following [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
+2. Add new section to [`RELEASES.md`](RELEASES.md), following [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
    and the conventions of earlier releases' notes.
+3. `git tag` new version.
 
 ## Deploying
 

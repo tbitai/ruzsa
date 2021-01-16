@@ -2,21 +2,25 @@
 
 Ruzsa adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## 1.2.0-alpha: Dark theme, mobile version, Read the Docs, fixes (Unreleased)
+## 1.2.0: Documentation, convenience improvements (2021-01-16)
 
 New features:
 
-* Dark theme.
-* Mobile version.
 * [Documentation](https://ruzsa.readthedocs.io) on Read the Docs.
-* Automatic syntax checking in Check Step (it's not required anymore to <kbd>Enter</kbd> every sentence).
+* Mobile version.
+* Dark theme.
+* The virtual keyboard is now collapsible.
+* Tooltips in the top toolbar.
+* Pressing <kbd>Enter</kbd> is not required anymore for derived sentences.
 
 Bugfixes:
 
-* Fix virtual keyboard input being ignored (most noticeable for `*`).
+* Fix native fonts causing readability issues: use hosted Roboto and DejaVu Sans.
 * Fix focusing next node on node change.
 * Fix cursor jumping out of parentheses.
+* Fix virtual keyboard input being ignored (most noticeable for `*`).
 * Fix subsequent breakdown editability after Undo.
+* Fix missing enforcing of syntax check before adding new sentences.
 
 ## 1.1.0: Associativity (2018-05-01)
 
