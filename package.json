@@ -37,7 +37,7 @@
     "@rollup/plugin-node-resolve": "8.4.0",
     "http-server": "0.12.3",
     "netlify-cli": "2.58.0",
-    "node-sass": "4.14.1",
+    "node-sass": "9.0.0",
     "rollup": "2.23.0",
     "rollup-plugin-clear": "2.0.7",
     "rollup-plugin-copy": "3.3.0",
